@@ -69,7 +69,10 @@ public class Security {
 		http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.csrf(c -> c.disable());
 		http.formLogin(f -> f.disable());
-		http.httpBasic(Customizer.withDefaults());
+		http.httpBasic(h -> h.disable());
+		http.exceptionHandling(e -> e.authenticationEntryPoint((request, response, authException) -> {
+			response.sendError(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+		}));
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

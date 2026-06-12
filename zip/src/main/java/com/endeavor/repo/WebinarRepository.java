@@ -15,28 +15,28 @@ public interface WebinarRepository extends JpaRepository<Webinar, Long> {
     Optional<Webinar> findBySlug(String slug);
 
     @Query("SELECT w FROM Webinar w WHERE " +
-           "(:status IS NULL OR w.status = :status) AND " +
+           "(:status IS NULL OR UPPER(w.status) = UPPER(:status)) AND " +
            "(:search IS NULL OR LOWER(w.title) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.description) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.speakerName) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Webinar> findByFilters(@Param("status") String status, @Param("search") String search, Pageable pageable);
 
     @Query("SELECT w FROM Webinar w WHERE " +
-           "(:status IS NULL OR w.status = :status) AND " +
+           "(:status IS NULL OR UPPER(w.status) = UPPER(:status)) AND " +
            "(:search IS NULL OR LOWER(w.title) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.description) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.speakerName) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
-           "(w.status <> 'Archived')")
+           "(UPPER(w.status) <> 'ARCHIVED')")
     Page<Webinar> findByFiltersExcludingArchived(@Param("status") String status, @Param("search") String search, Pageable pageable);
 
     @Query("SELECT w FROM Webinar w WHERE " +
-           "(w.status = 'Published' OR w.status = 'Completed') AND " +
+           "(UPPER(w.status) = 'PUBLISHED' OR UPPER(w.status) = 'COMPLETED') AND " +
            "(:search IS NULL OR LOWER(w.title) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.description) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.speakerName) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Webinar> findPublicWebinars(@Param("search") String search, Pageable pageable);
 
     @Query("SELECT w FROM Webinar w WHERE " +
-           "w.status = 'Published' AND w.webinarDate >= :today AND " +
+           "UPPER(w.status) = 'PUBLISHED' AND w.webinarDate >= :today AND " +
            "(:search IS NULL OR LOWER(w.title) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.description) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.speakerName) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Webinar> findUpcomingPublicWebinars(@Param("search") String search, @Param("today") String today, Pageable pageable);
 
     @Query("SELECT w FROM Webinar w WHERE " +
-           "(w.status = 'Completed' OR (w.status = 'Published' AND w.webinarDate < :today)) AND " +
+           "(UPPER(w.status) = 'COMPLETED' OR (UPPER(w.status) = 'PUBLISHED' AND w.webinarDate < :today)) AND " +
            "(:search IS NULL OR LOWER(w.title) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.description) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(w.speakerName) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Webinar> findPastPublicWebinars(@Param("search") String search, @Param("today") String today, Pageable pageable);
 }

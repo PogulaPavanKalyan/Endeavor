@@ -63,6 +63,12 @@ public class WebinarController {
         return ResponseEntity.notFound().build();
     }
 
+    // DEBUG Endpoint: Get all webinars without any filters
+    @GetMapping("/debug/webinars")
+    public ResponseEntity<?> getDebugWebinars() {
+        return ResponseEntity.ok(webinarService.getAdminWebinars(null, null, true, PageRequest.of(0, 100)));
+    }
+
     // Admin Endpoint: Get all webinars list with filters
     @GetMapping("/admin/webinars")
     public ResponseEntity<Page<WebinarDTO>> getAdminWebinars(
