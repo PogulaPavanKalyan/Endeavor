@@ -1,0 +1,138 @@
+.journals-hero {
+  position: relative;
+  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f");
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0 80px 0;
+  text-align: center;
+  color: #ffffff;
+}
+
+.journals-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.journals-hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  line-height: 1.2;
+  background: linear-gradient(to right, #ffffff, #f1f5f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.journals-hero p {
+  font-size: 1.15rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.journals-container {
+  margin-top: -30px;
+  position: relative;
+  z-index: 10;
+  padding-bottom: 80px;
+}
+
+.journals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 30px;
+}
+
+.journal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.journal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  border-color: #3b82f6;
+}
+
+.journal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.journal-publisher {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.8px;
+}
+
+.journal-if {
+  font-size: 13px;
+  color: #475569;
+}
+
+.journal-if strong {
+  color: #10b981;
+}
+
+.journal-card h3 {
+  font-size: 1.4rem;
+  color: #0f172a;
+  margin-bottom: 12px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.journal-coverage {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.journal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.journal-index-pill {
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.btn-journal-details {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-journal-details:hover {
+  background: #1e293b;
+}
+
+@media (max-width: 768px) {
+  .journals-grid {
+    grid-template-columns: 1fr;
+  }
+}

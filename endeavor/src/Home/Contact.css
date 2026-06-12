@@ -1,0 +1,280 @@
+.contact-hero {
+  position: relative;
+  background-image: url("https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  padding: 90px 0;
+  text-align: center;
+  color: #ffffff;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-hero .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.75);
+  z-index: 1;
+}
+
+.contact-hero .hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.contact-hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin: 0 0 15px 0;
+  color: #ffffff;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.contact-wrapper {
+  background-color: #f8fafc;
+  padding: 80px 0 100px 0;
+}
+
+.contact-card {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left side styling - Deep Slate */
+.contact-left {
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-sub {
+  font-family: 'Outfit', sans-serif;
+  color: #ed3a4e;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.contact-left h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 15px 0;
+  color: #ffffff;
+}
+
+.contact-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.contact-icon {
+  background-color: rgba(237, 58, 78, 0.1);
+  color: #ed3a4e;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-item-text h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #ffffff;
+}
+
+.contact-item-text p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14.5px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Right side styling - Form */
+.contact-right {
+  padding: 50px 60px;
+  background-color: #ffffff;
+}
+
+.contact-right h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 30px 0;
+  color: #1e293b;
+}
+
+.contact-right .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.contact-right input,
+.contact-right textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.contact-right input:focus,
+.contact-right textarea:focus {
+  outline: none;
+  border-color: #ed3a4e;
+  box-shadow: 0 0 0 3px rgba(237, 58, 78, 0.15);
+}
+
+.contact-right input::placeholder,
+.contact-right textarea::placeholder {
+  color: #94a3b8;
+}
+
+.contact-right textarea {
+  resize: vertical;
+  min-height: 150px;
+  margin-bottom: 30px;
+}
+
+.contact-right button {
+  background-color: #ed3a4e;
+  color: #ffffff;
+  border: none;
+  padding: 14px 35px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(237, 58, 78, 0.2);
+}
+
+.contact-right button:hover {
+  background-color: #d12e40;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(237, 58, 78, 0.3);
+}
+
+.contact-right button:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Map Section */
+.map-section {
+  width: 100%;
+  background-color: #f8fafc;
+  padding: 0 0 80px 0;
+}
+
+.map-section iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+  display: block;
+}
+
+/* Message states */
+.success-message {
+  padding: 15px;
+  background: #ecfdf5;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+  font-size: 14.5px;
+  font-family: 'Inter', sans-serif;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+.error-message {
+  padding: 15px;
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+  font-size: 14.5px;
+  font-family: 'Inter', sans-serif;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+/* Responsive grid overrides */
+@media (max-width: 992px) {
+  .contact-card {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-right {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-hero h1 {
+    font-size: 2.2rem;
+  }
+  
+  .contact-right .row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .contact-right {
+    padding: 30px 20px;
+  }
+  
+  .contact-left {
+    padding: 40px 20px;
+  }
+}

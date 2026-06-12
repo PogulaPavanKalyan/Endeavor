@@ -1,0 +1,774 @@
+/* ==========================================================================
+   PREMIUM HEADER & NAVIGATION STYLES (2026 EVENT PLATFORM EDITION)
+   ========================================================================== */
+
+/* Variables */
+:root {
+  --nav-navy: #0F172A;
+  --nav-accent: #E91E63;
+  --nav-accent-hover: #D81B60;
+  --nav-white: #FFFFFF;
+  --nav-text-dark: #1E293B;
+  --nav-text-muted: #64748B;
+  --nav-font: 'Outfit', 'Poppins', 'Inter', sans-serif;
+  --nav-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-glass: rgba(15, 23, 42, 0.95);
+  --nav-border: rgba(233, 30, 99, 0.15);
+}
+
+body {
+  padding-top: 122px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  font-family: var(--nav-font);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.header.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   TOP HEADER (CLEAN WHITE BLOCK)
+   ========================================================================== */
+.top-header {
+  background-color: var(--nav-white);
+  border-bottom: 1px solid #E2E8F0;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  transition: var(--nav-transition);
+}
+
+.top-header-container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.02);
+}
+
+/* Subscribe button */
+.btn-subscribe {
+  background-color: var(--nav-accent);
+  color: var(--nav-white);
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: var(--nav-transition);
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+}
+
+.btn-subscribe:hover {
+  background-color: var(--nav-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(233, 30, 99, 0.3);
+}
+
+/* ==========================================================================
+   BOTTOM NAVBAR (DARK NAVY ROW)
+   ========================================================================== */
+.bottom-navbar {
+  background-color: var(--nav-navy);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  transition: var(--nav-transition);
+  position: relative;
+}
+
+.bottom-navbar-container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Navigation Links */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 100%;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #E2E8F0;
+  font-size: 14.5px;
+  font-weight: 600;
+  position: relative;
+  padding: 14px 0;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--nav-accent);
+  transform: translateX(-50%);
+  transition: var(--nav-transition);
+}
+
+.nav-menu a:hover {
+  color: var(--nav-white);
+}
+
+.nav-menu a:hover::after {
+  width: 100%;
+}
+
+/* Active Menu Item Link */
+.nav-menu a.active {
+  color: var(--nav-accent);
+}
+
+.nav-menu a.active::after {
+  width: 100%;
+}
+
+/* Hide sticky logo and actions by default */
+.sticky-logo,
+.sticky-action {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.sticky-logo-img {
+  max-height: 30px;
+  filter: brightness(0) invert(1); /* Force logo to white for dark navy background */
+}
+
+/* ==========================================================================
+   STICKY FLOATING CAPSULE MODE (TRIGGERED BY SCROLL)
+   ========================================================================== */
+.header.sticky-active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.header.sticky-active .top-header {
+  margin-top: -70px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.header.sticky-active .bottom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  border-radius: 0;
+  transform: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0;
+  height: 58px;
+  z-index: 1002;
+}
+
+.header.sticky-active .bottom-navbar-container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+/* Reveal sticky logo and sticky CTA button on scroll */
+.header.sticky-active .sticky-logo {
+  opacity: 1;
+  width: 140px;
+  pointer-events: auto;
+}
+
+.header.sticky-active .sticky-action {
+  opacity: 1;
+  width: auto;
+  pointer-events: auto;
+}
+
+.sticky-btn {
+  padding: 8px 20px;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   MEGA MENU PANEL (GLASSMORPHISM)
+   ========================================================================== */
+.nav-item-dropdown {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-trigger {
+  cursor: pointer;
+}
+
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.nav-item-dropdown:hover .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.mega-menu-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(15px);
+  width: 780px;
+  background: var(--nav-glass);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--nav-border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 25px rgba(233, 30, 99, 0.05);
+  border-radius: 12px;
+  padding: 30px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1005;
+}
+
+/* Hover triggers showing Mega Menu */
+.nav-item-dropdown:hover .mega-menu-panel,
+.mega-menu-panel.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Mega Menu Inside Grid */
+.mega-menu-grid {
+  display: grid;
+  grid-template-columns: 240px 240px 1fr;
+  gap: 30px;
+}
+
+.mega-menu-col h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--nav-accent);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+}
+
+.mega-menu-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mega-menu-col ul li a {
+  padding: 0;
+  font-size: 14px;
+  color: #cbd5e1;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mega-menu-col ul li a:hover {
+  color: var(--nav-white);
+  padding-left: 4px;
+}
+
+.mega-menu-col ul li a::after {
+  display: none; /* remove hover line inside mega menu links */
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.pink {
+  background-color: var(--nav-accent);
+  box-shadow: 0 0 8px var(--nav-accent);
+}
+
+/* Featured card column */
+.featured-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.featured-badge {
+  background: rgba(233, 30, 99, 0.15);
+  color: var(--nav-accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.featured-card h5 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--nav-white);
+  margin-bottom: 8px;
+}
+
+.featured-card p {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.btn-featured-action {
+  font-size: 13px;
+  color: var(--nav-accent) !important;
+  font-weight: 700;
+  padding: 0 !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-featured-action:hover {
+  color: var(--nav-white) !important;
+}
+
+.mobile-subscribe-wrapper {
+  display: none;
+}
+
+/* ==========================================================================
+   GLASSMORPHIC NEWSLETTER SUBSCRIBE MODAL
+   ========================================================================== */
+.subscribe-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.subscribe-modal-card {
+  background: var(--nav-white);
+  border-radius: 16px;
+  padding: 45px 35px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  text-align: center;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--nav-text-muted);
+  cursor: pointer;
+  line-height: 1;
+  transition: var(--nav-transition);
+}
+
+.close-modal-btn:hover {
+  color: var(--nav-text-dark);
+}
+
+.subscribe-modal-card h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--nav-text-dark);
+  margin-bottom: 12px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: var(--nav-text-muted);
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group-modal input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--nav-text-dark);
+  transition: var(--nav-transition);
+}
+
+.form-group-modal input:focus {
+  outline: none;
+  border-color: var(--nav-accent);
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.btn-modal-submit {
+  background-color: var(--nav-accent);
+  color: var(--nav-white);
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: var(--nav-transition);
+}
+
+.btn-modal-submit:hover {
+  background-color: var(--nav-accent-hover);
+}
+
+.btn-modal-submit:disabled {
+  background-color: #E2E8F0;
+  color: var(--nav-text-muted);
+  cursor: not-allowed;
+}
+
+/* Success modal state */
+.success-modal-state {
+  padding: 20px 0;
+}
+
+.success-checkmark {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   HAMBURGER / RESPONSIVE (MOBILE & TABLET VIEWPORTS)
+   ========================================================================== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1005;
+  padding: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--nav-white);
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* When header is NOT sticky active, hamburger is on navy background, so spans should be white.
+   But if we merge rows on mobile, let's look at how headers display: */
+
+@media (max-width: 992px) {
+  /* Merge top and bottom bars into a single white header on mobile/tablet */
+  .top-header {
+    height: 64px;
+    border-bottom: 1px solid #E2E8F0;
+  }
+  
+  .bottom-navbar {
+    height: 0;
+    overflow: visible;
+  }
+  
+  .bottom-navbar-container,
+  .header.sticky-active .bottom-navbar-container {
+    justify-content: flex-end;
+    position: absolute;
+    top: -46px; /* Align hamburger into the white top header */
+    right: 5%;
+    width: auto;
+    margin: 0;
+    max-width: none;
+  }
+  
+  .sticky-logo, .sticky-action {
+    display: none !important;
+  }
+
+  /* Override header sticky behavior for mobile/tablet */
+  .header.sticky-active .top-header {
+    margin-top: 0;
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.85); /* White glassmorphism */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* shadow after scrolling 50px */
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .header.sticky-active .bottom-navbar {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+
+  body {
+    padding-top: 64px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+  
+  .hamburger span {
+    background-color: var(--nav-text-dark); /* Dark hamburger for white mobile header */
+  }
+  
+  .hamburger.open span {
+    background-color: var(--nav-white); /* White hamburger when menu overlay is open */
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Navigation Drawer Panel */
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--nav-navy);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 90px 30px 40px 30px;
+    gap: 15px;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.77, 0.2, 0.05, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+    z-index: 1004;
+    overflow-y: auto;
+  }
+
+  .nav-menu.active {
+    transform: translateX(0);
+  }
+
+  .nav-menu a {
+    font-size: 17px;
+    width: 100%;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    justify-content: space-between;
+  }
+
+  .nav-menu a::after {
+    display: none; /* disable animated underline on mobile drawer */
+  }
+
+  .nav-menu a.active {
+    color: var(--nav-accent);
+    font-weight: 700;
+  }
+
+  /* Accordion dropdown inside drawer */
+  .nav-item-dropdown {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mega-menu-panel {
+    position: static;
+    transform: none !important;
+    width: 100%;
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .mega-menu-panel.show {
+    max-height: 1000px;
+    opacity: 1;
+    visibility: visible;
+    padding: 15px 10px 5px 10px;
+  }
+
+  .mega-menu-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .mega-menu-col h4 {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .mega-menu-col ul {
+    gap: 8px;
+  }
+
+  .mega-menu-col ul li a {
+    font-size: 13.5px;
+    padding: 4px 0;
+    border: none;
+  }
+
+  .featured-card {
+    padding: 15px;
+  }
+
+  .mobile-subscribe-wrapper {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding-top: 15px;
+  }
+  
+  .btn-subscribe.mobile {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .top-header {
+    height: 60px;
+  }
+  
+  .bottom-navbar-container,
+  .header.sticky-active .bottom-navbar-container {
+    top: -42px;
+  }
+  
+  .logo img {
+    height: 34px;
+  }
+
+  body {
+    padding-top: 60px;
+  }
+}

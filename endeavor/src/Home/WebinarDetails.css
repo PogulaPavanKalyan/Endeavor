@@ -1,0 +1,457 @@
+.webinar-details-loading, .webinar-details-error {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error-card {
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.error-card h2 {
+  font-size: 1.8rem;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.error-card p {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.btn-back-catalog {
+  display: inline-block;
+  padding: 10px 24px;
+  background: #0f172a;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.btn-back-catalog:hover {
+  background: #1e293b;
+}
+
+/* Hero Section */
+.webinar-details-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  padding: 80px 0 60px 0;
+  color: #ffffff;
+}
+
+.details-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.details-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.details-breadcrumbs {
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.details-breadcrumbs a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.details-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.webinar-tags {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.status-tag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.status-tag.upcoming {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.status-tag.live {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.status-tag.completed {
+  background: #64748b;
+  color: #ffffff;
+}
+
+.cert-tag {
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.webinar-details-hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  max-width: 900px;
+}
+
+.hero-speaker-byline {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+}
+
+.hero-speaker-byline strong {
+  color: #ffffff;
+}
+
+/* Main Content Layout */
+.webinar-main-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+.webinar-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.webinar-description-card, .speaker-profile-card, .recording-player-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.02);
+}
+
+.webinar-left-col h2 {
+  font-size: 1.5rem;
+  color: #0f172a;
+  font-weight: 700;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.description-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+/* Speaker Profile */
+.speaker-profile-grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.speaker-avatar-frame {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #f1f5f9;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.speaker-avatar-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.speaker-profile-info h3 {
+  font-size: 1.4rem;
+  color: #0f172a;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.speaker-subtitle {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.speaker-bio-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Recording Card */
+.recording-embed-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.recording-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Right Column Sidebar Cards */
+.webinar-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.details-countdown-card, .details-live-status-card, .details-meta-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.02);
+}
+
+/* Countdown Clock */
+.details-countdown-card h3 {
+  font-size: 1rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f8fafc;
+  padding: 12px 6px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.countdown-item .num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.countdown-item .lbl {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Live Status */
+.details-live-status-card {
+  background: #fef2f2;
+  border-color: #fee2e2;
+  text-align: center;
+}
+
+.details-live-status-card h3 {
+  font-size: 1.2rem;
+  color: #b91c1c;
+  font-weight: 700;
+  margin: 12px 0 6px 0;
+}
+
+.details-live-status-card p {
+  color: #7f1d1d;
+  font-size: 13px;
+}
+
+.live-dot-pulse {
+  width: 16px;
+  height: 16px;
+  background: #ef4444;
+  border-radius: 50%;
+  margin: 0 auto;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Meta Card */
+.details-meta-card h3 {
+  font-size: 1.1rem;
+  color: #0f172a;
+  font-weight: 700;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.meta-list-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.meta-list-item .icon {
+  font-size: 24px;
+  background: #f8fafc;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+.meta-list-item .info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-list-item .lbl {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.meta-list-item .val {
+  font-size: 14px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Actions Stack */
+.action-buttons-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-register-primary, .btn-join-primary {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+
+.btn-register-primary:hover, .btn-join-primary:hover {
+  background: #2563eb;
+}
+
+.btn-register-primary-disabled {
+  display: block;
+  width: 100%;
+  background: #f1f5f9;
+  color: #94a3b8;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: not-allowed;
+  text-align: center;
+}
+
+.btn-share-secondary {
+  display: block;
+  width: 100%;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-share-secondary:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* Responsive details */
+@media (max-width: 992px) {
+  .webinar-main-layout {
+    grid-template-columns: 1fr;
+  }
+  .webinar-details-hero h1 {
+    font-size: 2.2rem;
+  }
+  .speaker-profile-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .speaker-avatar-frame {
+    margin: 0 auto;
+  }
+}
