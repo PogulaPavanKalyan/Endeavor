@@ -158,3 +158,39 @@
     justify-content: space-between;
   }
 }
+
+@media (max-width: 480px) {
+  .proceedings-hero h1 {
+    font-size: 1.8rem;
+  }
+  .proceedings-hero p {
+    font-size: 0.95rem;
+  }
+  .proceedings-card {
+    padding: 20px;
+  }
+  .proceedings-card h2 {
+    font-size: 1.4rem;
+  }
+  .volume-item {
+    padding: 16px;
+  }
+  .volume-year {
+    font-size: 1.2rem;
+  }
+  .volume-info h3 {
+    font-size: 1rem;
+  }
+  .volume-action {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 12px;
+  }
+  .status-badge-vol {
+    text-align: center;
+  }
+  .btn-vol-download {
+    width: 100%;
+  }
+}

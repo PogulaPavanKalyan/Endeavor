@@ -40,7 +40,7 @@
 
 .journals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(450px, 100%), 1fr));
   gap: 30px;
 }
 
@@ -134,5 +134,34 @@
 @media (max-width: 768px) {
   .journals-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .journals-hero h1 {
+    font-size: 1.8rem;
+  }
+  .journals-hero p {
+    font-size: 0.95rem;
+  }
+  .journal-card {
+    padding: 20px;
+  }
+  .journal-card h3 {
+    font-size: 1.15rem;
+  }
+  .journal-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .journal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    text-align: center;
+  }
+  .btn-journal-details {
+    width: 100%;
   }
 }

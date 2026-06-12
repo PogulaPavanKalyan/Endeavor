@@ -20,3 +20,16 @@
   --conf-secondary-hover: #db2777;
   --conf-bg-accent: rgba(244, 63, 94, 0.05);
 }
+
+/* Global Reset for Responsiveness & Usability */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}

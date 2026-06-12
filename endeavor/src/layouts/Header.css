@@ -71,6 +71,12 @@ body {
   transform: scale(1.02);
 }
 
+.top-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 /* Subscribe button */
 .btn-subscribe {
   background-color: var(--nav-accent);
@@ -267,7 +273,8 @@ body {
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(15px);
-  width: 780px;
+  max-width: 780px;
+  width: 90vw;
   background: var(--nav-glass);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -538,6 +545,12 @@ body {
   to { transform: translateY(0); opacity: 1; }
 }
 
+@media (max-width: 1280px) {
+  .nav-menu {
+    gap: 20px;
+  }
+}
+
 /* ==========================================================================
    HAMBURGER / RESPONSIVE (MOBILE & TABLET VIEWPORTS)
    ========================================================================== */
@@ -545,13 +558,14 @@ body {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 24px;
-  height: 18px;
+  width: 44px;
+  height: 44px;
+  padding: 13px 10px;
   background: transparent;
   border: none;
   cursor: pointer;
   z-index: 1005;
-  padding: 0;
+  box-sizing: border-box;
 }
 
 .hamburger span {
@@ -580,13 +594,9 @@ body {
   
   .bottom-navbar-container,
   .header.sticky-active .bottom-navbar-container {
-    justify-content: flex-end;
-    position: absolute;
-    top: -46px; /* Align hamburger into the white top header */
-    right: 5%;
-    width: auto;
-    margin: 0;
-    max-width: none;
+    position: static;
+    width: 100%;
+    height: auto;
   }
   
   .sticky-logo, .sticky-action {
@@ -630,6 +640,15 @@ body {
   .hamburger span {
     background-color: var(--nav-text-dark); /* Dark hamburger for white mobile header */
   }
+
+  .btn-subscribe {
+    padding: 8px 16px;
+    font-size: 13.5px;
+  }
+
+  .top-actions-group {
+    gap: 12px;
+  }
   
   .hamburger.open span {
     background-color: var(--nav-white); /* White hamburger when menu overlay is open */
@@ -652,7 +671,7 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    width: 300px;
+    width: min(300px, 85vw);
     height: 100vh;
     background-color: var(--nav-navy);
     flex-direction: column;
@@ -759,16 +778,17 @@ body {
     height: 60px;
   }
   
-  .bottom-navbar-container,
-  .header.sticky-active .bottom-navbar-container {
-    top: -42px;
-  }
-  
   .logo img {
     height: 34px;
   }
 
   body {
     padding-top: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-header .btn-subscribe {
+    display: none;
   }
 }

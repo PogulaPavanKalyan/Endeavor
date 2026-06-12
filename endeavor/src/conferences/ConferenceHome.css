@@ -488,6 +488,10 @@
   .conf-speakers-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .speaker-image-wrapper {
+    width: 160px;
+    height: 160px;
+  }
   .conf-modal-content-grid {
     grid-template-columns: 1fr;
   }
@@ -512,6 +516,28 @@
   .conf-tab-btn {
     width: 100%;
     max-width: 250px;
+  }
+  .conf-home-hero h1 {
+    font-size: 26px;
+    margin-bottom: 25px;
+  }
+  .conf-home-hero-meta {
+    font-size: 14px;
+    padding: 4px 12px;
+  }
+  .conf-registration-home-container h2 {
+    font-size: 26px;
+    margin-bottom: 30px;
+  }
+  .conf-countdown-item {
+    width: 70px;
+    height: 70px;
+  }
+  .conf-countdown-number {
+    font-size: 20px;
+  }
+  .conf-countdown-label {
+    font-size: 8px;
   }
 }
 
@@ -566,7 +592,7 @@
 .ticket-card {
   background: #ffffff;
   color: #1e293b;
-  width: 270px;
+  width: min(270px, 100%);
   padding: 35px 20px;
   position: relative;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);

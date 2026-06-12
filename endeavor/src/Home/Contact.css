@@ -44,7 +44,7 @@
 
 .contact-card {
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: minmax(320px, 420px) 1fr;
   background: #ffffff;
   border-radius: 16px;
   overflow: hidden;
@@ -276,5 +276,21 @@
   
   .contact-left {
     padding: 40px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-hero h1 {
+    font-size: 1.8rem;
+  }
+  .contact-hero {
+    padding: 60px 0;
+    min-height: 200px;
+  }
+  .contact-left h2, .contact-right h2 {
+    font-size: 22px;
+  }
+  .map-section iframe {
+    height: 300px;
   }
 }

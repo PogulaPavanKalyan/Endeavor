@@ -253,6 +253,16 @@ body.conf-portal-body-active {
 }
 
 /* Responsive headers */
+@media (max-width: 1024px) {
+  .conf-nav {
+    gap: 8px;
+  }
+  .conf-nav-link {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+}
+
 @media (max-width: 900px) {
   .conf-hamburger {
     display: block;

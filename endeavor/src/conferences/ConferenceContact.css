@@ -140,3 +140,15 @@
     gap: 15px;
   }
 }
+
+@media (max-width: 480px) {
+  .conf-contact-left {
+    padding: 30px 20px;
+  }
+  .conf-contact-right {
+    padding: 24px 16px;
+  }
+  .conf-contact-right h2, .conf-contact-left h2 {
+    font-size: 20px;
+  }
+}

@@ -499,7 +499,7 @@
   visibility: hidden;
   transform: translateY(12px);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 9999;
+  z-index: 999;
 }
 
 .btn-back-to-top.visible {
@@ -626,5 +626,19 @@
 @media (max-width: 480px) {
   .bottom-legal-links {
     justify-content: center;
+  }
+}
+
+@media (max-width: 375px) {
+  .bottom-copyright p,
+  .bottom-legal-links a,
+  .bottom-brand-msg p {
+    font-size: 11px;
+  }
+  .bottom-legal-links {
+    gap: 4px;
+  }
+  .bottom-legal-links .separator {
+    font-size: 8px;
   }
 }

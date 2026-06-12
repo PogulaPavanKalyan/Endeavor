@@ -440,7 +440,7 @@
 }
 
 /* Responsive details */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .webinar-main-layout {
     grid-template-columns: 1fr;
   }
@@ -453,5 +453,30 @@
   }
   .speaker-avatar-frame {
     margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .webinar-details-hero h1 {
+    font-size: 1.6rem;
+  }
+  .hero-speaker-byline {
+    font-size: 1rem;
+  }
+  .webinar-description-card, .speaker-profile-card, .recording-player-card {
+    padding: 20px;
+  }
+  .speaker-avatar-frame {
+    width: 120px;
+    height: 120px;
+  }
+  .countdown-grid {
+    gap: 6px;
+  }
+  .countdown-item .num {
+    font-size: 1.4rem;
+  }
+  .countdown-item .lbl {
+    font-size: 9px;
   }
 }

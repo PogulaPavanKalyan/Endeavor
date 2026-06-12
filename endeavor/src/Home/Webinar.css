@@ -125,7 +125,7 @@
 
 .webinar-item-card {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: minmax(240px, 320px) 1fr;
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid #e2e8f0;
@@ -443,5 +443,41 @@
   }
   .search-box {
     width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .webinar-hero h1 {
+    font-size: 1.8rem;
+  }
+  .webinar-hero p {
+    font-size: 0.95rem;
+  }
+  .web-info-holder {
+    padding: 16px;
+  }
+  .web-info-holder h3 {
+    font-size: 1.25rem;
+  }
+  .web-meta {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 12px;
+  }
+  .web-action {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .btn-view-details, .btn-register-action {
+    text-align: center;
+  }
+  .filter-tabs {
+    flex-direction: column;
+    width: 100%;
+  }
+  .filter-btn {
+    width: 100%;
+    text-align: center;
   }
 }

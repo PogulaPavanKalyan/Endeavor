@@ -225,3 +225,20 @@
     font-size: 2rem;
   }
 }
+
+@media (max-width: 480px) {
+  .conf-hero h1 {
+    font-size: 1.8rem;
+  }
+  .conf-hero {
+    padding: 60px 0;
+    min-height: 200px;
+  }
+  .upcoming-title {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  .card-image-wrapper {
+    height: 180px;
+  }
+}

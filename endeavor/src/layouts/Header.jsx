@@ -72,10 +72,24 @@ const Header = () => {
               </Link>
             </div>
             
-            {/* Subscribe CTA */}
-            <div className="top-actions">
-              <button className="btn-subscribe" onClick={() => setIsSubscribeOpen(true)}>
-                <span>Subscribe</span>
+            {/* Action Group (Subscribe + Hamburger) */}
+            <div className="top-actions-group">
+              {/* Subscribe CTA */}
+              <div className="top-actions">
+                <button className="btn-subscribe" onClick={() => setIsSubscribeOpen(true)}>
+                  <span>Subscribe</span>
+                </button>
+              </div>
+              
+              {/* Hamburger Toggle */}
+              <button
+                className={`hamburger ${menuOpen ? "open" : ""}`}
+                onClick={toggleMenu}
+                aria-label="Toggle Navigation"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             </div>
           </div>
@@ -234,17 +248,6 @@ const Header = () => {
                 <span>Subscribe</span>
               </button>
             </div>
-
-            {/* Hamburger Toggle */}
-            <button
-              className={`hamburger ${menuOpen ? "open" : ""}`}
-              onClick={toggleMenu}
-              aria-label="Toggle Navigation"
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
 
           </div>
         </div>
