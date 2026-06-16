@@ -1,0 +1,142 @@
+/* Speakers & Committee Grid Styles */
+
+.speakers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.speaker-card {
+  text-align: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.speaker-img-container {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: #eaeaea;
+}
+
+.speaker-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+/* Hover overlay */
+.speaker-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(45, 20, 75, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.speaker-card:hover .speaker-overlay {
+  opacity: 1;
+}
+
+.plus-icon {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.plus-icon::before, .plus-icon::after {
+  content: '';
+  position: absolute;
+  background: #ffffff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.plus-icon::before {
+  width: 20px;
+  height: 2px;
+}
+
+.plus-icon::after {
+  width: 2px;
+  height: 20px;
+}
+
+.speaker-card:hover .plus-icon {
+  transform: scale(1.1);
+}
+
+.speaker-info {
+  padding: 0 10px;
+}
+
+.speaker-name {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.color-orange .speaker-name {
+  color: #F29000;
+}
+
+.color-pink .speaker-name {
+  color: #E91E63;
+}
+
+.speaker-designation-affiliation {
+  font-size: 16px;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsiveness */
+@media (max-width: 1200px) {
+  .speakers-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  .speaker-img-container {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .speakers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .speaker-img-container {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .speakers-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .speaker-img-container {
+    width: 240px;
+    height: 240px;
+  }
+}

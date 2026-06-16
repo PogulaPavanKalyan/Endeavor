@@ -1,0 +1,233 @@
+.abstract-hero {
+  position: relative;
+  background-image: url("https://images.unsplash.com/photo-1485827404703-89b55fcc595e");
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0 80px 0;
+  text-align: center;
+  color: #ffffff;
+}
+
+.abstract-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.abstract-hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  line-height: 1.2;
+  background: linear-gradient(to right, #ffffff, #f1f5f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.abstract-hero p {
+  font-size: 1.15rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* Form Container */
+.abstract-container {
+  margin-top: -30px;
+  position: relative;
+  z-index: 10;
+  max-width: 900px !important;
+  padding-bottom: 80px;
+}
+
+.abstract-form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  padding: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.abstract-form-card h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.abstract-form-card .description {
+  font-size: 15px;
+  color: #64748b;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.abstract-form {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.form-section {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 30px;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.form-section h3 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  font-size: 14.5px;
+  background: #f8fafc;
+  color: #1e293b;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+/* Dropzone style */
+.file-dropzone {
+  position: relative;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.file-dropzone:hover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+
+.file-dropzone input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dropzone-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.upload-icon {
+  font-size: 30px;
+}
+
+.file-selected {
+  color: #15803d;
+}
+
+.btn-abstract-submit {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #ffffff;
+  border: none;
+  padding: 15px 0;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary) 30%, transparent);
+  transition: all 0.3s ease;
+}
+
+.btn-abstract-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.btn-abstract-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success & Error Banners */
+.success-banner {
+  padding: 20px;
+  background: #ecfdf5;
+  border-left: 5px solid #10b981;
+  color: #065f46;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.success-banner strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.success-banner p {
+  font-size: 14px;
+}
+
+.error-banner {
+  padding: 15px;
+  background: #fef2f2;
+  border-left: 5px solid #ef4444;
+  color: #991b1b;
+  font-size: 14.5px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .abstract-form-card {
+    padding: 30px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .abstract-hero h1 {
+    font-size: 2.5rem;
+  }
+}

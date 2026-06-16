@@ -1,0 +1,68 @@
+/* Scientific Program Plain Styles */
+
+.program-plain-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.program-plain-session {
+  margin-bottom: 35px;
+}
+
+.program-plain-heading {
+  color: #800080; /* Purple */
+  font-size: 24px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 30px;
+}
+
+.program-plain-time {
+  color: #FF0000; /* Red */
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.program-plain-title {
+  color: #0000FF; /* Blue */
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.program-plain-speaker {
+  color: #000000;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.program-tracks-section {
+  margin-top: 60px;
+  border-top: 2px dashed #e1e8ed;
+  padding-top: 40px;
+  font-family: 'Inter', sans-serif;
+}
+
+.program-tracks-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.program-tracks-list {
+  padding-left: 20px;
+  line-height: 1.8;
+  color: #4a5568;
+  font-size: 14.5px;
+}
+
+.program-tracks-item {
+  margin-bottom: 12px;
+}

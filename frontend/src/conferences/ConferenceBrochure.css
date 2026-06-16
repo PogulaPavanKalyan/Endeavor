@@ -1,0 +1,40 @@
+/* Brochure Request Page Styles */
+
+.brochure-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.brochure-info-text {
+  color: #718096;
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.brochure-success-container {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.brochure-success-icon {
+  color: #28a745;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.brochure-success-text {
+  margin-bottom: 25px;
+  font-size: 15px;
+  color: #4a5568;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .brochure-form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
