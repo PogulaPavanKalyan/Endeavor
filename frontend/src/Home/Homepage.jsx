@@ -472,6 +472,7 @@ const Homepage = () => {
   const [webinarFilter, setWebinarFilter] = useState("all");
   const [galleryActiveTag, setGalleryActiveTag] = useState("all");
   const [timelineActiveDay, setTimelineActiveDay] = useState("day1");
+  const [committeeActiveTab, setCommitteeActiveTab] = useState("keynotes");
 
   const [contactSuccess, setContactSuccess] = useState(false);
   const [contactError, setContactError] = useState("");
@@ -634,7 +635,7 @@ const Homepage = () => {
           <div className="hero-light-glow pink-glow" />
 
           <div className="hero-inner container">
-            {/* Left Column: Text Content and Stats */}
+            {/* Left Column: Text Content */}
             <div className="hero-left animate-fade-in-left">
               <div className="hero-content-wrapper">
                 {/* Top Badge */}
@@ -668,37 +669,9 @@ const Homepage = () => {
                   </button>
                 </div>
               </div>
-
-              {/* Left Column Statistics Counter Row */}
-              <div className="hero-left-stats">
-                <div className="stat-card">
-                  <span className="stat-num">
-                    <AnimatedCounter end={stats?.conferencesCount ?? 150} suffix="+" />
-                  </span>
-                  <span className="stat-txt">Conferences</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-num">
-                    <AnimatedCounter end={stats?.researchersCount ?? 10000} suffix="+" />
-                  </span>
-                  <span className="stat-txt">Researchers</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-num">
-                    <AnimatedCounter end={stats?.countriesCount ?? 50} suffix="+" />
-                  </span>
-                  <span className="stat-txt">Countries</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-num">
-                    <AnimatedCounter end={stats?.publicationsCount ?? 500} suffix="+" />
-                  </span>
-                  <span className="stat-txt">Publications</span>
-                </div>
-              </div>
             </div>
             
-            {/* Right Column: 3-Image Collage and Floating Badges */}
+            {/* Right Column: 3-Image Collage */}
             <div className="hero-right animate-fade-in-right">
               <div className="hero-collage-wrap">
                 <div className="collage-container">
@@ -731,60 +704,124 @@ const Homepage = () => {
                     />
                     <div className="collage-card-overlay" />
                   </div>
-
-                  {/* Floating Glass Credibility Cards */}
-                  <div className="glass-cred-card cred-1">
-                    <span className="cred-icon">🔍</span>
-                    <div className="cred-body">
-                      <strong>Scopus Indexed</strong>
-                      <span>Elsevier Indexation</span>
-                    </div>
-                  </div>
-
-                  <div className="glass-cred-card cred-2">
-                    <span className="cred-icon">🎯</span>
-                    <div className="cred-body">
-                      <strong>Peer Reviewed</strong>
-                      <span>Double-Blind Review</span>
-                    </div>
-                  </div>
-
-                  <div className="glass-cred-card cred-3">
-                    <span className="cred-icon">🤝</span>
-                    <div className="cred-body">
-                      <strong>Global Network</strong>
-                      <span>50+ Partner Countries</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Real Sponsor Logos Strip below Hero content */}
-          <div className="hero-sponsor-strip container">
-            <span className="sponsor-strip-title">TRUSTED & ACCREDITED BY LEADING SCIENTIFIC PUBLISHERS & RESEARCH GROUPS</span>
-            <div className="sponsor-logos-grid">
-              {sponsorsList.length > 0 ? (
-                sponsorsList.slice(0, 6).map((sp) => (
-                  <div key={sp.id} className="sponsor-logo-wrap">
-                    <SponsorLogo name={sp.sponsorName} />
-                  </div>
-                ))
-              ) : (
-                <>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="IEEE" /></div>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="Springer Nature" /></div>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="Elsevier" /></div>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="Google Scholar" /></div>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="CrossRef" /></div>
-                  <div className="sponsor-logo-wrap"><SponsorLogo name="Scopus" /></div>
-                </>
-              )}
-            </div>
-          </div>
         </section>
       )}
+
+      {/* 5. UPCOMING CONFERENCES (REDESIGNED & DYNAMIC) */}
+      <section className="section upcoming-conferences-redesign">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">Conferences</span>
+            <h2 className="section-title">Upcoming Global Congresses 2026</h2>
+            <p className="section-desc">
+              Participate as a presenter or delegate at our upcoming summits.
+            </p>
+          </div>
+          <div className="upcoming-strip-wrap" ref={confRef}>
+            {conferences.map((item) => (
+              <div className="upcoming-conf-card card-premium" key={item.id}>
+                <div className="card-media">
+                  <span className="status-badge-active">Open Registration</span>
+                  <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
+                </div>
+                <div className="card-details">
+                  <h3>{item.title}</h3>
+                  <p className="conf-meta">📅 {item.date}</p>
+                  <p className="conf-meta">📍 {item.venue}</p>
+                  <a href={getSubdomainUrl(item.subdomain || item.dbId)} className="btn-view-conf">View Program &rarr;</a>
+                </div>
+              </div>
+            ))}
+            {conferences.length === 0 && (
+              <p className="empty-state">No upcoming conferences listed. Please verify later.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. PAST CONFERENCES (REDESIGNED & DYNAMIC) */}
+      <section className="section past-conferences-redesign">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">Success Footprint</span>
+            <h2 className="section-title">Past Congress Editions</h2>
+            <p className="section-desc">
+              Review our global academic reach and previously held symposium volumes.
+            </p>
+          </div>
+          <div className="past-conferences-grid">
+            {pastConferences.map((item) => (
+              <div className="past-conf-card card-premium" key={item.id}>
+                <div className="past-card-media">
+                  <span className="past-year-badge">2025</span>
+                  <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
+                </div>
+                <div className="past-card-body">
+                  <h3>{item.title}</h3>
+                  <div className="past-metadata">
+                    <span>📍 {item.venue}</span>
+                    <span>👥 {item.attendees}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 14. WEBINAR SECTION (REDESIGNED & DYNAMIC) */}
+      <section className="section webinars-redesign">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">E-Learning</span>
+            <h2 className="section-title">Virtual Lectures & Webinars</h2>
+            <p className="section-desc">
+              Join online expert-led research discussions and live scientific assemblies.
+            </p>
+          </div>
+          <div className="webinar-filter-bar">
+            {["all", "live", "upcoming"].map((cat) => (
+              <button
+                key={cat}
+                className={`filter-btn ${webinarFilter === cat ? "active" : ""}`}
+                onClick={() => setWebinarFilter(cat)}
+              >
+                {cat.toUpperCase()} WEBINARS
+              </button>
+            ))}
+          </div>
+          <div className="webinars-grid-redesign">
+            {filteredWebinars.map((web) => (
+              <div className={`webinar-card-redesign card-premium ${web.status}`} key={web.id}>
+                <div className="w-media">
+                  <OptimizedImage src={web.image} alt={web.title} fallbackType="conference" />
+                  <span className={`w-status-pill ${web.status}`}>{web.status.toUpperCase()}</span>
+                </div>
+                <div className="w-body">
+                  <h3>{web.title}</h3>
+                  <p className="w-speaker">🎙️ Speaker: {web.speaker}</p>
+                  <p className="w-desc">{web.desc}</p>
+                  <div className="w-footer-meta">
+                    <span>📅 {web.date}</span>
+                    <span>⏰ {web.time}</span>
+                  </div>
+                  <div className="w-actions">
+                    {web.status === "live" ? (
+                      <button className="btn-join-broadcast" onClick={() => navigate("/webinars")}>Join Broadcast</button>
+                    ) : (
+                      <button className="btn-reserve-seat" onClick={() => navigate("/webinars")}>Reserve Seat</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* 3. ABOUT ORGANIZATION — PREMIUM 2026 REDESIGN */}
       <section className="section about-org-redesign">
@@ -873,41 +910,6 @@ const Homepage = () => {
             </div>
           </div>
 
-          {/* ── Bottom Credibility Strip ── */}
-          <div className="about-cred-strip">
-            <div className="about-cred-item">
-              <span className="cred-strip-icon">🔬</span>
-              <div>
-                <strong>Scopus Indexed</strong>
-                <span>Elsevier verified indexation</span>
-              </div>
-            </div>
-            <div className="about-cred-divider" />
-            <div className="about-cred-item">
-              <span className="cred-strip-icon">✅</span>
-              <div>
-                <strong>Peer Reviewed</strong>
-                <span>Double-blind review process</span>
-              </div>
-            </div>
-            <div className="about-cred-divider" />
-            <div className="about-cred-item">
-              <span className="cred-strip-icon">🌐</span>
-              <div>
-                <strong>Global Network</strong>
-                <span>50+ partner countries</span>
-              </div>
-            </div>
-            <div className="about-cred-divider" />
-            <div className="about-cred-item">
-              <span className="cred-strip-icon">📚</span>
-              <div>
-                <strong>500+ Publications</strong>
-                <span>Indexed research proceedings</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
@@ -932,104 +934,6 @@ const Homepage = () => {
                 <div className="cat-content">
                   <h3>{cat.label}</h3>
                   <p>{cat.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. UPCOMING CONFERENCES (REDESIGNED & DYNAMIC) */}
-      <section className="section upcoming-conferences-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Conferences</span>
-            <h2 className="section-title">Upcoming Global Congresses 2026</h2>
-            <p className="section-desc">
-              Participate as a presenter or delegate at our upcoming summits.
-            </p>
-          </div>
-          <div className="upcoming-strip-wrap" ref={confRef}>
-            {conferences.map((item) => (
-              <div className="upcoming-conf-card card-premium" key={item.id}>
-                <div className="card-media">
-                  <span className="status-badge-active">Open Registration</span>
-                  <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
-                </div>
-                <div className="card-details">
-                  <h3>{item.title}</h3>
-                  <p className="conf-meta">📅 {item.date}</p>
-                  <p className="conf-meta">📍 {item.venue}</p>
-                  <a href={getSubdomainUrl(item.subdomain || item.dbId)} className="btn-view-conf">View Program &rarr;</a>
-                </div>
-              </div>
-            ))}
-            {conferences.length === 0 && (
-              <p className="empty-state">No upcoming conferences listed. Please verify later.</p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. PAST CONFERENCES (REDESIGNED & DYNAMIC) */}
-      <section className="section past-conferences-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Success Footprint</span>
-            <h2 className="section-title">Past Congress Editions</h2>
-            <p className="section-desc">
-              Review our global academic reach and previously held symposium volumes.
-            </p>
-          </div>
-          <div className="past-conferences-grid">
-            {pastConferences.map((item) => (
-              <div className="past-conf-card card-premium" key={item.id}>
-                <div className="past-card-media">
-                  <span className="past-year-badge">2025</span>
-                  <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
-                </div>
-                <div className="past-card-body">
-                  <h3>{item.title}</h3>
-                  <div className="past-metadata">
-                    <span>📍 {item.venue}</span>
-                    <span>👥 {item.attendees}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. SCIENTIFIC PROGRAMS (REDESIGNED & DYNAMIC) */}
-      <section className="section scientific-programs-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Programs</span>
-            <h2 className="section-title">Generic Program Timeline</h2>
-            <p className="section-desc">
-              Interact with the Day-by-Day schedule layout representing standard 3-day congress agendas.
-            </p>
-          </div>
-          <div className="timeline-day-selector">
-            <button className={`day-tab-btn ${timelineActiveDay === "day1" ? "active" : ""}`} onClick={() => setTimelineActiveDay("day1")}>DAY 01 (Inaugural & Tracks)</button>
-            <button className={`day-tab-btn ${timelineActiveDay === "day2" ? "active" : ""}`} onClick={() => setTimelineActiveDay("day2")}>DAY 02 (Keynotes & Panel)</button>
-            <button className={`day-tab-btn ${timelineActiveDay === "day3" ? "active" : ""}`} onClick={() => setTimelineActiveDay("day3")}>DAY 03 (Symposia & Awards)</button>
-          </div>
-          <div className="timeline-wrapper-redesign">
-            {(timelineData[timelineActiveDay] || []).map((session, index, arr) => (
-              <div className="timeline-node" key={session.id}>
-                <div className="node-time">
-                  <span>⏰ {session.timeRange}</span>
-                </div>
-                <div className="node-marker">
-                  <span className="node-dot"></span>
-                  {index < arr.length - 1 && <span className="node-line"></span>}
-                </div>
-                <div className="node-card card-premium">
-                  <h3>{session.name}</h3>
-                  <p className="node-presenter">👤 Presenter: {session.speakerName} ({session.affiliation})</p>
-                  <p className="node-desc">{session.description}</p>
                 </div>
               </div>
             ))}
@@ -1073,17 +977,33 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* 9. SPEAKERS (REDESIGNED) */}
-      {speakersList.length > 0 && (
-        <section className="section speakers-redesign">
-          <div className="container">
-            <div className="section-header">
-              <span className="section-tag">Keynotes</span>
-              <h2 className="section-title">Featured Plenary Presenters</h2>
-              <p className="section-desc">
-                Learn from world-renowned scientists and industry-leading specialists.
-              </p>
-            </div>
+      {/* 9 & 10. KEYNOTES & ADVISORY BOARD (MERGED & TOGGLEABLE) */}
+      <section className="section speakers-committee-redesign">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">Committee & Keynotes</span>
+            <h2 className="section-title">Keynote Speakers & Steering Committee</h2>
+            <p className="section-desc">
+              Distinguished scholars, world-renowned keynote presenters, and steering members directing the congress.
+            </p>
+          </div>
+
+          <div className="committee-filter-bar">
+            <button
+              className={`filter-btn ${committeeActiveTab === "keynotes" ? "active" : ""}`}
+              onClick={() => setCommitteeActiveTab("keynotes")}
+            >
+              KEYNOTE SPEAKERS
+            </button>
+            <button
+              className={`filter-btn ${committeeActiveTab === "committee" ? "active" : ""}`}
+              onClick={() => setCommitteeActiveTab("committee")}
+            >
+              STEERING COMMITTEE
+            </button>
+          </div>
+
+          {committeeActiveTab === "keynotes" ? (
             <div className="speakers-grid-redesign">
               {speakersList.slice(0, 4).map((s, i) => {
                 const headshot = s.photo?.filePath && s.photo.filePath.startsWith("http")
@@ -1103,90 +1023,30 @@ const Homepage = () => {
                   </div>
                 );
               })}
+              {speakersList.length === 0 && (
+                <p className="empty-state">No keynote speakers listed at the moment.</p>
+              )}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* 10. COMMITTEE MEMBERS (REDESIGNED & DYNAMIC) */}
-      <section className="section committee-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Advisory Board</span>
-            <h2 className="section-title">Global Steering Committee Section</h2>
-            <p className="section-desc">
-              Distinguished scholars directing research scopes, peer assessments, and track sessions.
-            </p>
-          </div>
-          <div className="committee-grid-redesign">
-            {committeeMembers.map((member, i) => (
-              <div className="committee-card-redesign card-premium" key={i}>
-                <div className="committee-img">
-                  <OptimizedImage src={member.photo} alt={member.name} fallbackType="avatar" />
+          ) : (
+            <div className="speakers-grid-redesign">
+              {committeeMembers.map((member, i) => (
+                <div className="speaker-card-redesign card-premium" key={i}>
+                  <div className="speaker-avatar-wrap">
+                    <OptimizedImage src={member.photo} alt={member.name} fallbackType="avatar" />
+                  </div>
+                  <div className="speaker-meta-info">
+                    <h3>{member.name}</h3>
+                    <p className="speaker-role">{member.role}</p>
+                    <p className="speaker-aff">{member.institution}</p>
+                    {member.country && <span className="speaker-country-chip">🌍 {member.country}</span>}
+                  </div>
                 </div>
-                <div className="committee-body">
-                  <h3>{member.name}</h3>
-                  <p className="c-role">{member.role}</p>
-                  <p className="c-inst">{member.institution}</p>
-                  <span className="c-country">📍 {member.country}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 11. PUBLICATION OPPORTUNITIES (REDESIGNED & DYNAMIC) */}
-      <section className="section publication-opp-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Publishing Tracks</span>
-            <h2 className="section-title">Publication Indexation Opportunities</h2>
-            <p className="section-desc">
-              Ensure global academic reach by submitting abstracts to validated publishing tracks.
-            </p>
-          </div>
-          <div className="pub-pathways-grid">
-            {publicationPathways.map((path, i) => (
-              <div className={`pathway-card card-premium ${path.type === "featured" ? "path-featured" : ""}`} key={i}>
-                {path.type === "featured" && <span className="path-popular-badge">Special Issues</span>}
-                <div className="path-img-wrap">
-                  <OptimizedImage src={path.image} alt={path.title} fallbackType="research" />
-                </div>
-                <div className="path-body">
-                  <h3>{path.title}</h3>
-                  <p>{path.description}</p>
-                  <Link to="/submit-abstract" className="btn-pathway-link">Submit Proposal &rarr;</Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 12. JOURNALS (REDESIGNED & DYNAMIC) */}
-      <section className="section journals-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Affiliated Publications</span>
-            <h2 className="section-title">Indexed Academic Journals</h2>
-            <p className="section-desc">
-              Select special issues published in collaboration with top publishers.
-            </p>
-          </div>
-          <div className="journals-grid-redesign">
-            {journals.map((journal, i) => (
-              <div className="journal-card-redesign card-premium" key={i}>
-                <div className="j-badge">IMPACT FACTOR: {journal.impact}</div>
-                <h3>{journal.name}</h3>
-                <p className="j-publisher">{journal.publisher}</p>
-                <div className="j-metadata">
-                  <span>{journal.issn}</span>
-                  <span>Indexed: {journal.indexing}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+              {committeeMembers.length === 0 && (
+                <p className="empty-state">No committee members listed at the moment.</p>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -1195,9 +1055,9 @@ const Homepage = () => {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Partnerships</span>
-            <h2 className="section-title">Organizers & Corporate Sponsors</h2>
+            <h2 className="section-title">Organizers, Sponsors & Media Partners</h2>
             <p className="section-desc">
-              Supported by leading academic groups and research laboratories.
+              Supported by leading academic groups, corporate sponsors, and international media partners.
             </p>
           </div>
           <div className="sponsors-ticker-wrapper">
@@ -1222,179 +1082,6 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
-      {/* 14. WEBINAR SECTION (REDESIGNED & DYNAMIC) */}
-      <section className="section webinars-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">E-Learning</span>
-            <h2 className="section-title">Virtual Lectures & Webinars</h2>
-            <p className="section-desc">
-              Join online expert-led research discussions and live scientific assemblies.
-            </p>
-          </div>
-          <div className="webinar-filter-bar">
-            {["all", "live", "upcoming"].map((cat) => (
-              <button
-                key={cat}
-                className={`filter-btn ${webinarFilter === cat ? "active" : ""}`}
-                onClick={() => setWebinarFilter(cat)}
-              >
-                {cat.toUpperCase()} WEBINARS
-              </button>
-            ))}
-          </div>
-          <div className="webinars-grid-redesign">
-            {filteredWebinars.map((web) => (
-              <div className={`webinar-card-redesign card-premium ${web.status}`} key={web.id}>
-                <div className="w-media">
-                  <OptimizedImage src={web.image} alt={web.title} fallbackType="conference" />
-                  <span className={`w-status-pill ${web.status}`}>{web.status.toUpperCase()}</span>
-                </div>
-                <div className="w-body">
-                  <h3>{web.title}</h3>
-                  <p className="w-speaker">🎙️ Speaker: {web.speaker}</p>
-                  <p className="w-desc">{web.desc}</p>
-                  <div className="w-footer-meta">
-                    <span>📅 {web.date}</span>
-                    <span>⏰ {web.time}</span>
-                  </div>
-                  <div className="w-actions">
-                    {web.status === "live" ? (
-                      <button className="btn-join-broadcast" onClick={() => navigate("/webinars")}>Join Broadcast</button>
-                    ) : (
-                      <button className="btn-reserve-seat" onClick={() => navigate("/webinars")}>Reserve Seat</button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 15. RESEARCH AREAS (REDESIGNED & DYNAMIC) */}
-      <section className="section research-areas-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Scope of Research</span>
-            <h2 className="section-title">Critical Research Domains</h2>
-            <p className="section-desc">
-              Focusing on computational and experimental frontiers that impact international scientific policies.
-            </p>
-          </div>
-          <div className="research-areas-grid-expanded">
-            {researchAreas.map((area, i) => (
-              <div className="expanded-area-card card-premium" key={i}>
-                <div className="area-head-img-wrap">
-                  <OptimizedImage src={area.image} alt={area.label} className="area-cover-img" fallbackType="research" />
-                  <div className="area-head-overlay" />
-                  <div className="area-header-absolute">
-                    <span className="area-icon-lg">{area.icon}</span>
-                    <h3>{area.label}</h3>
-                  </div>
-                </div>
-                <div className="area-body-content">
-                  <p className="area-desc-text">{area.desc}</p>
-                  <div className="area-subtracks">
-                    <h4>Key Tracks:</h4>
-                    <ul>
-                      {(area.tracks || []).map((track, trackIdx) => (
-                        <li key={trackIdx}>🧬 {track}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 16. WHY CHOOSE US (REDESIGNED & DYNAMIC) */}
-      <section className="section why-choose-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Value Proposition</span>
-            <h2 className="section-title">Why Scholars Choose Endeavor</h2>
-            <p className="section-desc">
-              Connecting researchers globally with validated publishing channels.
-            </p>
-          </div>
-          <div className="why-choose-grid">
-            {(aboutData?.pillars || FALLBACK_ABOUT.pillars).map((item, i) => (
-              <div className="why-choose-card card-premium" key={i}>
-                <span className="why-icon-badge">{item.icon}</span>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 17. STATISTICS STRIP (REDESIGNED) */}
-      {stats && (
-        <section className="stats-strip-redesign">
-          <div className="stats-strip-inner container">
-            <div className="stat-item-redesign">
-              <span className="stat-number-lg">
-                <AnimatedCounter end={stats.conferencesCount} suffix="+" />
-              </span>
-              <span className="stat-label-muted">Conferences Hosted</span>
-            </div>
-            <div className="stat-item-redesign">
-              <span className="stat-number-lg">
-                <AnimatedCounter end={stats.countriesCount} suffix="+" />
-              </span>
-              <span className="stat-label-muted">Countries Represented</span>
-            </div>
-            <div className="stat-item-redesign">
-              <span className="stat-number-lg">
-                <AnimatedCounter end={stats.researchersCount} suffix="+" />
-              </span>
-              <span className="stat-label-muted">Scholars Connected</span>
-            </div>
-            <div className="stat-item-redesign">
-              <span className="stat-number-lg">
-                <AnimatedCounter end={stats.publicationsCount} suffix="+" />
-              </span>
-              <span className="stat-label-muted">Publications Indexed</span>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 18. TESTIMONIALS (REDESIGNED) */}
-      {/* <section className="section testimonials-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Reviews</span>
-            <h2 className="section-title">Scholars Feedback</h2>
-            <p className="section-desc">
-              Read how international presenters value their conference experience.
-            </p>
-          </div>
-          <div className="testimonials-grid">
-            <div className="testimonial-card card-premium">
-              <div className="t-rating">⭐⭐⭐⭐⭐</div>
-              <p className="t-text">"Outstanding double-blind peer review. The comments received on my abstract submission from the advisory committee significantly polished my final presentation."</p>
-              <div className="t-user">
-                <strong>Dr. Sarah Lee</strong>
-                <span>MIT Graduate Researcher</span>
-              </div>
-            </div>
-            <div className="testimonial-card card-premium">
-              <div className="t-rating">⭐⭐⭐⭐⭐</div>
-              <p className="t-text">"An invaluable platform for networking. I initiated joint research collaborations with experts from 3 different countries during the Spain Food Congress."</p>
-              <div className="t-user">
-                <strong>Prof. Alan Vance</strong>
-                <span>CERN Laboratory Lead</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       {/* 19. GALLERY (REDESIGNED & DYNAMIC) */}
       <section className="section gallery-redesign">
@@ -1436,126 +1123,9 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* 20. NEWS & UPDATES (REDESIGNED & DYNAMIC) */}
-      <section className="section news-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Latest Announcements</span>
-            <h2 className="section-title">News & Congress Deadlines</h2>
-            <p className="section-desc">
-              Stay informed about submission cutoff extensions and peer review updates.
-            </p>
-          </div>
-          <div className="news-grid-redesign">
-            {newsArticles.map((article, i) => (
-              <div className="news-card-redesign card-premium" key={i}>
-                <div className="news-media-wrap">
-                  <OptimizedImage src={article.image} alt={article.title} fallbackType="research" />
-                  <span className="news-cat-chip">{article.category}</span>
-                </div>
-                <div className="news-body-content">
-                  <span className="news-date">{article.date}</span>
-                  <h3>{article.title}</h3>
-                  <p>{article.summary}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* 22. CONTACT INFORMATION (REDESIGNED) */}
-      {/* <section className="section contact-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Support Desk</span>
-            <h2 className="section-title">Contact Organizing Office</h2>
-            <p className="section-desc">
-              Direct inquiries to the steering committee or request administrative support.
-            </p>
-          </div>
-          <div className="contact-box-grid">
-            <div className="contact-details-panel">
-              <div className="c-info-card card-premium">
-                <h4>🏢 Address</h4>
-                <p><strong>Endeavor Research Private Limited</strong></p>
-                <p>1043 Garland Ave, Unit C #1012</p>
-                <p>San Jose, CA 95126-3159</p>
-              </div>
-              <div className="c-info-card card-premium">
-                <h4>✉️ Global Support Email</h4>
-                <p>info@endeavorresearchgroup.com</p>
-                <p>geology@endeavorresearchgroup.net</p>
-              </div>
-              <div className="c-info-card card-premium">
-                <h4>📞 Hotlines</h4>
-                <p>+1 (209) 299-5348</p>
-              </div>
-            </div>
-            <div className="contact-form-panel card-premium">
-              <h3>Send a Message</h3>
-              {contactSuccess && <div className="contact-success-state">✓ Message transmitted successfully. We will follow up shortly.</div>}
-              {contactError && <div className="contact-error-state">{contactError}</div>}
-              <form onSubmit={handleContactSubmit}>
-                <div className="form-row">
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={contactForm.fullName}
-                    onChange={(e) => setContactForm({ ...contactForm, fullName: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={contactForm.email}
-                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="form-row">
-                  <input
-                    type="text"
-                    placeholder="Phone"
-                    value={contactForm.phone}
-                    onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Subject"
-                    value={contactForm.subject}
-                    onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                    required
-                  />
-                </div>
-                <textarea
-                  placeholder="Your message details..."
-                  rows="5"
-                  value={contactForm.message}
-                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                  required
-                ></textarea>
-                <button type="submit" className="btn-send-msg" disabled={contactLoading}>
-                  {contactLoading ? "Transmitting..." : "Send Message"}
-                </button>
-              </form>
-            </div>
-          </div>
-          <div className="contact-map-frame card-premium">
-            <iframe
-              title="Global Office Map"
-              src="https://maps.google.com/maps?q=1043%20Garland%20Ave,%20San%20Jose,%20CA%2095126&t=&z=14&ie=UTF8&iwloc=&output=embed"
-            />
-          </div>
-        </div>
-      </section> */}
-
       {/* 23. FOOTER (UNTOUCHED) */}
       <Footer />
-    </div>
-  );
+    </div>  );
 };
 
 export default Homepage;

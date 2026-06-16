@@ -6,6 +6,7 @@
   padding: 100px 0 80px 0;
   text-align: center;
   color: #ffffff;
+  margin-top: 122px;
 }
 
 .webinar-hero-content {
@@ -424,6 +425,9 @@
 
 /* Responsive */
 @media (max-width: 992px) {
+  .webinar-hero {
+    margin-top: 64px;
+  }
   .webinar-item-card {
     grid-template-columns: 1fr;
   }
@@ -447,6 +451,9 @@
 }
 
 @media (max-width: 480px) {
+  .webinar-hero {
+    margin-top: 60px;
+  }
   .webinar-hero h1 {
     font-size: 1.8rem;
   }

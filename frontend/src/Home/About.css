@@ -145,6 +145,7 @@
     url('https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1800&q=90')
     center 30% / cover no-repeat;
   overflow: hidden;
+  margin-top: 122px;
 }
 
 /* Layer 1 — deep dark base, stronger on left (readability), fades right */
@@ -480,6 +481,7 @@
     height: auto;
     min-height: auto;
     padding: 140px 0 80px;
+    margin-top: 64px;
   }
 
   .abt-hero-inner {
@@ -507,6 +509,7 @@
   .abt-hero {
     min-height: auto;
     padding: 120px 0 60px;
+    margin-top: 60px;
   }
 
   .abt-hero-stats-grid {

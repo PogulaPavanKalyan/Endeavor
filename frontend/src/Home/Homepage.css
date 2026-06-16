@@ -142,19 +142,20 @@
    ========================================================================== */
 .hero-section.hero-premium-light {
   position: relative;
-  height: 90vh;
-  min-height: 750px;
+  height: auto;
+  min-height: auto;
   max-height: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   background-color: #FFFFFF;
   overflow: hidden;
   border-bottom: 1px solid #E2E8F0;
   font-family: 'Poppins', sans-serif;
-  padding: 40px 0 24px 0;
+  padding: 100px 0;
   box-sizing: border-box;
+  margin-top: 122px;
 }
 
 /* Subtle Ambient Background Glow Bubbles */
@@ -563,6 +564,7 @@
     min-height: auto;
     padding-top: clamp(80px, 10vw, 100px);
     padding-bottom: 40px;
+    margin-top: 64px;
   }
 
   .hero-inner {
@@ -2050,7 +2052,8 @@
   background: var(--bg);
 }
 
-.webinar-filter-bar {
+.webinar-filter-bar,
+.committee-filter-bar {
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -3028,6 +3031,7 @@
   .hero-section.hero-premium-light {
     padding-top: clamp(70px, 18vw, 85px);
     padding-bottom: 20px;
+    margin-top: 60px;
   }
   .hero-title {
     font-size: 28px;

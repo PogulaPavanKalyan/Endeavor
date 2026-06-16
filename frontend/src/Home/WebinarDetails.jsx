@@ -264,9 +264,9 @@ const WebinarDetails = () => {
               {/* Action Buttons */}
               <div className="action-buttons-stack">
                 {isUpcoming ? (
-                  webinar.registrationRequired ? (
+                  (webinar.registrationRequired || webinar.registrationUrl) ? (
                     <a 
-                      href={webinar.registrationUrl} 
+                      href={webinar.registrationUrl || "#"} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="btn-register-primary"

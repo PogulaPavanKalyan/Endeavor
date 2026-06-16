@@ -10,6 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 122px;
 }
 
 .contact-hero .hero-overlay {
@@ -293,6 +294,7 @@
   .contact-hero {
     padding: 110px 0 65px 0;
     min-height: 240px;
+    margin-top: 64px;
   }
   .contact-wrapper {
     padding: 40px 0 60px 0; /* Reduce excessive visual whitespace */
@@ -339,6 +341,7 @@
   .contact-hero {
     padding: 95px 0 45px 0; /* Clear mobile sticky nav bar */
     min-height: 210px;
+    margin-top: 60px;
   }
   .contact-left h2, .contact-right h2 {
     font-size: 22px;

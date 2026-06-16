@@ -63,10 +63,28 @@ const Webinar = () => {
       return { text: "Completed", class: "past" };
     }
     
-    // Calculate if it's upcoming or past based on current date
-    const todayStr = new Date().toISOString().split('T')[0];
-    if (web.webinarDate < todayStr) {
-      return { text: "Completed", class: "past" };
+    // Parse webinar date robustly
+    if (web.webinarDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      let webinarDate;
+      if (web.webinarDate.includes("-")) {
+        const parts = web.webinarDate.split("-");
+        if (parts[0].length === 4) {
+          // YYYY-MM-DD
+          webinarDate = new Date(web.webinarDate);
+        } else {
+          // DD-MM-YYYY
+          webinarDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        }
+      } else {
+        webinarDate = new Date(web.webinarDate);
+      }
+      
+      if (!isNaN(webinarDate.getTime()) && webinarDate < today) {
+        return { text: "Completed", class: "past" };
+      }
     }
     
     if (web.status && web.status.toLowerCase() === "published") {
@@ -191,9 +209,9 @@ const Webinar = () => {
                             View Details &rarr;
                           </Link>
                           {statusInfo.class === "upcoming" ? (
-                            web.registrationRequired ? (
+                            (web.registrationRequired || web.registrationUrl) ? (
                               <a 
-                                href={web.registrationUrl} 
+                                href={web.registrationUrl || "#"} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
                                 className="btn-register-action"

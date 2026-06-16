@@ -147,7 +147,11 @@ public class Security {
                 "http://51.21.159.47:8000",
                 "http://51.21.159.47:8081",
                 "http://localhost:*",
-                "http://127.0.0.1:*"
+                "http://127.0.0.1:*",
+                "http://*.mydomain.com:*",
+                "https://*.mydomain.com:*",
+                "http://mydomain.com:*",
+                "https://mydomain.com:*"
             )
         );
 

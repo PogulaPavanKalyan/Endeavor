@@ -6,6 +6,7 @@
   padding: 100px 0 80px 0;
   text-align: center;
   color: #ffffff;
+  margin-top: 122px;
 }
 
 .register-hero-content {
@@ -575,6 +576,9 @@
 
 /* Responsiveness */
 @media (max-width: 992px) {
+  .register-hero {
+    margin-top: 64px;
+  }
   .register-layout {
     grid-template-columns: 1fr;
   }
@@ -615,6 +619,9 @@
 }
 
 @media (max-width: 480px) {
+  .register-hero {
+    margin-top: 60px;
+  }
   .register-hero h1 {
     font-size: 1.8rem;
   }

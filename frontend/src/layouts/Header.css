@@ -16,9 +16,7 @@
   --nav-border: rgba(233, 30, 99, 0.15);
 }
 
-body {
-  padding-top: 122px;
-}
+
 
 .header {
   position: fixed;
@@ -638,9 +636,7 @@ body {
     padding: 0;
   }
 
-  body {
-    padding-top: 64px;
-  }
+
 
   .hamburger {
     display: flex;
@@ -803,9 +799,7 @@ body {
     height: 34px;
   }
 
-  body {
-    padding-top: 60px;
-  }
+
 }
 
 @media (max-width: 480px) {
