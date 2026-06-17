@@ -517,6 +517,124 @@ const Homepage = () => {
     }).catch(err => console.error("Failed to fetch homepage dynamic content:", err));
   }, []);
 
+  useEffect(() => {
+    const container = galleryRef.current;
+    if (!container) return;
+
+    let autoScrollInterval = null;
+    let isInteracting = false;
+    let userTimeout = null;
+
+    const updateCardTransforms = () => {
+      if (window.innerWidth > 768) {
+        const cards = container.querySelectorAll(".gallery-img-holder-expanded");
+        cards.forEach((card) => {
+          card.style.transform = "";
+          card.style.opacity = "";
+          card.style.transition = "";
+        });
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      const cards = container.querySelectorAll(".gallery-img-holder-expanded");
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = cardCenter - containerCenter;
+        
+        // Normalize distance based on half-width of container
+        const normalizedDistance = distance / (containerRect.width / 2 || 1);
+        const clampedDistance = Math.max(-1.5, Math.min(1.5, normalizedDistance));
+
+        // Scale: shrink slightly as card moves away from center
+        const scale = 1 - Math.abs(clampedDistance) * 0.12;
+
+        // Rotation: 3D coverflow style rotation
+        const rotateY = clampedDistance * -15;
+
+        // Translation: translateY pushes down at edges to create a downward scroll curve
+        const translateY = Math.abs(clampedDistance) * Math.abs(clampedDistance) * 15;
+
+        // Opacity: fade out slightly towards the edges
+        const opacity = 1 - Math.abs(clampedDistance) * 0.25;
+
+        card.style.transform = `perspective(800px) translateY(${translateY}px) scale(${scale}) rotateY(${rotateY}deg)`;
+        card.style.opacity = opacity;
+        card.style.transition = "transform 0.1s ease-out, opacity 0.1s ease-out";
+      });
+    };
+
+    const startAutoScroll = () => {
+      if (window.innerWidth > 768) return;
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        if (isInteracting) return;
+
+        const cards = container.querySelectorAll(".gallery-img-holder-expanded");
+        if (cards.length <= 1) return;
+
+        const cardRect = cards[0].getBoundingClientRect();
+        const cardWidth = cardRect.width + 16; // card width + gap
+        const currentScroll = container.scrollLeft;
+        const totalWidth = container.scrollWidth;
+        const maxScroll = totalWidth - container.clientWidth;
+
+        let nextScroll = currentScroll + cardWidth;
+        // If we reach the end, wrap back to the beginning
+        if (nextScroll >= maxScroll + 10) {
+          nextScroll = 0;
+        }
+
+        container.scrollTo({
+          left: nextScroll,
+          behavior: "smooth"
+        });
+      }, 3000);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    };
+
+    const handleInteraction = () => {
+      isInteracting = true;
+      stopAutoScroll();
+      clearTimeout(userTimeout);
+      userTimeout = setTimeout(() => {
+        isInteracting = false;
+        startAutoScroll();
+      }, 5000); // Resume auto scroll after 5 seconds of inactivity
+    };
+
+    // Trigger initial calculations
+    const timer = setTimeout(updateCardTransforms, 100);
+
+    container.addEventListener("scroll", updateCardTransforms);
+    container.addEventListener("touchstart", handleInteraction, { passive: true });
+    container.addEventListener("mousedown", handleInteraction);
+    window.addEventListener("resize", updateCardTransforms);
+
+    startAutoScroll();
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(userTimeout);
+      stopAutoScroll();
+      if (container) {
+        container.removeEventListener("scroll", updateCardTransforms);
+        container.removeEventListener("touchstart", handleInteraction);
+        container.removeEventListener("mousedown", handleInteraction);
+      }
+      window.removeEventListener("resize", updateCardTransforms);
+    };
+  }, [galleryPhotos]);
+
   /* ── Fetch hero, stats, badges in parallel ── */
   useEffect(() => {
     const load = async () => {
@@ -1062,22 +1180,44 @@ const Homepage = () => {
           </div>
           <div className="sponsors-ticker-wrapper">
             <div className="sponsors-ticker-content">
-              {sponsorsList.map((sp) => (
-                <div key={sp.id} className="sponsor-ticker-item">
-                  <SponsorLogo name={sp.sponsorName} />
-                </div>
-              ))}
-              {sponsorsList.length === 0 && (
-                <>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="IEEE" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="Springer Nature" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="Elsevier" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="Google Scholar" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="CrossRef" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
-                  <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
-                </>
-              )}
+              {/* First set of logos */}
+              <div className="sponsors-ticker-group">
+                {sponsorsList.map((sp) => (
+                  <div key={sp.id} className="sponsor-ticker-item">
+                    <SponsorLogo name={sp.sponsorName} />
+                  </div>
+                ))}
+                {sponsorsList.length === 0 && (
+                  <>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="IEEE" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Springer Nature" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Elsevier" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Google Scholar" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="CrossRef" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
+                  </>
+                )}
+              </div>
+              {/* Second set of logos (Duplicated for seamless loop) */}
+              <div className="sponsors-ticker-group" aria-hidden="true">
+                {sponsorsList.map((sp) => (
+                  <div key={`dup-${sp.id}`} className="sponsor-ticker-item">
+                    <SponsorLogo name={sp.sponsorName} />
+                  </div>
+                ))}
+                {sponsorsList.length === 0 && (
+                  <>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="IEEE" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Springer Nature" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Elsevier" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Google Scholar" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="CrossRef" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
+                    <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -311,3 +311,27 @@ body.conf-portal-body-active {
     padding: 10px;
   }
 }
+
+@media (max-width: 600px) {
+  .conf-top-bar {
+    padding: 6px 0;
+    font-size: 11.5px;
+  }
+  
+  .conf-top-bar-container {
+    gap: 6px 16px;
+  }
+  
+  .conf-top-bar-item {
+    gap: 4px;
+  }
+  
+  .conf-form-card {
+    padding: 20px 16px;
+  }
+  
+  .conf-page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+}

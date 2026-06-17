@@ -4,11 +4,13 @@ D:\Endeavor\backend\src\main\java\com\endeavor\configuration\DataSeeder.java
 D:\Endeavor\backend\src\main\java\com\endeavor\configuration\Security.java
 D:\Endeavor\backend\src\main\java\com\endeavor\configuration\WebConfig.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AboutUsController.java
+D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminConferenceSectionController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminManagementController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminNavbarMenuController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\CommitteeController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\ConferenceController.java
+D:\Endeavor\backend\src\main\java\com\endeavor\controller\ConferenceSectionController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\DynamicContentController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\GalleryController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\LoginController.java
@@ -37,6 +39,8 @@ D:\Endeavor\backend\src\main\java\com\endeavor\entity\CommitteeMember.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferenceDetails.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferencePage.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferencePhoto.java
+D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferenceSection.java
+D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferenceSectionItem.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferenceSeries.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ContactMessage.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\GalleryImage.java
@@ -74,6 +78,8 @@ D:\Endeavor\backend\src\main\java\com\endeavor\repo\CommitteeMemberRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferenceDetailsRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferencePageRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferencePhotoRepo.java
+D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferenceSectionItemRepository.java
+D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferenceSectionRepository.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferenceSeriesRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ContactMessageRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\GalleryImageRepo.java
@@ -100,6 +106,7 @@ D:\Endeavor\backend\src\main\java\com\endeavor\service\CommitteeMemberService.ja
 D:\Endeavor\backend\src\main\java\com\endeavor\service\ConferenceDetailsService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\ConferencePageService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\ConferencePhotoService.java
+D:\Endeavor\backend\src\main\java\com\endeavor\service\ConferenceSectionService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\ContactMessageService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\GalleryService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\HeroSectionService.java

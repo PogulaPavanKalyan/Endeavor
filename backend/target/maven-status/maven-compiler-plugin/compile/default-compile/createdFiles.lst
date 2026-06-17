@@ -1,5 +1,6 @@
 com\endeavor\entity\AdminActivityLog.class
 com\endeavor\service\SponsorService.class
+com\endeavor\controller\ConferenceSectionController.class
 com\endeavor\controller\VenueController.class
 com\endeavor\service\AdminActivityLogService.class
 com\endeavor\service\ScientificSessionService.class
@@ -8,6 +9,7 @@ com\endeavor\service\AbstractSubmissionService.class
 com\endeavor\controller\AdminNavbarMenuController.class
 com\endeavor\entity\AbstractSubmission.class
 com\endeavor\repo\AboutMapLocationRepo.class
+com\endeavor\service\ConferenceSectionService.class
 com\endeavor\service\WebinarService.class
 com\endeavor\entity\HeroSection.class
 com\endeavor\entity\AboutMapConnection.class
@@ -73,6 +75,7 @@ com\endeavor\service\SpeakerPhotoService.class
 com\endeavor\entity\AboutServiceItem.class
 com\endeavor\repo\CommitteeMemberRepo.class
 com\endeavor\repo\ContactMessageRepo.class
+com\endeavor\entity\ConferenceSectionItem.class
 com\endeavor\entity\NavbarMenu.class
 com\endeavor\controller\AdminController.class
 com\endeavor\repo\AboutAdvisoryLeaderRepo.class
@@ -92,6 +95,7 @@ com\endeavor\entity\AboutMapLocation.class
 com\endeavor\entity\AboutOverviewFeature.class
 com\endeavor\service\SiteStatisticsService.class
 com\endeavor\repo\ConferencePhotoRepo.class
+com\endeavor\repo\ConferenceSectionItemRepository.class
 com\endeavor\repo\SponsorImageRepo.class
 com\endeavor\controller\GalleryController.class
 com\endeavor\service\jwtservice.class
@@ -103,6 +107,7 @@ com\endeavor\dto\LoginDTO.class
 com\endeavor\filter\JWTFilter.class
 com\endeavor\entity\PricingTier.class
 com\endeavor\entity\ScientificSession.class
+com\endeavor\repo\ConferenceSectionRepository.class
 com\endeavor\repo\WebinarRepository.class
 com\endeavor\service\ScientificTrackService.class
 com\endeavor\service\SpeakerService.class
@@ -110,6 +115,7 @@ com\endeavor\entity\SiteStatistics.class
 com\endeavor\repo\TrustBadgeRepository.class
 com\endeavor\controller\AdminManagementController.class
 com\endeavor\controller\ScientificTrackController.class
+com\endeavor\entity\ConferenceSection.class
 com\endeavor\controller\LoginController.class
 com\endeavor\service\MyUserDetailsService.class
 com\endeavor\repo\AboutUsSectionRepo.class
@@ -118,6 +124,7 @@ com\endeavor\repo\SpeakerSuggestionRepo.class
 com\endeavor\entity\Venue.class
 com\endeavor\entity\SpeakerPhoto.class
 com\endeavor\service\SpeakerSuggestionService.class
+com\endeavor\controller\AdminConferenceSectionController.class
 com\endeavor\repo\NavbarMenuRepository.class
 com\endeavor\service\ConferenceDetailsService.class
 com\endeavor\entity\Role.class

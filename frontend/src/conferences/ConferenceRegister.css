@@ -231,3 +231,142 @@
     max-width: 100%;
   }
 }
+
+/* ==========================================================================
+   CUSTOM RESPONSIVE AND PREMIUM UPDATES
+   ========================================================================== */
+
+/* Scoped layout classes for the registration page */
+.legacy-registration-scope .conf-status-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 30px;
+  color: #0369a1;
+  font-size: 14px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.legacy-registration-scope .conf-status-banner-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legacy-registration-scope .conf-status-banner-phase {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Scrollable tables on mobile to prevent squishing and horizontal overflow */
+.legacy-registration-scope .conf-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.legacy-registration-scope .conf-table-responsive table {
+  margin-bottom: 0 !important;
+  min-width: 650px; /* Forces stable column layout on narrow screens */
+}
+
+/* Total amount container styling */
+.legacy-registration-scope .conf-total-amount-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.legacy-registration-scope .conf-total-amount-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Modern inputs and labels styling */
+.legacy-registration-scope .form-control {
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  height: auto !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.legacy-registration-scope .form-control:focus {
+  border-color: #ef813d !important;
+  box-shadow: 0 0 0 3px rgba(239, 129, 61, 0.15) !important;
+  outline: none !important;
+}
+
+.legacy-registration-scope label {
+  font-weight: 600 !important;
+  color: #334155 !important;
+  margin-bottom: 6px !important;
+  font-size: 14px !important;
+}
+
+/* Hover effects for primary register button */
+.legacy-registration-scope .btn-primary {
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.2s ease !important;
+}
+
+.legacy-registration-scope .btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(239, 129, 61, 0.25) !important;
+}
+
+.legacy-registration-scope .btn-primary:active {
+  transform: translateY(0) !important;
+}
+
+/* Responsive updates for mobile */
+@media (max-width: 768px) {
+  .legacy-registration-scope .conf-status-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .legacy-registration-scope .conf-status-banner-date,
+  .legacy-registration-scope .conf-status-banner-phase {
+    width: 100%;
+  }
+
+  .legacy-registration-scope .conf-status-banner-phase {
+    border-top: 1px solid #e0f2fe;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .legacy-registration-scope .conf-total-amount-wrapper {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .legacy-registration-scope .conf-total-amount-container {
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .legacy-registration-scope .section-title {
+    font-size: 28px !important;
+    margin-bottom: 20px !important;
+  }
+}
+

@@ -18,6 +18,11 @@ public class AboutAdvisoryLeader {
     private String emoji; // Fallback avatar emoji like 👩‍🔬
     private Integer displayOrder = 0;
 
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    private String linkedin;
+
     public AboutAdvisoryLeader() {}
 
     public Long getId() { return id; }
@@ -43,4 +48,10 @@ public class AboutAdvisoryLeader {
 
     public Integer getDisplayOrder() { return displayOrder; }
     public void setDisplayOrder(Integer displayOrder) { this.displayOrder = displayOrder; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getLinkedin() { return linkedin; }
+    public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
 }

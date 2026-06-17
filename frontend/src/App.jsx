@@ -36,7 +36,7 @@ import TrustBadgeManager from "./admin/pages/TrustBadgeManager";
 import SettingsManager from "./admin/pages/SettingsManager";
 import LogsManager from "./admin/pages/LogsManager";
 import WebinarManager from "./admin/pages/WebinarManager";
-import AboutUsManager from "./admin/pages/AboutUsManager";
+import ConferenceSectionManager from "./admin/pages/ConferenceSectionManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -122,6 +122,7 @@ function App() {
             <Route path="tracks" element={<TrackManager />} />
             <Route path="sessions" element={<SessionManager />} />
             <Route path="committee" element={<CommitteeManager />} />
+            <Route path="sections" element={<ConferenceSectionManager />} />
             <Route path="venue" element={<VenueManager />} />
             <Route path="navbar" element={<NavbarManager />} />
             <Route path="gallery" element={<GalleryManager />} />
@@ -136,7 +137,6 @@ function App() {
             <Route path="settings" element={<SettingsManager />} />
             <Route path="logs" element={<LogsManager />} />
             <Route path="webinars" element={<WebinarManager />} />
-            <Route path="about" element={<AboutUsManager />} />
           </Route>
 
           {/* Main Website 404 route */}

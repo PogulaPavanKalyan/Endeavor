@@ -63,6 +63,9 @@ const AdminLayout = () => {
           <NavLink to="/admin/committee" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">👥</span> Committee
           </NavLink>
+          <NavLink to="/admin/sections" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">🗂️</span> Dynamic Tabs
+          </NavLink>
           <NavLink to="/admin/tracks" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📑</span> Scientific Tracks
           </NavLink>
@@ -83,9 +86,6 @@ const AdminLayout = () => {
           </NavLink>
           <NavLink to="/admin/webinars" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🌐</span> Webinars
-          </NavLink>
-          <NavLink to="/admin/about" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
-            <span className="nav-icon">📖</span> About Us Manager
           </NavLink>
 
           <div className="admin-nav-section-label">Submissions</div>

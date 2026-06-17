@@ -73,6 +73,7 @@ public class Security {
                     "/api/venue/**",
                     "/api/gallery/**",
                     "/api/conference-pages/**",
+                    "/api/conference-sections/**",
                     "/api/navbar-menus/**",
                     "/api/webinars/**",
                     "/api/about/**",
@@ -145,14 +146,14 @@ public class Security {
 
         config.setAllowedOriginPatterns(
             Arrays.asList(
-                "http://51.21.159.47:8000",
-                "http://51.21.159.47:8081",
+                "http://51.21.159.47:*",
+                "https://51.21.159.47:*",
                 "http://localhost:*",
                 "http://127.0.0.1:*",
-                "http://*.mydomain.com:*",
-                "https://*.mydomain.com:*",
-                "http://mydomain.com:*",
-                "https://mydomain.com:*"
+                "http://*.endeavorresearchgroup.net:*",
+                "https://*.endeavorresearchgroup.net:*",
+                "http://endeavorresearchgroup.net:*",
+                "https://endeavorresearchgroup.net:*"
             )
         );
 

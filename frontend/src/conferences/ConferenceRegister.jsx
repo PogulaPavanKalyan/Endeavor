@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
 import "./ConferenceRegisterLegacy.css"; // The scoped bootstrap + old_style.css
+import "./ConferenceRegister.css";
 
 const DEFAULT_PRICING_TIERS = [
   { type: "Student Registration", earlyPrice: 129, midPrice: 159, finalPrice: 189 },
@@ -281,24 +282,12 @@ const ConferenceRegister = () => {
             {successMsg && <div className="alert alert-success" style={{marginTop: '20px'}}>{successMsg}</div>}
 
             {/* Dynamic Date & Phase Status Banner */}
-            <div className="alert alert-info" style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: '#f0f9ff',
-              border: '1px solid #bae6fd',
-              borderRadius: '12px',
-              padding: '16px 24px',
-              marginBottom: '30px',
-              color: '#0369a1',
-              fontSize: '14px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
-            }}>
-              <div>
+            <div className="conf-status-banner alert alert-info">
+              <div className="conf-status-banner-date">
                 <span style={{ marginRight: '8px' }}>📅</span>
                 <strong>Today's Date:</strong> {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div className="conf-status-banner-phase">
                 <span style={{
                   width: '10px',
                   height: '10px',
@@ -455,186 +444,192 @@ const ConferenceRegister = () => {
             <div id="customer-data" style={{ marginTop: '30px' }}>
               <div className="row">
                 <div className="col-md-12">
-                  <table className="table table-bordered" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ background: '#1e293b', color: '#ffffff', textAlign: 'center' }}>
-                        <th style={{ padding: '15px', fontWeight: 'bold', width: '35%', fontSize: '15px' }}>Registration Type</th>
-                        <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Early Bird' ? 1 : 0.5 }}>Early Bird Registration</th>
-                        <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Mid-On' ? 1 : 0.5 }}>Mid-On Registration</th>
-                        <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Final' ? 1 : 0.5 }}>Final Registration</th>
-                      </tr>
-                      <tr style={{ background: '#f8fafc', textAlign: 'center', fontSize: '13px', fontWeight: '700' }}>
-                        <td style={{ padding: '10px' }}></td>
-                        <td style={{ padding: '10px', color: '#16a34a', opacity: activePhase === 'Early Bird' ? 1 : 0.5 }}>
-                          <div>{earlyDate}</div>
-                          <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
-                          {activePhase === 'Early Bird' ? (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#dcfce7', color: '#16a34a', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
-                          ) : (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#94a3b8', borderRadius: '4px', display: 'inline-block', marginTop: '6px', textDecoration: 'line-through' }}>EXPIRED</span>
-                          )}
-                        </td>
-                        <td style={{ padding: '10px', color: '#2563eb', opacity: activePhase === 'Mid-On' ? 1 : 0.5 }}>
-                          <div>{midDate}</div>
-                          <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
-                          {activePhase === 'Mid-On' ? (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#dbeafe', color: '#2563eb', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
-                          ) : activePhase === 'Early Bird' ? (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#64748b', borderRadius: '4px', display: 'inline-block', marginTop: '6px' }}>UPCOMING</span>
-                          ) : (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#94a3b8', borderRadius: '4px', display: 'inline-block', marginTop: '6px', textDecoration: 'line-through' }}>EXPIRED</span>
-                          )}
-                        </td>
-                        <td style={{ padding: '10px', color: '#dc2626', opacity: activePhase === 'Final' ? 1 : 0.5 }}>
-                          <div>{finalDate}</div>
-                          <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
-                          {activePhase === 'Final' ? (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#fee2e2', color: '#dc2626', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
-                          ) : (
-                            <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#64748b', borderRadius: '4px', display: 'inline-block', marginTop: '6px' }}>UPCOMING</span>
-                          )}
-                        </td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {baseTiers.map((tier, idx) => (
-                        <tr key={idx} style={{ textAlign: 'center' }}>
-                          <td style={{ padding: '15px', textAlign: 'left', fontWeight: '700', color: '#1e293b', background: '#f8fafc' }}>
-                            {tier.type}
+                  <div className="conf-table-responsive">
+                    <table className="table table-bordered" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ background: '#1e293b', color: '#ffffff', textAlign: 'center' }}>
+                          <th style={{ padding: '15px', fontWeight: 'bold', width: '35%', fontSize: '15px' }}>Registration Type</th>
+                          <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Early Bird' ? 1 : 0.5 }}>Early Bird Registration</th>
+                          <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Mid-On' ? 1 : 0.5 }}>Mid-On Registration</th>
+                          <th style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px', opacity: activePhase === 'Final' ? 1 : 0.5 }}>Final Registration</th>
+                        </tr>
+                        <tr style={{ background: '#f8fafc', textAlign: 'center', fontSize: '13px', fontWeight: '700' }}>
+                          <td style={{ padding: '10px' }}></td>
+                          <td style={{ padding: '10px', color: '#16a34a', opacity: activePhase === 'Early Bird' ? 1 : 0.5 }}>
+                            <div>{earlyDate}</div>
+                            <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
+                            {activePhase === 'Early Bird' ? (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#dcfce7', color: '#16a34a', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
+                            ) : (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#94a3b8', borderRadius: '4px', display: 'inline-block', marginTop: '6px', textDecoration: 'line-through' }}>EXPIRED</span>
+                            )}
                           </td>
-                          {/* Early bird price cell */}
-                          <td 
-                            onClick={() => handleRowSelect(tier.type)}
-                            style={{
-                              padding: '15px',
-                              cursor: 'pointer',
-                              fontWeight: isCellSelected(tier.type, 'Early Bird') ? 'bold' : 'normal',
-                              backgroundColor: isCellSelected(tier.type, 'Early Bird') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
-                              border: isCellSelected(tier.type, 'Early Bird') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
-                              color: isCellSelected(tier.type, 'Early Bird') ? '#ef4444' : '#334155',
-                              transition: 'all 0.15s ease',
-                              opacity: activePhase === 'Early Bird' ? 1 : 0.5
-                            }}
-                          >
-                            {currencySymbol} {getConvertedPrice(tier.earlyPrice)}
+                          <td style={{ padding: '10px', color: '#2563eb', opacity: activePhase === 'Mid-On' ? 1 : 0.5 }}>
+                            <div>{midDate}</div>
+                            <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
+                            {activePhase === 'Mid-On' ? (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#dbeafe', color: '#2563eb', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
+                            ) : activePhase === 'Early Bird' ? (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#64748b', borderRadius: '4px', display: 'inline-block', marginTop: '6px' }}>UPCOMING</span>
+                            ) : (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#94a3b8', borderRadius: '4px', display: 'inline-block', marginTop: '6px', textDecoration: 'line-through' }}>EXPIRED</span>
+                            )}
                           </td>
-                          {/* Mid-on price cell */}
-                          <td 
-                            onClick={() => handleRowSelect(tier.type)}
-                            style={{
-                              padding: '15px',
-                              cursor: 'pointer',
-                              fontWeight: isCellSelected(tier.type, 'Mid-On') ? 'bold' : 'normal',
-                              backgroundColor: isCellSelected(tier.type, 'Mid-On') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
-                              border: isCellSelected(tier.type, 'Mid-On') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
-                              color: isCellSelected(tier.type, 'Mid-On') ? '#ef4444' : '#334155',
-                              transition: 'all 0.15s ease',
-                              opacity: activePhase === 'Mid-On' ? 1 : 0.5
-                            }}
-                          >
-                            {currencySymbol} {getConvertedPrice(tier.midPrice)}
-                          </td>
-                          {/* Final price cell */}
-                          <td 
-                            onClick={() => handleRowSelect(tier.type)}
-                            style={{
-                              padding: '15px',
-                              cursor: 'pointer',
-                              fontWeight: isCellSelected(tier.type, 'Final') ? 'bold' : 'normal',
-                              backgroundColor: isCellSelected(tier.type, 'Final') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
-                              border: isCellSelected(tier.type, 'Final') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
-                              color: isCellSelected(tier.type, 'Final') ? '#ef4444' : '#334155',
-                              transition: 'all 0.15s ease',
-                              opacity: activePhase === 'Final' ? 1 : 0.5
-                            }}
-                          >
-                            {currencySymbol} {getConvertedPrice(tier.finalPrice)}
+                          <td style={{ padding: '10px', color: '#dc2626', opacity: activePhase === 'Final' ? 1 : 0.5 }}>
+                            <div>{finalDate}</div>
+                            <div style={{ fontSize: '11px', marginTop: '3px' }}>(ON OR BEFORE)</div>
+                            {activePhase === 'Final' ? (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#fee2e2', color: '#dc2626', borderRadius: '4px', display: 'inline-block', marginTop: '6px', fontWeight: 'bold' }}>ACTIVE</span>
+                            ) : (
+                              <span style={{ fontSize: '10px', padding: '3px 8px', background: '#f1f5f9', color: '#64748b', borderRadius: '4px', display: 'inline-block', marginTop: '6px' }}>UPCOMING</span>
+                            )}
                           </td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {baseTiers.map((tier, idx) => (
+                          <tr key={idx} style={{ textAlign: 'center' }}>
+                            <td style={{ padding: '15px', textAlign: 'left', fontWeight: '700', color: '#1e293b', background: '#f8fafc' }}>
+                              {tier.type}
+                            </td>
+                            {/* Early bird price cell */}
+                            <td 
+                              onClick={() => handleRowSelect(tier.type)}
+                              style={{
+                                padding: '15px',
+                                cursor: 'pointer',
+                                fontWeight: isCellSelected(tier.type, 'Early Bird') ? 'bold' : 'normal',
+                                backgroundColor: isCellSelected(tier.type, 'Early Bird') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
+                                border: isCellSelected(tier.type, 'Early Bird') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
+                                color: isCellSelected(tier.type, 'Early Bird') ? '#ef4444' : '#334155',
+                                transition: 'all 0.15s ease',
+                                opacity: activePhase === 'Early Bird' ? 1 : 0.5
+                              }}
+                            >
+                              {currencySymbol} {getConvertedPrice(tier.earlyPrice)}
+                            </td>
+                            {/* Mid-on price cell */}
+                            <td 
+                              onClick={() => handleRowSelect(tier.type)}
+                              style={{
+                                padding: '15px',
+                                cursor: 'pointer',
+                                fontWeight: isCellSelected(tier.type, 'Mid-On') ? 'bold' : 'normal',
+                                backgroundColor: isCellSelected(tier.type, 'Mid-On') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
+                                border: isCellSelected(tier.type, 'Mid-On') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
+                                color: isCellSelected(tier.type, 'Mid-On') ? '#ef4444' : '#334155',
+                                transition: 'all 0.15s ease',
+                                opacity: activePhase === 'Mid-On' ? 1 : 0.5
+                              }}
+                            >
+                              {currencySymbol} {getConvertedPrice(tier.midPrice)}
+                            </td>
+                            {/* Final price cell */}
+                            <td 
+                              onClick={() => handleRowSelect(tier.type)}
+                              style={{
+                                padding: '15px',
+                                cursor: 'pointer',
+                                fontWeight: isCellSelected(tier.type, 'Final') ? 'bold' : 'normal',
+                                backgroundColor: isCellSelected(tier.type, 'Final') ? 'rgba(239, 68, 68, 0.05)' : 'transparent',
+                                border: isCellSelected(tier.type, 'Final') ? '2.5px solid #ef4444' : '1px solid #dee2e6',
+                                color: isCellSelected(tier.type, 'Final') ? '#ef4444' : '#334155',
+                                transition: 'all 0.15s ease',
+                                opacity: activePhase === 'Final' ? 1 : 0.5
+                              }}
+                            >
+                              {currencySymbol} {getConvertedPrice(tier.finalPrice)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
               {/* Add On's Section */}
               <div className="row" style={{ marginTop: '25px' }}>
                 <div className="col-md-12">
-                  <table className="table table-bordered" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ background: '#1e293b', color: '#ffffff' }}>
-                        <th colSpan="4" style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px' }}>Add On's</th>
-                      </tr>
-                      <tr style={{ background: '#f8fafc', fontSize: '13px', fontWeight: '700', color: '#475569' }}>
-                        <td style={{ padding: '12px', width: '35%' }}>Accomdation</td>
-                        <td style={{ padding: '12px', textAlign: 'center' }}>Single Occupancy</td>
-                        <td style={{ padding: '12px', textAlign: 'center' }}>Double Occupancy</td>
-                        <td style={{ padding: '12px', textAlign: 'center' }}>Accompany Person</td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style={{ textAlign: 'center' }}>
-                        <td style={{ padding: '15px', textAlign: 'left', color: '#64748b', fontStyle: 'italic' }}>
-                          Select optional accommodation
-                        </td>
-                        <td style={{ padding: '15px' }}>
-                          <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
-                            <input 
-                              type="checkbox" 
-                              checked={selectedAddOns.singleOccupancy}
-                              onChange={(e) => setSelectedAddOns({ ...selectedAddOns, singleOccupancy: e.target.checked })}
-                            />
-                            <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
-                              {currencySymbol} {getConvertedPrice(addOnPrices.singleOccupancy)}
-                            </span>
-                          </label>
-                        </td>
-                        <td style={{ padding: '15px' }}>
-                          <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
-                            <input 
-                              type="checkbox" 
-                              checked={selectedAddOns.doubleOccupancy}
-                              onChange={(e) => setSelectedAddOns({ ...selectedAddOns, doubleOccupancy: e.target.checked })}
-                            />
-                            <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
-                              {currencySymbol} {getConvertedPrice(addOnPrices.doubleOccupancy)}
-                            </span>
-                          </label>
-                        </td>
-                        <td style={{ padding: '15px' }}>
-                          <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
-                            <input 
-                              type="checkbox" 
-                              checked={selectedAddOns.accompanyPerson}
-                              onChange={(e) => setSelectedAddOns({ ...selectedAddOns, accompanyPerson: e.target.checked })}
-                            />
-                            <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
-                              {currencySymbol} {getConvertedPrice(addOnPrices.accompanyPerson)}
-                            </span>
-                          </label>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div className="conf-table-responsive">
+                    <table className="table table-bordered" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ background: '#1e293b', color: '#ffffff' }}>
+                          <th colSpan="4" style={{ padding: '15px', fontWeight: 'bold', fontSize: '15px' }}>Add On's</th>
+                        </tr>
+                        <tr style={{ background: '#f8fafc', fontSize: '13px', fontWeight: '700', color: '#475569' }}>
+                          <td style={{ padding: '12px', width: '35%' }}>Accomdation</td>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>Single Occupancy</td>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>Double Occupancy</td>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>Accompany Person</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style={{ textAlign: 'center' }}>
+                          <td style={{ padding: '15px', textAlign: 'left', color: '#64748b', fontStyle: 'italic' }}>
+                            Select optional accommodation
+                          </td>
+                          <td style={{ padding: '15px' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
+                              <input 
+                                type="checkbox" 
+                                checked={selectedAddOns.singleOccupancy}
+                                onChange={(e) => setSelectedAddOns({ ...selectedAddOns, singleOccupancy: e.target.checked })}
+                              />
+                              <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
+                                {currencySymbol} {getConvertedPrice(addOnPrices.singleOccupancy)}
+                              </span>
+                            </label>
+                          </td>
+                          <td style={{ padding: '15px' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
+                              <input 
+                                type="checkbox" 
+                                checked={selectedAddOns.doubleOccupancy}
+                                onChange={(e) => setSelectedAddOns({ ...selectedAddOns, doubleOccupancy: e.target.checked })}
+                              />
+                              <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
+                                {currencySymbol} {getConvertedPrice(addOnPrices.doubleOccupancy)}
+                              </span>
+                            </label>
+                          </td>
+                          <td style={{ padding: '15px' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', margin: '0' }}>
+                              <input 
+                                type="checkbox" 
+                                checked={selectedAddOns.accompanyPerson}
+                                onChange={(e) => setSelectedAddOns({ ...selectedAddOns, accompanyPerson: e.target.checked })}
+                              />
+                              <span style={{ fontSize: '14px', color: '#475569', fontWeight: '600' }}>
+                                {currencySymbol} {getConvertedPrice(addOnPrices.accompanyPerson)}
+                              </span>
+                            </label>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
               {/* Total Amount block */}
               <div className="row" style={{ marginTop: '20px', justifyContent: 'flex-end' }}>
-                <div className="col-md-5" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '15px' }}>
-                  <strong style={{ fontSize: '18px', color: '#334155' }}>Total Amount</strong>
-                  <div style={{
-                    fontSize: '24px',
-                    fontWeight: '800',
-                    color: '#ef4444',
-                    background: 'rgba(239, 68, 68, 0.04)',
-                    padding: '8px 25px',
-                    borderRadius: '6px',
-                    border: '1.5px solid #ef4444',
-                    minWidth: '120px',
-                    textAlign: 'center'
-                  }}>
-                    {currencySymbol} {getTotalAmount()}
+                <div className="col-md-5 conf-total-amount-wrapper">
+                  <div className="conf-total-amount-container">
+                    <strong style={{ fontSize: '18px', color: '#334155' }}>Total Amount</strong>
+                    <div style={{
+                      fontSize: '24px',
+                      fontWeight: '800',
+                      color: '#ef4444',
+                      background: 'rgba(239, 68, 68, 0.04)',
+                      padding: '8px 25px',
+                      borderRadius: '6px',
+                      border: '1.5px solid #ef4444',
+                      minWidth: '120px',
+                      textAlign: 'center'
+                    }}>
+                      {currencySymbol} {getTotalAmount()}
+                    </div>
                   </div>
                 </div>
               </div>

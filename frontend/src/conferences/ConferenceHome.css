@@ -186,8 +186,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
   
+  .conf-home-hero {
+    padding: 80px 0 90px 0;
+  }
+  
   .conf-home-hero h1 {
     font-size: 32px;
+    margin-bottom: 30px;
   }
 }
 
@@ -517,24 +522,34 @@
     width: 100%;
     max-width: 250px;
   }
+  .conf-home-hero {
+    padding: 60px 0 70px 0;
+  }
   .conf-home-hero h1 {
-    font-size: 26px;
-    margin-bottom: 25px;
+    font-size: 24px;
+    margin-bottom: 20px;
+    line-height: 1.35;
   }
   .conf-home-hero-meta {
-    font-size: 14px;
-    padding: 4px 12px;
+    font-size: 13px;
+    padding: 4px 10px;
+    margin-bottom: 16px;
   }
   .conf-registration-home-container h2 {
     font-size: 26px;
     margin-bottom: 30px;
   }
+  .conf-countdown {
+    gap: 10px;
+    margin-top: 15px;
+  }
   .conf-countdown-item {
-    width: 70px;
-    height: 70px;
+    width: 64px;
+    height: 64px;
+    border-width: 2px;
   }
   .conf-countdown-number {
-    font-size: 20px;
+    font-size: 18px;
   }
   .conf-countdown-label {
     font-size: 8px;
@@ -693,11 +708,74 @@
 }
 
 /* Info Update Cards hover effects */
+.info-update-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
 .info-update-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
 }
 
+.info-update-card-img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.info-update-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
 .info-update-card:hover .info-card-image {
   transform: scale(1.06);
+}
+
+.info-update-card-body {
+  padding: 20px 15px;
+  text-align: center;
+  background: #ffffff;
+  border-top: 1px solid #f1f5f9;
+}
+
+.info-update-card-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* Responsive Mobile Horizontal Curve Scroll */
+@media (max-width: 768px) {
+  .info-updates-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 20px 40px 40px 40px;
+    gap: 20px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .info-updates-grid::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+
+  .info-update-card {
+    scroll-snap-align: center;
+    flex: 0 0 280px;
+    width: 280px;
+  }
 }

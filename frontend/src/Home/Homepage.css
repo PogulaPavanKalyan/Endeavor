@@ -1998,9 +1998,15 @@
 
 .sponsors-ticker-content {
   display: flex;
-  gap: 40px;
   width: max-content;
   animation: ticker-slide 30s linear infinite;
+}
+
+.sponsors-ticker-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-right: 40px;
 }
 
 @keyframes ticker-slide {
@@ -2949,6 +2955,8 @@
     grid-template-columns: 1fr;
   }
   .gallery-filter-bar {
+    display: flex;
+    flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
     padding: 8px 16px;

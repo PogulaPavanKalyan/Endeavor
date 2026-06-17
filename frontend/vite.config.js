@@ -7,18 +7,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        // target: 'http://localhost:8081',
-        target: 'http://51.21.159.47:8081',
+        target: 'http://localhost:8081',
+        // target: 'http://51.21.159.47:8081',
         changeOrigin: true,
       },
       '/auth': {
-        // target: 'http://localhost:8081',
-        target: 'http://51.21.159.47:8081',
+        target: 'http://localhost:8081',
+        // target: 'http://51.21.159.47:8081',
         changeOrigin: true,
       },
       '/uploads': {
-        // target: 'http://localhost:8081',
-        target: 'http://51.21.159.47:8081',
+        target: 'http://localhost:8081',
+        // target: 'http://51.21.159.47:8081',
         changeOrigin: true,
       }
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
 import "./ConferenceHome.css";
@@ -22,10 +22,11 @@ const ConferenceHome = () => {
   const { conference, getSubRoutePath } = useOutletContext();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [sessions, setSessions] = useState([]);
-  const [speakers, setSpeakers] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [activeSection, setActiveSection] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [infoUpdates, setInfoUpdates] = useState([]);
-  const [activeTab, setActiveTab] = useState("keynote");
+  const [activeTab, setActiveTab] = useState("");
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -107,23 +108,27 @@ const ConferenceHome = () => {
     return () => clearInterval(timer);
   }, [conference.countdownTarget]);
 
-  // Fetch dynamic sessions, speakers & info updates
+  // Fetch dynamic sessions, sections & info updates
   useEffect(() => {
     if (!conference || !conference.id) return;
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [sessionsData, speakersData, infoData, tracksData] = await Promise.all([
+        const [sessionsData, sectionsData, infoData, tracksData] = await Promise.all([
           api.get(`/api/sessions?conferenceId=${conference.id}`),
-          api.get(`/api/speakers?conferenceId=${conference.id}`),
+          api.get(`/api/conference-sections?conferenceId=${conference.id}`),
           api.get("/api/info-updates"),
           api.get(`/api/tracks?conferenceId=${conference.id}`)
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
         }
-        if (Array.isArray(speakersData)) {
-          setSpeakers(speakersData);
+        if (Array.isArray(sectionsData)) {
+          setSections(sectionsData);
+          if (sectionsData.length > 0) {
+            setActiveTab(sectionsData[0].sectionSlug);
+            setActiveSection(sectionsData[0]);
+          }
         }
         if (Array.isArray(infoData)) {
           setInfoUpdates(infoData);
@@ -139,6 +144,125 @@ const ConferenceHome = () => {
     };
     fetchData();
   }, [conference.id]);
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let autoScrollInterval = null;
+    let isInteracting = false;
+    let userTimeout = null;
+
+    const updateCardTransforms = () => {
+      if (window.innerWidth > 768) {
+        const cards = container.querySelectorAll(".info-update-card");
+        cards.forEach((card) => {
+          card.style.transform = "";
+          card.style.opacity = "";
+          card.style.transition = "";
+        });
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      const cards = container.querySelectorAll(".info-update-card");
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = cardCenter - containerCenter;
+        
+        // Normalize distance based on half-width of container
+        const normalizedDistance = distance / (containerRect.width / 2 || 1);
+        const clampedDistance = Math.max(-1.5, Math.min(1.5, normalizedDistance));
+
+        // Scale: shrink slightly as card moves away from center
+        const scale = 1 - Math.abs(clampedDistance) * 0.12;
+
+        // Rotation: 3D coverflow style rotation
+        const rotateY = clampedDistance * -15;
+
+        // Translation: translateY pushes down at edges to create a downward scroll curve
+        const translateY = Math.abs(clampedDistance) * Math.abs(clampedDistance) * 15;
+
+        // Opacity: fade out slightly towards the edges
+        const opacity = 1 - Math.abs(clampedDistance) * 0.25;
+
+        card.style.transform = `perspective(800px) translateY(${translateY}px) scale(${scale}) rotateY(${rotateY}deg)`;
+        card.style.opacity = opacity;
+        card.style.transition = "transform 0.1s ease-out, opacity 0.1s ease-out";
+      });
+    };
+
+    const startAutoScroll = () => {
+      if (window.innerWidth > 768) return;
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        if (isInteracting) return;
+
+        const cards = container.querySelectorAll(".info-update-card");
+        if (cards.length <= 1) return;
+
+        const cardRect = cards[0].getBoundingClientRect();
+        const cardWidth = cardRect.width + 20; // card width + 20px gap
+        const currentScroll = container.scrollLeft;
+        const totalWidth = container.scrollWidth;
+        const maxScroll = totalWidth - container.clientWidth;
+
+        let nextScroll = currentScroll + cardWidth;
+        // If we reach the end, wrap back to the beginning
+        if (nextScroll >= maxScroll + 10) {
+          nextScroll = 0;
+        }
+
+        container.scrollTo({
+          left: nextScroll,
+          behavior: "smooth"
+        });
+      }, 3000);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    };
+
+    const handleInteraction = () => {
+      isInteracting = true;
+      stopAutoScroll();
+      clearTimeout(userTimeout);
+      userTimeout = setTimeout(() => {
+        isInteracting = false;
+        startAutoScroll();
+      }, 5000); // Resume auto scroll after 5 seconds of inactivity
+    };
+
+    const timer = setTimeout(updateCardTransforms, 100);
+
+    container.addEventListener("scroll", updateCardTransforms);
+    container.addEventListener("touchstart", handleInteraction, { passive: true });
+    container.addEventListener("mousedown", handleInteraction);
+    window.addEventListener("resize", updateCardTransforms);
+
+    startAutoScroll();
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(userTimeout);
+      stopAutoScroll();
+      if (container) {
+        container.removeEventListener("scroll", updateCardTransforms);
+        container.removeEventListener("touchstart", handleInteraction);
+        container.removeEventListener("mousedown", handleInteraction);
+      }
+      window.removeEventListener("resize", updateCardTransforms);
+    };
+  }, [infoUpdates, loading]);
 
   // Format single digits with leading zero
   const formatNum = (num) => {
@@ -194,15 +318,7 @@ const ConferenceHome = () => {
     ? sessions.map(s => ({ title: s.name, desc: s.description }))
     : (conference.sessions || []);
 
-  const allSpeakers = speakers.length > 0 ? speakers : mockSpeakers;
-  const currentSpeakers = allSpeakers.filter(spk => {
-    const t = (spk.type || "").toLowerCase();
-    if (activeTab === "advisory") {
-      return t.includes("advisory") || t.includes("board") || t.includes("committee");
-    } else {
-      return t.includes("keynote") || t.includes("speaker") || t === "";
-    }
-  });
+  const currentItems = activeSection ? (activeSection.items || []) : [];
 
   const renderAboutText = (text) => {
     if (!text) return null;
@@ -366,63 +482,65 @@ const ConferenceHome = () => {
         );
       })()}
 
-      {/* Listen to the Speakers Section */}
-      <section className="conf-speakers-section" id="speakers-list">
-        <div className="container">
-          <div className="conf-section-header">
-            <h2>Listen to the Speakers</h2>
-            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Meet our world-renowned keynote speakers and advisory board members.
-            </p>
-          </div>
-
-          {/* Tab buttons */}
-          <div className="conf-speaker-tabs">
-            <button 
-              className={`conf-tab-btn ${activeTab === "keynote" ? "active" : ""}`}
-              onClick={() => setActiveTab("keynote")}
-            >
-              Event Speakers
-            </button>
-            <button 
-              className={`conf-tab-btn ${activeTab === "advisory" ? "active" : ""}`}
-              onClick={() => setActiveTab("advisory")}
-            >
-              Advisory Board
-            </button>
-          </div>
-
-          {/* Speakers Grid */}
-          <div className="conf-speakers-grid">
-            {currentSpeakers.length === 0 ? (
-              <p style={{ textAlign: "center", gridColumn: "1/-1", color: "#718096", padding: "40px 0" }}>
-                No speakers registered for this category yet.
+      {/* Dynamic Tab Sections */}
+      {sections.length > 0 && (
+        <section className="conf-speakers-section" id="speakers-list">
+          <div className="container">
+            <div className="conf-section-header">
+              <h2>Speakers, Committees & Partners</h2>
+              <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+                Explore our keynote presenters, organizing committees, sponsors, and supporting organizations.
               </p>
-            ) : (
-              currentSpeakers.map((spk) => (
-                <div key={spk.id} className="conf-speaker-card" onClick={() => setSelectedSpeaker(spk)}>
-                  <div className="speaker-image-wrapper">
-                    <img 
-                      src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")} 
-                      alt={spk.name}
-                      onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
-                    />
-                    <div className="speaker-hover-overlay">
-                      <span className="plus-icon">+</span>
+            </div>
+
+            {/* Tab buttons */}
+            <div className="conf-speaker-tabs" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px" }}>
+              {sections.map((sec) => (
+                <button 
+                  key={sec.id}
+                  className={`conf-tab-btn ${activeTab === sec.sectionSlug ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab(sec.sectionSlug);
+                    setActiveSection(sec);
+                  }}
+                >
+                  {sec.sectionName}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Entries Grid */}
+            <div className="conf-speakers-grid">
+              {currentItems.length === 0 ? (
+                <p style={{ textAlign: "center", gridColumn: "1/-1", color: "#718096", padding: "40px 0" }}>
+                  No entries registered for this section yet.
+                </p>
+              ) : (
+                currentItems.map((item) => (
+                  <div key={item.id} className="conf-speaker-card" onClick={() => setSelectedSpeaker(item)}>
+                    <div className="speaker-image-wrapper">
+                      <img 
+                        src={item.imagePath || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"} 
+                        alt={item.name}
+                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
+                      />
+                      <div className="speaker-hover-overlay">
+                        <span className="plus-icon">+</span>
+                      </div>
+                    </div>
+                    <div className="speaker-info">
+                      <h3>{item.name}</h3>
+                      <p className="speaker-description">
+                        {item.designation}{item.organization ? `, ${item.organization}` : ''} {item.country ? `(${item.country})` : ''}
+                      </p>
                     </div>
                   </div>
-                  <div className="speaker-info">
-                    <h3>{spk.name}</h3>
-                    <p className="speaker-description">
-                      {spk.designation}, {spk.affiliation} - {spk.country}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Registration Section below Speakers */}
       <section 
@@ -511,33 +629,22 @@ const ConferenceHome = () => {
                 <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#f97316", marginTop: "10px", textTransform: "none" }}>Latest News</h2>
               </div>
 
-              <div className="info-updates-grid" style={{ display: "flex", justifyContent: "center", gap: "30px", flexWrap: "wrap" }}>
+              <div ref={scrollRef} className="info-updates-grid">
                 {activeInfoUpdates.map((item, idx) => (
                   <Link 
                     key={idx} 
                     to={getSubRoutePath ? getSubRoutePath(item.link) : `/${item.link}`}
                     className="info-update-card"
-                    style={{
-                      background: "#ffffff",
-                      borderRadius: "16px",
-                      overflow: "hidden",
-                      width: "320px",
-                      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.05)",
-                      cursor: "pointer",
-                      textDecoration: "none",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
                   >
-                    <div style={{ width: "100%", height: "220px", overflow: "hidden" }}>
+                    <div className="info-update-card-img-wrap">
                       <img 
                         src={item.imageUrl} 
                         alt={item.title} 
-                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }} 
                         className="info-card-image"
                       />
                     </div>
-                    <div style={{ padding: "20px 15px", textAlign: "center", background: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
-                      <h3 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: item.color }}>
+                    <div className="info-update-card-body">
+                      <h3 className="info-update-card-title" style={{ color: item.color }}>
                         {item.title}
                       </h3>
                     </div>
@@ -557,24 +664,40 @@ const ConferenceHome = () => {
             <div className="conf-modal-content-grid">
               <div className="conf-modal-img-wrap">
                 <img 
-                  src={selectedSpeaker.photo?.fileName ? `${BASE_URL}/uploads/speakers/${selectedSpeaker.photo.fileName}` : (selectedSpeaker.photoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")} 
+                  src={selectedSpeaker.imagePath || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"} 
                   alt={selectedSpeaker.name}
                   onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
                 />
               </div>
               <div className="conf-modal-text-wrap">
                 <h2>{selectedSpeaker.name}</h2>
-                <p className="modal-role">
-                  {(selectedSpeaker.type || "").toLowerCase().includes("advisory") 
-                    ? "Advisory Board Member" 
-                    : "Featured Speaker"}
+                <p className="modal-role" style={{ color: "var(--conf-primary, #e74c3c)", fontWeight: "700" }}>
+                  {selectedSpeaker.designation || "Participant"}
                 </p>
-                <p className="modal-designation"><strong>{selectedSpeaker.designation}</strong></p>
-                <p className="modal-affiliation">{selectedSpeaker.affiliation}, {selectedSpeaker.country}</p>
+                <p className="modal-affiliation">
+                  {selectedSpeaker.organization}{selectedSpeaker.country ? `, ${selectedSpeaker.country}` : ''}
+                </p>
+                
+                {/* Social/Web links */}
+                <div style={{ display: "flex", gap: "14px", marginTop: "10px", marginBottom: "15px" }}>
+                  {selectedSpeaker.websiteUrl && (
+                    <a href={selectedSpeaker.websiteUrl} target="_blank" rel="noreferrer" style={{ fontSize: "13.5px", color: "var(--conf-primary, #e74c3c)", fontWeight: "700", textDecoration: "none", borderBottom: "1px solid transparent" }}>
+                      🌐 Website
+                    </a>
+                  )}
+                  {selectedSpeaker.linkedinUrl && (
+                    <a href={selectedSpeaker.linkedinUrl} target="_blank" rel="noreferrer" style={{ fontSize: "13.5px", color: "#0077b5", fontWeight: "700", textDecoration: "none", borderBottom: "1px solid transparent" }}>
+                      🔗 LinkedIn
+                    </a>
+                  )}
+                </div>
+
                 <div className="modal-divider"></div>
                 <div className="modal-bio">
-                  <h3>Biography</h3>
-                  <p>{selectedSpeaker.bio || "Biography details are pending publication."}</p>
+                  <h3>Details & Description</h3>
+                  <p style={{ whiteSpace: "pre-line" }}>
+                    {selectedSpeaker.description || "Details and description are pending publication."}
+                  </p>
                 </div>
               </div>
             </div>

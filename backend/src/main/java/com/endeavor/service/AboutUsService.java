@@ -221,18 +221,24 @@ public class AboutUsService {
         List<AboutAdvisoryLeader> list = advisoryLeaderRepo.findAllByOrderByDisplayOrderAsc();
         if (list.isEmpty()) {
             list = new ArrayList<>();
-            list.add(createAdvisoryLeader("👩‍🔬", "Prof. Sarah Higgins", "Scientific Committee Chair", "University of Oxford", "United Kingdom", null, 1));
-            list.add(createAdvisoryLeader("👨‍🏫", "Dr. Rajan Mehta", "Advisory Board Member", "IIT Bombay", "India", null, 2));
-            list.add(createAdvisoryLeader("👩‍💼", "Prof. Maria Chen", "Publication Director", "MIT Cambridge", "USA", null, 3));
-            list.add(createAdvisoryLeader("👨‍🔬", "Dr. Ahmed Al-Farsi", "Peer Review Lead", "KAUST", "Saudi Arabia", null, 4));
-            list.add(createAdvisoryLeader("👩‍🏫", "Prof. Elena Vasquez", "Program Committee Head", "University of Madrid", "Spain", null, 5));
-            list.add(createAdvisoryLeader("👨‍💻", "Dr. Lucas Hoffmann", "Technology & Innovation", "TU Munich", "Germany", null, 6));
+            list.add(createAdvisoryLeader("👩‍🔬", "Prof. Sarah Higgins", "Scientific Committee Chair", "University of Oxford", "United Kingdom", null, 
+                "Over 20 years of academic experience in modern literature and academic editing. Leads scientific committee guidelines globally.", "https://linkedin.com/in/sarah-higgins-oxford", 1));
+            list.add(createAdvisoryLeader("👨‍🏫", "Dr. Rajan Mehta", "Advisory Board Member", "IIT Bombay", "India", null, 
+                "Distinguished researcher in computer science, robotics, and machine learning architectures with multiple IEEE publications.", "https://linkedin.com/in/rajan-mehta-iit", 2));
+            list.add(createAdvisoryLeader("👩‍💼", "Prof. Maria Chen", "Publication Director", "MIT Cambridge", "USA", null, 
+                "Specialist in publishing open-access research proceedings. Former editorial chief for leading technology research journals.", "https://linkedin.com/in/maria-chen-mit", 3));
+            list.add(createAdvisoryLeader("👨‍🔬", "Dr. Ahmed Al-Farsi", "Peer Review Lead", "KAUST", "Saudi Arabia", null, 
+                "Pioneers robust double-blind peer vetting frameworks. Coordinates international reviewer panel alignments.", "https://linkedin.com/in/ahmed-al-farsi-kaust", 4));
+            list.add(createAdvisoryLeader("👩‍🏫", "Prof. Elena Vasquez", "Program Committee Head", "University of Madrid", "Spain", null, 
+                "Focuses on curriculum development and academic program management. Leads Spain's computing coalition steering panel.", "https://linkedin.com/in/elena-vasquez-madrid", 5));
+            list.add(createAdvisoryLeader("👨‍💻", "Dr. Lucas Hoffmann", "Technology & Innovation", "TU Munich", "Germany", null, 
+                "Expert in digital innovation, online conference platforms, and semantic search algorithms for academic metadata indexing.", "https://linkedin.com/in/lucas-hoffmann-tum", 6));
             advisoryLeaderRepo.saveAll(list);
         }
         return list;
     }
 
-    private AboutAdvisoryLeader createAdvisoryLeader(String emoji, String name, String role, String inst, String country, String photo, int order) {
+    private AboutAdvisoryLeader createAdvisoryLeader(String emoji, String name, String role, String inst, String country, String photo, String bio, String linkedin, int order) {
         AboutAdvisoryLeader l = new AboutAdvisoryLeader();
         l.setEmoji(emoji);
         l.setName(name);
@@ -240,6 +246,8 @@ public class AboutUsService {
         l.setInstitution(inst);
         l.setCountry(country);
         l.setPhotoFileName(photo);
+        l.setBio(bio);
+        l.setLinkedin(linkedin);
         l.setDisplayOrder(order);
         return l;
     }

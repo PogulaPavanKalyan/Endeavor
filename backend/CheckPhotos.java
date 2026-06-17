@@ -3,7 +3,7 @@ import java.sql.*;
 public class CheckPhotos {
     public static void main(String[] args) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/endeavor", "root", "groot");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://database-1.cnygk2cg6q5w.eu-north-1.rds.amazonaws.com:3306/Ravi", "admin", "EndRavi12345678");
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT id, tittle, photo_id FROM conference_details");
             System.out.println("Conferences:");
