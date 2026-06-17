@@ -73,6 +73,7 @@ public class Security {
                     "/api/venue/**",
                     "/api/gallery/**",
                     "/api/conference-pages/**",
+                    "/api/navbar-menus/**",
                     "/api/webinars/**",
                     "/api/about/**",
 

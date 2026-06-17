@@ -181,4 +181,10 @@ public class Registration {
 
     public Long getConferenceId() { return conferenceId; }
     public void setConferenceId(Long conferenceId) { this.conferenceId = conferenceId; }
+
+    @Column(name="webinar_id")
+    private Long webinarId;
+
+    public Long getWebinarId() { return webinarId; }
+    public void setWebinarId(Long webinarId) { this.webinarId = webinarId; }
 }

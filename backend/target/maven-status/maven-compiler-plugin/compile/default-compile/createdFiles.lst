@@ -5,6 +5,7 @@ com\endeavor\service\AdminActivityLogService.class
 com\endeavor\service\ScientificSessionService.class
 com\endeavor\entity\Webinar.class
 com\endeavor\service\AbstractSubmissionService.class
+com\endeavor\controller\AdminNavbarMenuController.class
 com\endeavor\entity\AbstractSubmission.class
 com\endeavor\repo\AboutMapLocationRepo.class
 com\endeavor\service\WebinarService.class
@@ -29,6 +30,7 @@ com\endeavor\service\ContactMessageService.class
 com\endeavor\entity\SpeakerSuggestion.class
 com\endeavor\repo\SponsorRepo.class
 com\endeavor\repo\UserRepo.class
+com\endeavor\controller\NavbarMenuController.class
 com\endeavor\repo\ScientificSessionRepo.class
 com\endeavor\entity\SponsorImage.class
 com\endeavor\controller\PublicHomeController.class
@@ -48,6 +50,7 @@ com\endeavor\Application.class
 com\endeavor\entity\TrustBadge.class
 com\endeavor\entity\ConferencePhoto.class
 com\endeavor\entity\Users.class
+com\endeavor\service\NavbarMenuService.class
 com\endeavor\repo\AboutMapConnectionRepo.class
 com\endeavor\entity\ContactMessage.class
 com\endeavor\entity\CommitteeMember.class
@@ -70,6 +73,7 @@ com\endeavor\service\SpeakerPhotoService.class
 com\endeavor\entity\AboutServiceItem.class
 com\endeavor\repo\CommitteeMemberRepo.class
 com\endeavor\repo\ContactMessageRepo.class
+com\endeavor\entity\NavbarMenu.class
 com\endeavor\controller\AdminController.class
 com\endeavor\repo\AboutAdvisoryLeaderRepo.class
 com\endeavor\repo\SiteStatisticsRepository.class
@@ -114,5 +118,6 @@ com\endeavor\repo\SpeakerSuggestionRepo.class
 com\endeavor\entity\Venue.class
 com\endeavor\entity\SpeakerPhoto.class
 com\endeavor\service\SpeakerSuggestionService.class
+com\endeavor\repo\NavbarMenuRepository.class
 com\endeavor\service\ConferenceDetailsService.class
 com\endeavor\entity\Role.class

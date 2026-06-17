@@ -34,6 +34,7 @@ const ConferenceLayout = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [navPages, setNavPages] = useState([]);
+  const [submenuItems, setSubmenuItems] = useState([]);
 
   useEffect(() => {
     if (activeConf && activeConf.id) {
@@ -47,7 +48,20 @@ const ConferenceLayout = () => {
           console.error("Failed to load nav pages:", err);
         }
       };
+
+      const fetchSubmenuItems = async () => {
+        try {
+          const res = await api.get(`/api/navbar-menus?conferenceId=${activeConf.id}`);
+          if (Array.isArray(res)) {
+            setSubmenuItems(res);
+          }
+        } catch (err) {
+          console.error("Failed to load submenus:", err);
+        }
+      };
+
       fetchNavPages();
+      fetchSubmenuItems();
     }
   }, [activeConf?.id]);
 
@@ -244,24 +258,46 @@ const ConferenceLayout = () => {
               .sort((a, b) => a.displayOrder - b.displayOrder)
               .map(page => {
                 if (page.pageKey === "speakers") {
+                  const items = submenuItems.filter(sub => sub.menuType === "Speakers");
                   return (
                     <div key={page.id || page.pageKey} className="conf-nav-dropdown">
                       <span className="conf-nav-link">{page.label} ▾</span>
                       <div className="conf-dropdown-menu">
-                        <Link to={getSubRoutePath("speakers")} className="conf-dropdown-item">Keynote Speakers</Link>
-                        <Link to={getSubRoutePath("speakers?type=oral")} className="conf-dropdown-item">Oral Presenters</Link>
+                        {items.length > 0 ? (
+                          items.map(sub => (
+                            <Link key={sub.id} to={getSubRoutePath(sub.slug)} className="conf-dropdown-item">
+                              {sub.title}
+                            </Link>
+                          ))
+                        ) : (
+                          <>
+                            <Link to={getSubRoutePath("speakers")} className="conf-dropdown-item">Keynote Speakers</Link>
+                            <Link to={getSubRoutePath("speakers?type=oral")} className="conf-dropdown-item">Oral Presenters</Link>
+                          </>
+                        )}
                       </div>
                     </div>
                   );
                 }
                 if (page.pageKey === "program") {
+                  const items = submenuItems.filter(sub => sub.menuType === "Scientific Program");
                   return (
                     <div key={page.id || page.pageKey} className="conf-nav-dropdown">
                       <span className="conf-nav-link">{page.label} ▾</span>
                       <div className="conf-dropdown-menu">
-                        <Link to={getSubRoutePath("program")} className="conf-dropdown-item">Scientific Program</Link>
-                        <Link to={getSubRoutePath("program#schedule")} className="conf-dropdown-item">Program Schedule</Link>
-                        <Link to={getSubRoutePath("program#tracks")} className="conf-dropdown-item">Scientific Tracks</Link>
+                        {items.length > 0 ? (
+                          items.map(sub => (
+                            <Link key={sub.id} to={getSubRoutePath(sub.slug)} className="conf-dropdown-item">
+                              {sub.title}
+                            </Link>
+                          ))
+                        ) : (
+                          <>
+                            <Link to={getSubRoutePath("program")} className="conf-dropdown-item">Scientific Program</Link>
+                            <Link to={getSubRoutePath("program#schedule")} className="conf-dropdown-item">Program Schedule</Link>
+                            <Link to={getSubRoutePath("program#tracks")} className="conf-dropdown-item">Scientific Tracks</Link>
+                          </>
+                        )}
                       </div>
                     </div>
                   );

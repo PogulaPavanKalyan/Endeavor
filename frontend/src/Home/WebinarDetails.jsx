@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
+import { getRegistrationRoute } from "../utils/routeHelper";
 import "./WebinarDetails.css";
 
 const WebinarDetails = () => {
@@ -265,14 +266,24 @@ const WebinarDetails = () => {
               <div className="action-buttons-stack">
                 {isUpcoming ? (
                   (webinar.registrationRequired || webinar.registrationUrl) ? (
-                    <a 
-                      href={webinar.registrationUrl || "#"} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="btn-register-primary"
-                    >
-                      Register for Webinar
-                    </a>
+                    getRegistrationRoute(webinar.registrationUrl, webinar.slug) ? (
+                      <Link 
+                        to={getRegistrationRoute(webinar.registrationUrl, webinar.slug)} 
+                        className="btn-register-primary"
+                        style={{ textDecoration: 'none' }}
+                      >
+                        Register for Webinar
+                      </Link>
+                    ) : (
+                      <a 
+                        href={webinar.registrationUrl || "#"} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="btn-register-primary"
+                      >
+                        Register for Webinar
+                      </a>
+                    )
                   ) : (
                     <button className="btn-register-primary-disabled" disabled>
                       Free Access - Link Active at Start Time

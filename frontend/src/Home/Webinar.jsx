@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
+import { getRegistrationRoute } from "../utils/routeHelper";
 import "./Webinar.css";
 
 const Webinar = () => {
@@ -210,14 +211,23 @@ const Webinar = () => {
                           </Link>
                           {statusInfo.class === "upcoming" ? (
                             (web.registrationRequired || web.registrationUrl) ? (
-                              <a 
-                                href={web.registrationUrl || "#"} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="btn-register-action"
-                              >
-                                Register Now
-                              </a>
+                              getRegistrationRoute(web.registrationUrl, web.slug) ? (
+                                <Link 
+                                  to={getRegistrationRoute(web.registrationUrl, web.slug)} 
+                                  className="btn-register-action"
+                                >
+                                  Register Now
+                                </Link>
+                              ) : (
+                                <a 
+                                  href={web.registrationUrl || "#"} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="btn-register-action"
+                                >
+                                  Register Now
+                                </a>
+                              )
                             ) : (
                               <span className="free-tag">Free Entry</span>
                             )

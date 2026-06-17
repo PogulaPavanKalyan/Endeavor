@@ -17,7 +17,7 @@ const Header = () => {
   useEffect(() => {
     // Reveal header after mount
     const timer = setTimeout(() => setVisible(true), 200);
-    
+
     // Scroll event listener for sticky floating transition
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -55,13 +55,20 @@ const Header = () => {
   };
 
   const isActive = (path) => {
+    if (path === "/webinars") {
+      return (
+        location.pathname.startsWith("/webinars") ||
+        location.pathname.startsWith("/webinar") ||
+        location.pathname.startsWith("/register/")
+      ) ? "active" : "";
+    }
     return location.pathname === path ? "active" : "";
   };
 
   return (
     <>
       <header className={`header ${visible ? "show" : ""} ${isSticky ? "sticky-active" : ""} ${menuOpen ? "menu-active" : ""}`}>
-        
+
         {/* TOP TIER (White Header) */}
         <div className="top-header">
           <div className="top-header-container">
@@ -71,7 +78,7 @@ const Header = () => {
                 <img src="/logo.png" alt="Endeavor Conferences" />
               </Link>
             </div>
-            
+
             {/* Action Group (Subscribe + Hamburger) */}
             <div className="top-actions-group">
               {/* Subscribe CTA */}
@@ -80,7 +87,7 @@ const Header = () => {
                   <span>Subscribe</span>
                 </button>
               </div>
-              
+
               {/* Hamburger Toggle */}
               <button
                 className={`hamburger ${menuOpen ? "open" : ""}`}
@@ -98,7 +105,7 @@ const Header = () => {
         {/* BOTTOM TIER (Dark Navy Navbar) */}
         <div className={`bottom-navbar ${isSticky ? "floating-capsule" : ""}`}>
           <div className="bottom-navbar-container">
-            
+
             {/* Logo in Sticky State (Fades in on scroll) */}
             <div className="sticky-logo">
               <Link to="/">
@@ -108,7 +115,7 @@ const Header = () => {
 
             {/* Navigation Menu */}
             <nav className={`nav-menu ${menuOpen ? "active" : ""}`}>
-              
+
               {/* Home */}
               <Link to="/" className={isActive("/")} onClick={() => setMenuOpen(false)}>
                 Home
@@ -120,13 +127,13 @@ const Header = () => {
               </Link>
 
               {/* Conferences with Mega Menu */}
-              <div 
+              <div
                 className={`nav-item-dropdown ${confDropdownOpen ? "dropdown-open" : ""}`}
                 onMouseEnter={() => setConfDropdownOpen(true)}
                 onMouseLeave={() => setConfDropdownOpen(false)}
               >
-                <Link 
-                  to="/conferences" 
+                <Link
+                  to="/conferences"
                   className={`dropdown-trigger ${isActive("/conferences") || isActive("/submit-abstract") ? "active" : ""}`}
                   onClick={(e) => {
                     // Toggle dropdown on click for mobile/tablet screen sizes
@@ -147,7 +154,7 @@ const Header = () => {
                 {/* MEGA MENU DROPDOWN */}
                 <div className={`mega-menu-panel ${confDropdownOpen ? "show" : ""}`}>
                   <div className="mega-menu-grid">
-                    
+
                     {/* Column 1: Categories */}
                     <div className="mega-menu-col">
                       <h4>Conferences by Category</h4>
@@ -228,10 +235,7 @@ const Header = () => {
                 Proceedings
               </Link>
 
-              {/* Journals */}
-              <Link to="/journals" className={isActive("/journals")} onClick={() => setMenuOpen(false)}>
-                Journals
-              </Link>
+
 
               {/* Contact */}
               <Link to="/contact" className={isActive("/contact")} onClick={() => setMenuOpen(false)}>
@@ -264,7 +268,7 @@ const Header = () => {
         <div className="subscribe-modal-overlay" onClick={() => setIsSubscribeOpen(false)}>
           <div className="subscribe-modal-card" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal-btn" onClick={() => setIsSubscribeOpen(false)}>&times;</button>
-            
+
             {subSuccess ? (
               <div className="success-modal-state">
                 <div className="success-checkmark">&#10003;</div>
@@ -275,22 +279,22 @@ const Header = () => {
               <>
                 <h2>Subscribe to Updates</h2>
                 <p className="modal-subtitle">Stay notified about upcoming scientific conferences, abstract submission deadlines, and speaker announcements.</p>
-                
+
                 <form onSubmit={handleSubscribeSubmit} className="modal-form">
                   <div className="form-group-modal">
-                    <input 
-                      type="text" 
-                      placeholder="Your Name" 
-                      value={subFormData.name} 
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={subFormData.name}
                       onChange={(e) => setSubFormData({ ...subFormData, name: e.target.value })}
                       required
                     />
                   </div>
                   <div className="form-group-modal">
-                    <input 
-                      type="email" 
-                      placeholder="Email Address" 
-                      value={subFormData.email} 
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      value={subFormData.email}
                       onChange={(e) => setSubFormData({ ...subFormData, email: e.target.value })}
                       required
                     />

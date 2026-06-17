@@ -87,6 +87,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         seedConferences();
         seedSpeakers();
         seedSponsors();
+        migrateWebinarRegistrationUrls();
     }
 
     private void seedUsers() {
@@ -343,5 +344,14 @@ public class DatabaseInitializer implements CommandLineRunner {
         sponsor.setImage(image);
 
         sponsorRepo.save(sponsor);
+    }
+
+    private void migrateWebinarRegistrationUrls() {
+        try {
+            jdbcTemplate.execute("UPDATE webinars SET registration_url = CONCAT('/register/', slug) WHERE registration_required = true OR registration_required = 1");
+            System.out.println(">>> Updated webinar registration URLs to match dynamic SPA route pattern successfully! <<<");
+        } catch (Exception e) {
+            System.err.println(">>> Webinar registration URL update failed: " + e.getMessage() + " <<<");
+        }
     }
 }

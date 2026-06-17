@@ -6,11 +6,13 @@ D:\Endeavor\backend\src\main\java\com\endeavor\configuration\WebConfig.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AboutUsController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminManagementController.java
+D:\Endeavor\backend\src\main\java\com\endeavor\controller\AdminNavbarMenuController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\CommitteeController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\ConferenceController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\DynamicContentController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\GalleryController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\LoginController.java
+D:\Endeavor\backend\src\main\java\com\endeavor\controller\NavbarMenuController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\NavbarPageController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\PublicHomeController.java
 D:\Endeavor\backend\src\main\java\com\endeavor\controller\ScientificTrackController.java
@@ -39,6 +41,7 @@ D:\Endeavor\backend\src\main\java\com\endeavor\entity\ConferenceSeries.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\ContactMessage.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\GalleryImage.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\HeroSection.java
+D:\Endeavor\backend\src\main\java\com\endeavor\entity\NavbarMenu.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\PricingTier.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\Registration.java
 D:\Endeavor\backend\src\main\java\com\endeavor\entity\Role.java
@@ -75,6 +78,7 @@ D:\Endeavor\backend\src\main\java\com\endeavor\repo\ConferenceSeriesRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ContactMessageRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\GalleryImageRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\HeroSectionRepository.java
+D:\Endeavor\backend\src\main\java\com\endeavor\repo\NavbarMenuRepository.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\RegistrationRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ScientificSessionRepo.java
 D:\Endeavor\backend\src\main\java\com\endeavor\repo\ScientificTrackRepo.java
@@ -101,6 +105,7 @@ D:\Endeavor\backend\src\main\java\com\endeavor\service\GalleryService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\HeroSectionService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\jwtservice.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\MyUserDetailsService.java
+D:\Endeavor\backend\src\main\java\com\endeavor\service\NavbarMenuService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\principal.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\RegistrationService.java
 D:\Endeavor\backend\src\main\java\com\endeavor\service\ScientificSessionService.java

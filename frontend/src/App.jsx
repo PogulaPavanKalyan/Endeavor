@@ -7,8 +7,9 @@ import Confrencespage from "./Home/Confrencespage";
 import Webinar from "./Home/Webinar";
 import WebinarDetails from "./Home/WebinarDetails";
 import Proceedings from "./Home/Proceedings";
-import Journals from "./Home/Journals";
+
 import Register from "./Home/Register";
+import WebinarRegister from "./Home/WebinarRegister";
 import AbstractSubmission from "./Home/AbstractSubmission";
 import AdminLogin from "./admin/AdminLogin";
 
@@ -47,6 +48,7 @@ import ConferenceRegister from "./conferences/ConferenceRegister";
 import ConferenceVenue from "./conferences/ConferenceVenue";
 import ConferenceContact from "./conferences/ConferenceContact";
 import ConferenceSuggestSpeaker from "./conferences/ConferenceSuggestSpeaker";
+import DynamicConferencePage from "./conferences/DynamicConferencePage";
 
 import NotFoundPage from "./components/NotFoundPage";
 import Sponsors from "./Home/Sponsors.jsx";
@@ -71,6 +73,7 @@ function App() {
             <Route path="venue" element={<ConferenceVenue />} />
             <Route path="contact" element={<ConferenceContact />} />
             <Route path="suggest-speaker" element={<ConferenceSuggestSpeaker />} />
+            <Route path=":slug" element={<DynamicConferencePage />} />
           </Route>
           {/* Subdomain 404 route */}
           <Route path="*" element={<NotFoundPage />} />
@@ -83,7 +86,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/conferences" element={<Confrencespage />} />
           <Route path="/sponsors" element={<Sponsors />} />
-          
+
           {/* Fallback path-based routing for previewing conferences on main domain */}
           <Route path="/conferences/:id" element={<ConferenceLayout />}>
             <Route index element={<ConferenceHome />} />
@@ -95,18 +98,21 @@ function App() {
             <Route path="venue" element={<ConferenceVenue />} />
             <Route path="contact" element={<ConferenceContact />} />
             <Route path="suggest-speaker" element={<ConferenceSuggestSpeaker />} />
+            <Route path=":slug" element={<DynamicConferencePage />} />
           </Route>
 
           <Route path="/webinars" element={<Webinar />} />
           <Route path="/webinars/:slug" element={<WebinarDetails />} />
           <Route path="/proceedings" element={<Proceedings />} />
-          <Route path="/journals" element={<Journals />} />
+
           <Route path="/register" element={<Register />} />
+          <Route path="/register/:slug" element={<WebinarRegister />} />
+          <Route path="/webinar/:id" element={<WebinarRegister />} />
           <Route path="/submit-abstract" element={<AbstractSubmission />} />
-          
+
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          
+
           {/* Modular Admin Layout */}
           <Route path="/admin" element={<AdminProvider><AdminLayout /></AdminProvider>}>
             <Route index element={<Navigate to="dashboard" replace />} />
@@ -127,7 +133,7 @@ function App() {
             <Route path="hero" element={<HeroManager />} />
             <Route path="statistics" element={<StatisticsManager />} />
             <Route path="trust-badges" element={<TrustBadgeManager />} />
-             <Route path="settings" element={<SettingsManager />} />
+            <Route path="settings" element={<SettingsManager />} />
             <Route path="logs" element={<LogsManager />} />
             <Route path="webinars" element={<WebinarManager />} />
             <Route path="about" element={<AboutUsManager />} />

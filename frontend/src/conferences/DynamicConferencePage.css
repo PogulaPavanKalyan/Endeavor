@@ -1,0 +1,222 @@
+/* Dynamic Conference Page Styling */
+
+.dynamic-page-wrapper {
+  color: #f8fafc;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  padding-bottom: 60px;
+  background-color: #0d1117;
+}
+
+/* Page Hero Banner */
+.dynamic-hero-banner {
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  border-bottom: 3px solid var(--conf-primary, #e74c3c);
+}
+
+.dynamic-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.4) 0%, rgba(13, 17, 23, 0.9) 100%);
+  z-index: 1;
+}
+
+.dynamic-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.dynamic-hero-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Breadcrumbs */
+.dynamic-breadcrumbs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13.5px;
+  color: #8b949e;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.dynamic-breadcrumbs a {
+  color: #c9d1d9;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.dynamic-breadcrumbs a:hover {
+  color: var(--conf-primary, #e74c3c);
+}
+
+/* Content Container */
+.dynamic-main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 32px;
+}
+
+@media (max-width: 968px) {
+  .dynamic-main-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* Content Body */
+.dynamic-content-body {
+  background: rgba(22, 27, 34, 0.6);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.rich-content-wrapper {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #c9d1d9;
+}
+
+/* Styled elements inside rich text output */
+.rich-content-wrapper h2 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 28px 0 16px 0;
+  border-bottom: 1px solid #30363d;
+  padding-bottom: 8px;
+}
+
+.rich-content-wrapper h3 {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 24px 0 12px 0;
+}
+
+.rich-content-wrapper p {
+  margin-bottom: 18px;
+}
+
+.rich-content-wrapper ul, 
+.rich-content-wrapper ol {
+  margin-bottom: 18px;
+  padding-left: 24px;
+}
+
+.rich-content-wrapper li {
+  margin-bottom: 6px;
+}
+
+.rich-content-wrapper a {
+  color: var(--conf-primary, #e74c3c);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dashed transparent;
+  transition: all 0.15s ease;
+}
+
+.rich-content-wrapper a:hover {
+  border-bottom-color: var(--conf-primary, #e74c3c);
+}
+
+/* Sidebar */
+.dynamic-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebar-card {
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-thumbnail {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 2px solid #30363d;
+  margin-bottom: 16px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  border-bottom: 2px solid var(--conf-primary, #e74c3c);
+  padding-bottom: 6px;
+  display: inline-block;
+}
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-btn-primary {
+  background: var(--conf-primary, #e74c3c);
+  color: #ffffff;
+}
+
+.sidebar-btn-primary:hover {
+  background: var(--conf-primary-hover, #c0392b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.sidebar-btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #30363d;
+}
+
+.sidebar-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #8b949e;
+  transform: translateY(-2px);
+}

@@ -63,6 +63,19 @@ public class WebinarController {
         return ResponseEntity.notFound().build();
     }
 
+    // Public Endpoint: Get single webinar detail by ID (for route mapping support)
+    @GetMapping("/webinars/id/{id}")
+    public ResponseEntity<WebinarDTO> getWebinarById(@PathVariable Long id) {
+        Optional<Webinar> opt = webinarService.getById(id);
+        if (opt.isPresent()) {
+            Webinar w = opt.get();
+            if ("PUBLISHED".equalsIgnoreCase(w.getStatus()) || "COMPLETED".equalsIgnoreCase(w.getStatus())) {
+                return ResponseEntity.ok(new WebinarDTO(w));
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     // DEBUG Endpoint: Get all webinars without any filters
     @GetMapping("/debug/webinars")
     public ResponseEntity<?> getDebugWebinars() {
