@@ -323,3 +323,33 @@ input:checked + .slider:before {
   font-size: 12px;
   margin-top: 4px;
 }
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .form-group-full {
+    grid-column: span 1;
+  }
+  .tabs-container {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-manager-container .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .btn-action-add {
+    width: 100%;
+    text-align: center;
+  }
+}

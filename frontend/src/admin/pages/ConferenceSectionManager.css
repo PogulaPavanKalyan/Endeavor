@@ -255,3 +255,20 @@
 .btn-item-delete:hover {
   background: rgba(239, 68, 68, 0.08);
 }
+
+@media (max-width: 480px) {
+  .items-grid-container {
+    grid-template-columns: 1fr;
+  }
+  .item-card-header {
+    padding: 12px;
+    gap: 8px;
+  }
+  .item-card-body {
+    padding: 12px;
+    min-height: auto;
+  }
+  .item-card-footer {
+    padding: 10px 12px;
+  }
+}
