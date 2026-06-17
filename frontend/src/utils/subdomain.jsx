@@ -21,8 +21,21 @@ export const getSubdomain = () => {
     return null;
   }
 
-  // 3. Production domain configuration
-  const prodBaseDomain = import.meta.env.VITE_BASE_DOMAIN || "mydomain.com";
+  // 3. IP Address fallback
+  if (/^[0-9.]+$/.test(hostname)) {
+    return null; // IP address can't have host-based subdomains, rely on query param
+  }
+
+  // 4. Production domain configuration
+  let prodBaseDomain = import.meta.env.VITE_BASE_DOMAIN;
+  if (!prodBaseDomain) {
+    const parts = hostname.split(".");
+    if (parts.length >= 2) {
+      prodBaseDomain = `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
+    } else {
+      prodBaseDomain = "mydomain.com";
+    }
+  }
   
   if (hostname.endsWith(prodBaseDomain)) {
     const sub = hostname.replace(`.${prodBaseDomain}`, "");
@@ -59,8 +72,26 @@ export const getSubdomainUrl = (subdomain, path = "") => {
     }
   }
 
+  // IP Address fallback
+  if (/^[0-9.]+$/.test(hostname)) {
+    if (subdomain) {
+      return `${protocol}//${hostname}${port}${cleanPath}?subdomain=${subdomain}`;
+    } else {
+      return `${protocol}//${hostname}${port}${cleanPath}`;
+    }
+  }
+
   // In Production
-  const prodBaseDomain = import.meta.env.VITE_BASE_DOMAIN || "mydomain.com";
+  let prodBaseDomain = import.meta.env.VITE_BASE_DOMAIN;
+  if (!prodBaseDomain) {
+    const parts = hostname.split(".");
+    if (parts.length >= 2) {
+      prodBaseDomain = `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
+    } else {
+      prodBaseDomain = "mydomain.com";
+    }
+  }
+  
   if (subdomain) {
     return `${protocol}//${subdomain}.${prodBaseDomain}${port}${cleanPath}`;
   } else {
