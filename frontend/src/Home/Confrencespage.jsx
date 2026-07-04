@@ -92,6 +92,8 @@ const Confrencespage = () => {
                     </h3>
                     <a 
                       href={getSubdomainUrl(conf.subdomain || conf.dbId)} 
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="read-more-link"
                     >
                       Read More <span className="cta-arrow">→</span>

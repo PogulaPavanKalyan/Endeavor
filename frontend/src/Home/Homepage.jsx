@@ -47,8 +47,8 @@ const OptimizedImage = ({ src, alt, className, fallbackType = "conference" }) =>
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", display: "block" }}>
       {loading && (
-        <div 
-          className="skeleton" 
+        <div
+          className="skeleton"
           style={{
             position: "absolute",
             inset: 0,
@@ -59,7 +59,7 @@ const OptimizedImage = ({ src, alt, className, fallbackType = "conference" }) =>
         />
       )}
       {useUiFallback ? (
-        <div 
+        <div
           className={className}
           style={{
             width: "100%",
@@ -112,21 +112,21 @@ const parseTextToHighlightCards = (text) => {
     if (matches.length >= 2) {
       const cards = [];
       let leadText = "";
-      
+
       const firstMatchIndex = matches[0].index;
       leadText = text.substring(0, firstMatchIndex).trim();
 
       for (let i = 0; i < matches.length; i++) {
         const currentMatch = matches[i];
         const nextMatch = matches[i + 1];
-        
+
         const title = currentMatch[1].trim();
         const startIdx = currentMatch.index + currentMatch[0].length;
         const endIdx = nextMatch ? nextMatch.index : text.length;
-        
+
         let desc = text.substring(startIdx, endIdx).trim();
         desc = desc.replace(/[.;,\s]+$/, "").trim();
-        
+
         if (title && desc) {
           let emoji = "⚙️";
           const lowerTitle = title.toLowerCase();
@@ -137,7 +137,7 @@ const parseTextToHighlightCards = (text) => {
           else if (lowerTitle.includes("publication") || lowerTitle.includes("journal")) emoji = "📖";
           else if (lowerTitle.includes("peer") || lowerTitle.includes("review")) emoji = "🔬";
           else if (lowerTitle.includes("global") || lowerTitle.includes("network")) emoji = "🤝";
-          
+
           cards.push({ emoji, title, desc });
         }
       }
@@ -288,7 +288,7 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("ieee")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
         <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fill="#0F172A" fontSize="24" fontWeight="800" fontFamily="Inter, system-ui">IEEE</text>
       </svg>
     );
@@ -296,8 +296,8 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("springer")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <circle cx="45" cy="30" r="10" fill="#E91E63"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <circle cx="45" cy="30" r="10" fill="#E91E63" />
         <text x="70" y="36" fill="#0F172A" fontSize="16" fontWeight="800" fontFamily="Inter, system-ui">Springer</text>
       </svg>
     );
@@ -305,9 +305,9 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("elsevier")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <path d="M40 42 L48 18 L56 42 Z" fill="#0F172A"/>
-        <circle cx="48" cy="24" r="4" fill="#E91E63"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <path d="M40 42 L48 18 L56 42 Z" fill="#0F172A" />
+        <circle cx="48" cy="24" r="4" fill="#E91E63" />
         <text x="75" y="36" fill="#0F172A" fontSize="16" fontWeight="800" fontFamily="Inter, system-ui">Elsevier</text>
       </svg>
     );
@@ -315,9 +315,9 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("googlescholar") || normalized.includes("google")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <path d="M45 20 L30 28 L45 36 L60 28 Z" fill="#E91E63"/>
-        <path d="M45 36 L45 44" stroke="#0F172A" strokeWidth="3"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <path d="M45 20 L30 28 L45 36 L60 28 Z" fill="#E91E63" />
+        <path d="M45 36 L45 44" stroke="#0F172A" strokeWidth="3" />
         <text x="75" y="36" fill="#0F172A" fontSize="15" fontWeight="800" fontFamily="Inter, system-ui">Scholar</text>
       </svg>
     );
@@ -325,8 +325,8 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("crossref")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <circle cx="40" cy="30" r="10" stroke="#E91E63" strokeWidth="4" fill="none"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <circle cx="40" cy="30" r="10" stroke="#E91E63" strokeWidth="4" fill="none" />
         <text x="65" y="36" fill="#0F172A" fontSize="16" fontWeight="800" fontFamily="Inter, system-ui">CrossRef</text>
       </svg>
     );
@@ -334,8 +334,8 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("scopus")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <rect x="30" y="20" width="25" height="20" rx="4" fill="#0F172A"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <rect x="30" y="20" width="25" height="20" rx="4" fill="#0F172A" />
         <text x="70" y="36" fill="#0F172A" fontSize="16" fontWeight="800" fontFamily="Inter, system-ui">Scopus</text>
       </svg>
     );
@@ -343,8 +343,8 @@ const SponsorLogo = ({ name }) => {
   if (normalized.includes("webofscience") || normalized.includes("science")) {
     return (
       <svg className="sponsor-svg-logo" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1"/>
-        <polygon points="45,18 55,38 35,38" fill="#E91E63"/>
+        <rect width="200" height="60" rx="16" fill="#F8FAFC" stroke="rgba(15, 23, 42, 0.06)" strokeWidth="1" />
+        <polygon points="45,18 55,38 35,38" fill="#E91E63" />
         <text x="70" y="36" fill="#0F172A" fontSize="16" fontWeight="800" fontFamily="Inter, system-ui">WoS</text>
       </svg>
     );
@@ -474,6 +474,10 @@ const Homepage = () => {
   const [timelineActiveDay, setTimelineActiveDay] = useState("day1");
   const [committeeActiveTab, setCommitteeActiveTab] = useState("keynotes");
 
+  // Admin detection & gallery visibility from database
+  const isAdmin = !!localStorage.getItem("token");
+  const galleryVisible = stats?.galleryVisible !== false;
+
   const [contactSuccess, setContactSuccess] = useState(false);
   const [contactError, setContactError] = useState("");
   const [contactLoading, setContactLoading] = useState(false);
@@ -544,7 +548,7 @@ const Homepage = () => {
         const cardRect = card.getBoundingClientRect();
         const cardCenter = cardRect.left + cardRect.width / 2;
         const distance = cardCenter - containerCenter;
-        
+
         // Normalize distance based on half-width of container
         const normalizedDistance = distance / (containerRect.width / 2 || 1);
         const clampedDistance = Math.max(-1.5, Math.min(1.5, normalizedDistance));
@@ -765,7 +769,7 @@ const Homepage = () => {
                 <h1 className="hero-title">
                   {heroData?.title || "Advancing Global Research Through Innovation"}
                 </h1>
-                
+
                 {/* Description */}
                 <p className="hero-desc">
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
@@ -773,7 +777,7 @@ const Homepage = () => {
 
                 {/* Action Buttons */}
                 <div className="hero-cta-buttons">
-                  <Link
+                  {/* <Link
                     to="/submit-abstract"
                     className="btn-premium-primary"
                   >
@@ -784,11 +788,11 @@ const Homepage = () => {
                     onClick={() => navigate("/conferences")}
                   >
                     Explore Conferences
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
-            
+
             {/* Right Column: 3-Image Collage */}
             <div className="hero-right animate-fade-in-right">
               <div className="hero-collage-wrap">
@@ -850,7 +854,14 @@ const Homepage = () => {
                   <h3>{item.title}</h3>
                   <p className="conf-meta">📅 {item.date}</p>
                   <p className="conf-meta">📍 {item.venue}</p>
-                  <a href={getSubdomainUrl(item.subdomain || item.dbId)} className="btn-view-conf">View Program &rarr;</a>
+                  <a 
+                    href={getSubdomainUrl(item.subdomain || item.dbId)} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="btn-view-conf"
+                  >
+                    View Program &rarr;
+                  </a>
                 </div>
               </div>
             ))}
@@ -1032,7 +1043,7 @@ const Homepage = () => {
       </section>
 
       {/* 4. CONFERENCE CATEGORIES (REDESIGNED & DYNAMIC) */}
-      <section className="section categories-redesign">
+      {/* <section className="section categories-redesign">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Fields of Study</span>
@@ -1057,10 +1068,10 @@ const Homepage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 8. CALL FOR PAPERS (REDESIGNED & DYNAMIC) */}
-      <section className="section call-for-papers-redesign">
+      {/* <section className="section call-for-papers-redesign">
         <div className="container">
           <div className="cfp-card-wrap glass-panel">
             <div className="cfp-text-side">
@@ -1093,10 +1104,10 @@ const Homepage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 9 & 10. KEYNOTES & ADVISORY BOARD (MERGED & TOGGLEABLE) */}
-      <section className="section speakers-committee-redesign">
+      {/* <section className="section speakers-committee-redesign">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Committee & Keynotes</span>
@@ -1166,10 +1177,10 @@ const Homepage = () => {
             </div>
           )}
         </div>
-      </section>
+      </section> */}
 
       {/* 13. SPONSORS & PARTNERS (REDESIGNED & DYNAMIC LOGOS) */}
-      <section className="section sponsors-redesign">
+      {/* <section className="section sponsors-redesign">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Partnerships</span>
@@ -1181,7 +1192,7 @@ const Homepage = () => {
           <div className="sponsors-ticker-wrapper">
             <div className="sponsors-ticker-content">
               {/* First set of logos */}
-              <div className="sponsors-ticker-group">
+              {/* <div className="sponsors-ticker-group">
                 {sponsorsList.map((sp) => (
                   <div key={sp.id} className="sponsor-ticker-item">
                     <SponsorLogo name={sp.sponsorName} />
@@ -1197,10 +1208,10 @@ const Homepage = () => {
                     <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
                     <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
                   </>
-                )}
-              </div>
+                )} */}
+              {/* </div> */} */
               {/* Second set of logos (Duplicated for seamless loop) */}
-              <div className="sponsors-ticker-group" aria-hidden="true">
+              {/* <div className="sponsors-ticker-group" aria-hidden="true">
                 {sponsorsList.map((sp) => (
                   <div key={`dup-${sp.id}`} className="sponsor-ticker-item">
                     <SponsorLogo name={sp.sponsorName} />
@@ -1221,51 +1232,83 @@ const Homepage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 19. GALLERY (REDESIGNED & DYNAMIC) */}
-      <section className="section gallery-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Visual Timeline</span>
-            <h2 className="section-title">Large Congress Gallery Section</h2>
-            <p className="section-desc">
-              Visual records representing collaborative discussions, presentations, and award dinners.
-            </p>
-          </div>
-          <div className="gallery-filter-bar">
-            {["all", "auditorium", "networking", "awards"].map((tag) => (
-              <button
-                key={tag}
-                className={`gallery-filter-btn ${galleryActiveTag === tag ? "active" : ""}`}
-                onClick={() => setGalleryActiveTag(tag)}
-              >
-                {tag.toUpperCase()} PHOTOS
-              </button>
-            ))}
-          </div>
-          <div className="gallery-slider-wrapper">
-            <button className="gallery-nav-btn prev" onClick={() => scrollGallery("left")} aria-label="Previous Image">
-              ‹
-            </button>
-            <div className="gallery-grid-redesign-expanded" ref={galleryRef}>
-              {filteredGallery.map((photo, i) => (
-                <div className="gallery-img-holder-expanded card-premium" key={i}>
-                  <OptimizedImage src={photo.url} alt={`Congress moment ${photo.tag} ${i + 1}`} fallbackType="conference" />
-                  <span className="gallery-tag-label">{photo.tag.toUpperCase()}</span>
-                </div>
-              ))}
+      {(galleryVisible || isAdmin) && (
+        <section className="section gallery-redesign" style={{ position: "relative" }}>
+          {/* Admin Indicator (only visible to admins when section is deactivated) */}
+          {isAdmin && !galleryVisible && (
+            <div style={{
+              position: "absolute",
+              top: "14px",
+              right: "20px",
+              zIndex: 50,
+            }}>
+              <span style={{
+                background: "rgba(239, 68, 68, 0.15)",
+                color: "#ef4444",
+                border: "1px solid rgba(239, 68, 68, 0.4)",
+                borderRadius: "6px",
+                padding: "6px 14px",
+                fontSize: "12.5px",
+                fontWeight: 700,
+                letterSpacing: "0.02em"
+              }}>
+                🚫 Hidden from public (Disabled in Admin Panel)
+              </span>
             </div>
-            <button className="gallery-nav-btn next" onClick={() => scrollGallery("right")} aria-label="Next Image">
-              ›
-            </button>
+          )}
+
+          {/* Section content — dimmed when hidden (admin preview) */}
+          <div style={{
+            opacity: !galleryVisible && isAdmin ? 0.35 : 1,
+            pointerEvents: !galleryVisible && isAdmin ? "none" : "auto",
+            transition: "opacity 0.3s ease"
+          }}>
+            <div className="container">
+              <div className="section-header">
+                <span className="section-tag">Visual Timeline</span>
+                <h2 className="section-title">Large Congress Gallery Section</h2>
+                <p className="section-desc">
+                  Visual records representing collaborative discussions, presentations, and award dinners.
+                </p>
+              </div>
+              <div className="gallery-filter-bar">
+                {["all", "auditorium", "networking", "awards"].map((tag) => (
+                  <button
+                    key={tag}
+                    className={`gallery-filter-btn ${galleryActiveTag === tag ? "active" : ""}`}
+                    onClick={() => setGalleryActiveTag(tag)}
+                  >
+                    {tag.toUpperCase()} PHOTOS
+                  </button>
+                ))}
+              </div>
+              <div className="gallery-slider-wrapper">
+                <button className="gallery-nav-btn prev" onClick={() => scrollGallery("left")} aria-label="Previous Image">
+                  ‹
+                </button>
+                <div className="gallery-grid-redesign-expanded" ref={galleryRef}>
+                  {filteredGallery.map((photo, i) => (
+                    <div className="gallery-img-holder-expanded card-premium" key={i}>
+                      <OptimizedImage src={photo.url} alt={`Congress moment ${photo.tag} ${i + 1}`} fallbackType="conference" />
+                      <span className="gallery-tag-label">{photo.tag.toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+                <button className="gallery-nav-btn next" onClick={() => scrollGallery("right")} aria-label="Next Image">
+                  ›
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 23. FOOTER (UNTOUCHED) */}
       <Footer />
-    </div>  );
+    </div>);
 };
 
 export default Homepage;

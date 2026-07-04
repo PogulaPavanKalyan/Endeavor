@@ -404,6 +404,8 @@ public class AdminController {
             Sponsor sponsor = sponsorOpt.get();
             sponsor.setSponsorName(sponsorDetails.getSponsorName());
             sponsor.setDescription(sponsorDetails.getDescription());
+            sponsor.setTier(sponsorDetails.getTier());
+            sponsor.setConferenceId(sponsorDetails.getConferenceId());
             if (sponsorDetails.getImage() != null) {
                 sponsor.setImage(sponsorDetails.getImage());
             }

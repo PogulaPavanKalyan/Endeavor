@@ -25,6 +25,7 @@ public class SiteStatisticsService {
         if (incoming.getCountriesCount() != null) stats.setCountriesCount(incoming.getCountriesCount());
         if (incoming.getResearchersCount() != null) stats.setResearchersCount(incoming.getResearchersCount());
         if (incoming.getPublicationsCount() != null) stats.setPublicationsCount(incoming.getPublicationsCount());
+        if (incoming.getGalleryVisible() != null) stats.setGalleryVisible(incoming.getGalleryVisible());
         return siteStatisticsRepository.save(stats);
     }
 }

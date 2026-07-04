@@ -26,6 +26,7 @@ const ConferenceHome = () => {
   const [activeSection, setActiveSection] = useState(null);
   const [tracks, setTracks] = useState([]);
   const [infoUpdates, setInfoUpdates] = useState([]);
+  const [sponsors, setSponsors] = useState([]);
   const [activeTab, setActiveTab] = useState("");
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -114,11 +115,12 @@ const ConferenceHome = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [sessionsData, sectionsData, infoData, tracksData] = await Promise.all([
+        const [sessionsData, sectionsData, infoData, tracksData, sponsorsData] = await Promise.all([
           api.get(`/api/sessions?conferenceId=${conference.id}`),
           api.get(`/api/conference-sections?conferenceId=${conference.id}`),
           api.get("/api/info-updates"),
-          api.get(`/api/tracks?conferenceId=${conference.id}`)
+          api.get(`/api/tracks?conferenceId=${conference.id}`),
+          api.get(`/api/sponsors?conferenceId=${conference.id}`).catch(() => [])
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
@@ -135,6 +137,9 @@ const ConferenceHome = () => {
         }
         if (Array.isArray(tracksData)) {
           setTracks(tracksData.filter(t => t.isEnabled));
+        }
+        if (Array.isArray(sponsorsData)) {
+          setSponsors(sponsorsData);
         }
       } catch (err) {
         console.error("Failed to load home page dynamic details:", err);
@@ -398,10 +403,7 @@ const ConferenceHome = () => {
               </div>
             </div>
 
-            <div style={{ marginTop: "35px", display: "flex", gap: "15px", flexWrap: "wrap" }}>
-              <Link to={getSubRoutePath ? getSubRoutePath("register") : "register"} className="btn-conf-submit" style={{ textDecoration: "none", display: "inline-block" }}>Register Now</Link>
-              <Link to={getSubRoutePath ? getSubRoutePath("submit-abstract") : "submit-abstract"} className="btn-conf-download" style={{ textDecoration: "none", display: "inline-block" }}>Submit Abstract</Link>
-            </div>
+            
           </div>
           <div className="conf-about-image" style={{ alignSelf: "start", marginTop: "15px" }}>
             <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80" alt="Conference Presentation" style={{ width: "100%", borderRadius: "12px", boxShadow: "0 15px 40px rgba(15, 23, 42, 0.08)" }} />
@@ -476,7 +478,12 @@ const ConferenceHome = () => {
                     </div>
                   ))}
                 </div>
+                
               </div>
+              <div style={{ marginTop: "35px", display: "flex", gap: "15px", flexWrap: "wrap" }}>
+              <Link to={getSubRoutePath ? getSubRoutePath("register") : "register"} className="btn-conf-submit" style={{ textDecoration: "none", display: "inline-block" }}>Register Now</Link>
+              <Link to={getSubRoutePath ? getSubRoutePath("submit-abstract") : "submit-abstract"} className="btn-conf-download" style={{ textDecoration: "none", display: "inline-block" }}>Submit Abstract</Link>
+            </div>
             </div>
           </section>
         );
@@ -538,6 +545,74 @@ const ConferenceHome = () => {
                 ))
               )}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Media Partners & Sponsors Section (Admin added only) */}
+      {sponsors && sponsors.length > 0 && (
+        <section className="conf-sponsors-partners-section">
+          <div className="container">
+            <div className="conf-section-header">
+              <span className="sponsors-tag-pill">Partnerships</span>
+              <h2>Media Partners &amp; Sponsors</h2>
+              <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+                We are proud to collaborate with prestigious indexing partners, academic publishers, and corporate supporters.
+              </p>
+            </div>
+
+            {(() => {
+              const groups = {};
+              sponsors.forEach(s => {
+                const tier = s.tier || "SILVER";
+                if (!groups[tier]) groups[tier] = [];
+                groups[tier].push(s);
+              });
+
+              const tierOrder = ["PLATINUM", "GOLD", "SILVER", "BRONZE", "PARTNER"];
+
+              return (
+                <div className="sponsors-tiers-container">
+                  {tierOrder.map(tier => {
+                    const list = groups[tier];
+                    if (!list || list.length === 0) return null;
+
+                    const label = tier.charAt(0) + tier.slice(1).toLowerCase();
+
+                    return (
+                      <div key={tier} className={`sponsor-tier-group tier-${tier.toLowerCase()}`}>
+                        <div className="tier-badge-header">
+                          <span className="tier-badge-label">{label} Partners</span>
+                        </div>
+                        <div className="sponsor-logos-grid">
+                          {list.map(sp => {
+                            const logoUrl = sp.image?.fileName
+                              ? `${BASE_URL}/uploads/sponsors/${sp.image.fileName}`
+                              : null;
+
+                            return (
+                              <div key={sp.id} className="sponsor-logo-box">
+                                <div className="logo-inner">
+                                  {logoUrl ? (
+                                    <img src={logoUrl} alt={sp.sponsorName} className="sponsor-img-element" />
+                                  ) : (
+                                    <span className="sponsor-text-element">{sp.sponsorName}</span>
+                                  )}
+                                </div>
+                                <div className="logo-hover-details">
+                                  <h4>{sp.sponsorName}</h4>
+                                  {sp.description && <p>{sp.description}</p>}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </section>
       )}
@@ -655,6 +730,8 @@ const ConferenceHome = () => {
           </section>
         );
       })()}
+
+
 
       {/* Speaker Details Modal */}
       {selectedSpeaker && (

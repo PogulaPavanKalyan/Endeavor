@@ -707,12 +707,260 @@
   box-shadow: 0 6px 14px rgba(234, 88, 12, 0.35);
 }
 
+/* ═══════════════════════════════════════════════════
+   MEDIA PARTNERS & SPONSORS SECTION
+═══════════════════════════════════════════════════ */
+.conf-sponsors-partners-section {
+  padding: 75px 0 85px;
+  background: #ffffff;
+  border-top: 1px solid #f1f5f9;
+  position: relative;
+}
+
+.sponsors-tag-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--conf-primary, #f97316);
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 50px;
+  padding: 4px 14px;
+  margin-bottom: 12px;
+}
+
+.sponsors-tiers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  margin-top: 40px;
+}
+
+.sponsor-tier-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.tier-badge-header {
+  margin-bottom: 26px;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier-badge-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+
+.tier-badge-label {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 0 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+/* Tier Specific Badges */
+.tier-platinum .tier-badge-label {
+  color: #1e40af;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.tier-gold .tier-badge-label {
+  color: #92400e;
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.tier-silver .tier-badge-label {
+  color: #374151;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.tier-bronze .tier-badge-label {
+  color: #c2410c;
+  background-color: #ffedd5;
+  border: 1px solid #fed7aa;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.tier-partner .tier-badge-label {
+  color: #5b21b6;
+  background-color: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+
+.sponsor-logos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.sponsor-logo-box {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  width: 210px;
+  height: 95px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+}
+
+.logo-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sponsor-img-element {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.85);
+  transition: all 0.3s ease;
+}
+
+.sponsor-text-element {
+  font-size: 16px;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* Hover States */
+.sponsor-logo-box:hover {
+  transform: translateY(-5px);
+  border-color: var(--conf-primary, #f97316);
+  box-shadow: 0 12px 24px -5px rgba(249, 115, 22, 0.12), 0 8px 8px -5px rgba(0, 0, 0, 0.04);
+  z-index: 10;
+}
+
+.sponsor-logo-box:hover .sponsor-img-element {
+  filter: grayscale(0%) opacity(1);
+}
+
+/* Tooltip Description - Positioned below the logo box to prevent overlap with tier headers */
+.logo-hover-details {
+  position: absolute;
+  top: calc(100% + 12px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: 240px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 14px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  text-align: center;
+}
+
+.logo-hover-details::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #0f172a transparent;
+}
+
+.sponsor-logo-box:hover .logo-hover-details {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.logo-hover-details h4 {
+  margin: 0 0 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.logo-hover-details p {
+  margin: 0;
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .conf-sponsors-partners-section {
+    padding: 55px 0 65px;
+  }
+
+  .sponsors-tiers-container {
+    gap: 35px;
+  }
+
+  .sponsor-logo-box {
+    width: 150px;
+    height: 75px;
+    padding: 10px;
+  }
+
+  .sponsor-text-element {
+    font-size: 13px;
+  }
+}
+
+/* Info Update Section – Desktop Grid */
+.info-updates-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
 /* Info Update Cards hover effects */
 .info-update-card {
   background: #ffffff;
   border-radius: 16px;
   overflow: hidden;
   width: 320px;
+  flex: 0 0 calc(33.333% - 22px);
+  max-width: 360px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   text-decoration: none;
@@ -754,6 +1002,15 @@
   font-weight: 800;
 }
 
+/* Tablet: 2 columns */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .info-update-card {
+    flex: 0 0 calc(50% - 16px);
+    max-width: calc(50% - 16px);
+    width: auto;
+  }
+}
+
 /* Responsive Mobile Horizontal Curve Scroll */
 @media (max-width: 768px) {
   .info-updates-grid {
@@ -777,5 +1034,6 @@
     scroll-snap-align: center;
     flex: 0 0 280px;
     width: 280px;
+    max-width: 280px;
   }
 }

@@ -22,6 +22,9 @@ public class SiteStatistics {
     @Column(nullable = false)
     private Integer publicationsCount = 500;
 
+    @Column(nullable = false)
+    private Boolean galleryVisible = true;
+
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -33,6 +36,9 @@ public class SiteStatistics {
     public SiteStatistics() {}
 
     // Getters and Setters
+    public Boolean getGalleryVisible() { return galleryVisible; }
+    public void setGalleryVisible(Boolean galleryVisible) { this.galleryVisible = galleryVisible; }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
