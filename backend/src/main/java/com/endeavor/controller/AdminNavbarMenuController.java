@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174", "http://51.21.159.47:8000"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174", "http://51.21.159.47:8000"}, originPatterns = {"https://*.intelevoresearch.org", "https://intelevoresearch.org"})
 @RequestMapping("/api/admin/navbar-menus")
 public class AdminNavbarMenuController {
 

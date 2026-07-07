@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
@@ -80,7 +80,7 @@ const OptimizedImage = ({ src, alt, className, fallbackType = "conference" }) =>
             {fallbackType === "avatar" ? "👤" : fallbackType === "research" ? "🔬" : "🏛️"}
           </span>
           <span style={{ fontSize: "11px", fontWeight: "600", opacity: 0.85, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-            {alt || "Endeavor"}
+            {alt || "Intelevo Research"}
           </span>
         </div>
       ) : (
@@ -369,16 +369,16 @@ const FALLBACK_BADGES = [
 const FALLBACK_ABOUT = {
   title: "Empowering Global Scientific Discovery",
   tag: "About Organization",
-  description: "Research Endeavor acts as a pivotal axis connecting international experts, ideas, and publication pathways.",
+  description: "Intelevo Research acts as a pivotal axis connecting international experts, ideas, and publication pathways.",
   pillars: [
-    { icon: "👤", title: "Who We Are", desc: "Endeavor Conferences brings together academicians, researchers, and engineers worldwide to exchange discoveries." },
+    { icon: "👤", title: "Who We Are", desc: "Intelevo Research brings together academicians, researchers, and engineers worldwide to exchange discoveries." },
     { icon: "🎯", title: "What We Do", desc: "We build communities through high-quality international meetings, workshops, virtual webinars, and proceedings." },
     { icon: "💡", title: "Why Choose Us", desc: "Exceptional global networking, robust abstract review, and guaranteed distribution through indexed media channels." }
   ],
   tabs: {
     about: {
       title: "About Company",
-      text: "Research Endeavor is the scientific perseverance and so is the learning. Scientific Events are not just limited to discussion, but to connect people with people, people with ideas, and people with opportunities. Endeavor Research is one of the innovative organizers of webinars, conferences, workshops and exhibitions.",
+      text: "Intelevo Research is the scientific perseverance and so is the learning. Scientific Events are not just limited to discussion, but to connect people with people, people with ideas, and people with opportunities. Intelevo Research is one of the innovative organizers of webinars, conferences, workshops and exhibitions.",
       images: [
         "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"
@@ -398,7 +398,7 @@ const FALLBACK_PAST_CONFERENCES = [
 
 const FALLBACK_TIMELINE = {
   day1: [
-    { id: 101, name: "Registration, Credentials Collection & Welcome Coffee", timeRange: "08:30 AM - 09:30 AM", speakerName: "Steering Committee", affiliation: "Endeavor Board", description: "Attendees sign in and collect validation badges, folders, and conference catalogs." }
+    { id: 101, name: "Registration, Credentials Collection & Welcome Coffee", timeRange: "08:30 AM - 09:30 AM", speakerName: "Steering Committee", affiliation: "Intelevo Research Board", description: "Attendees sign in and collect validation badges, folders, and conference catalogs." }
   ]
 };
 
@@ -411,7 +411,7 @@ const FALLBACK_PUBLICATIONS = [
 ];
 
 const FALLBACK_JOURNALS = [
-  { name: "International Journal of Food Sciences", publisher: "Endeavor Publications Group", impact: "4.8", issn: "ISSN 2643-9821", indexing: "Scopus, Web of Science, Google Scholar" }
+  { name: "International Journal of Food Sciences", publisher: "Intelevo Research Publications", impact: "4.8", issn: "ISSN 2643-9821", indexing: "Scopus, Web of Science, Google Scholar" }
 ];
 
 const FALLBACK_WEBINARS = [
@@ -433,7 +433,7 @@ const FALLBACK_NEWS = [
 const FALLBACK_CFP = {
   title: "Share Your Innovations Internationally",
   badge: "Call For Abstracts 2026",
-  description: "Submitting your proposal to Endeavor Conferences is streamlined. Authors upload word/pdf drafts.",
+  description: "Submitting your proposal to Intelevo Research is streamlined. Authors upload word/pdf drafts.",
   image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80"
 };
 
@@ -854,10 +854,10 @@ const Homepage = () => {
                   <h3>{item.title}</h3>
                   <p className="conf-meta">📅 {item.date}</p>
                   <p className="conf-meta">📍 {item.venue}</p>
-                  <a 
-                    href={getSubdomainUrl(item.subdomain || item.dbId)} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={getSubdomainUrl(item.subdomain || item.dbId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="btn-view-conf"
                   >
                     View Program &rarr;
@@ -966,7 +966,7 @@ const Homepage = () => {
                 {aboutData?.title || "Empowering Global Scientific Discovery"}
               </h2>
               <p className="about-lead-para">
-                {aboutData?.description || "Research Endeavor acts as a pivotal axis connecting international experts, ideas, and publication pathways across 50+ countries."}
+                {aboutData?.description || "Intelevo Research acts as a pivotal axis connecting international experts, ideas, and publication pathways across 50+ countries."}
               </p>
 
               {/* 4 Service Highlight Cards – 2×2 grid */}
@@ -1041,231 +1041,10 @@ const Homepage = () => {
 
         </div>
       </section>
-
-      {/* 4. CONFERENCE CATEGORIES (REDESIGNED & DYNAMIC) */}
-      {/* <section className="section categories-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Fields of Study</span>
-            <h2 className="section-title">Diverse Academic Frontiers</h2>
-            <p className="section-desc">
-              Explore scientific calls and programs across all major disciplines and technical directories.
-            </p>
-          </div>
-          <div className="categories-grid-redesign">
-            {categories.map((cat, i) => (
-              <div className="category-card-redesign card-premium" key={i}>
-                <div className="cat-image-wrap">
-                  <OptimizedImage src={cat.image} alt={cat.label} className="cat-img" fallbackType="research" />
-                  <div className="cat-img-overlay" />
-                  <span className="cat-icon-badge">{cat.icon}</span>
-                </div>
-                <div className="cat-content">
-                  <h3>{cat.label}</h3>
-                  <p>{cat.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
-      {/* 8. CALL FOR PAPERS (REDESIGNED & DYNAMIC) */}
-      {/* <section className="section call-for-papers-redesign">
-        <div className="container">
-          <div className="cfp-card-wrap glass-panel">
-            <div className="cfp-text-side">
-              <span className="cfp-badge">{callForAbstracts?.badge || "Call For Abstracts 2026"}</span>
-              <h2>{callForAbstracts?.title || "Share Your Innovations Internationally"}</h2>
-              <p>
-                {callForAbstracts?.description || "Submitting your proposal to Endeavor Conferences is streamlined. Authors must register, upload a short draft abstract (word/pdf format), and select their target research category."}
-              </p>
-              <div className="cfp-milestones">
-                <div className="milestone">
-                  <strong>Milestone A</strong>
-                  <span>Topic Selection</span>
-                </div>
-                <div className="milestone">
-                  <strong>Milestone B</strong>
-                  <span>Document Upload</span>
-                </div>
-                <div className="milestone">
-                  <strong>Milestone C</strong>
-                  <span>Portal Submission</span>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                <Link to="/submit-abstract" className="btn-cfp-action">Submit Abstract proposal &rarr;</Link>
-                <Link to="/conferences" className="btn-cfp-secondary">Abstract Guidelines</Link>
-              </div>
-            </div>
-            <div className="cfp-image-side">
-              <OptimizedImage src={callForAbstracts?.image} alt="Academic publishing review process" className="cfp-hero-img shadow-premium" fallbackType="research" />
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* 9 & 10. KEYNOTES & ADVISORY BOARD (MERGED & TOGGLEABLE) */}
-      {/* <section className="section speakers-committee-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Committee & Keynotes</span>
-            <h2 className="section-title">Keynote Speakers & Steering Committee</h2>
-            <p className="section-desc">
-              Distinguished scholars, world-renowned keynote presenters, and steering members directing the congress.
-            </p>
-          </div>
-
-          <div className="committee-filter-bar">
-            <button
-              className={`filter-btn ${committeeActiveTab === "keynotes" ? "active" : ""}`}
-              onClick={() => setCommitteeActiveTab("keynotes")}
-            >
-              KEYNOTE SPEAKERS
-            </button>
-            <button
-              className={`filter-btn ${committeeActiveTab === "committee" ? "active" : ""}`}
-              onClick={() => setCommitteeActiveTab("committee")}
-            >
-              STEERING COMMITTEE
-            </button>
-          </div>
-
-          {committeeActiveTab === "keynotes" ? (
-            <div className="speakers-grid-redesign">
-              {speakersList.slice(0, 4).map((s, i) => {
-                const headshot = s.photo?.filePath && s.photo.filePath.startsWith("http")
-                  ? s.photo.filePath
-                  : (s.photo?.fileName ? `${BASE_URL}/uploads/speakers/${s.photo.fileName}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=FFF1F5&color=E91E63&size=200`);
-                return (
-                  <div className="speaker-card-redesign card-premium" key={i}>
-                    <div className="speaker-avatar-wrap">
-                      <OptimizedImage src={headshot} alt={s.name} fallbackType="avatar" />
-                    </div>
-                    <div className="speaker-meta-info">
-                      <h3>{s.name}</h3>
-                      <p className="speaker-role">{s.designation}</p>
-                      <p className="speaker-aff">{s.affiliation}</p>
-                      {s.country && <span className="speaker-country-chip">🌍 {s.country}</span>}
-                    </div>
-                  </div>
-                );
-              })}
-              {speakersList.length === 0 && (
-                <p className="empty-state">No keynote speakers listed at the moment.</p>
-              )}
-            </div>
-          ) : (
-            <div className="speakers-grid-redesign">
-              {committeeMembers.map((member, i) => (
-                <div className="speaker-card-redesign card-premium" key={i}>
-                  <div className="speaker-avatar-wrap">
-                    <OptimizedImage src={member.photo} alt={member.name} fallbackType="avatar" />
-                  </div>
-                  <div className="speaker-meta-info">
-                    <h3>{member.name}</h3>
-                    <p className="speaker-role">{member.role}</p>
-                    <p className="speaker-aff">{member.institution}</p>
-                    {member.country && <span className="speaker-country-chip">🌍 {member.country}</span>}
-                  </div>
-                </div>
-              ))}
-              {committeeMembers.length === 0 && (
-                <p className="empty-state">No committee members listed at the moment.</p>
-              )}
-            </div>
-          )}
-        </div>
-      </section> */}
-
-      {/* 13. SPONSORS & PARTNERS (REDESIGNED & DYNAMIC LOGOS) */}
-      {/* <section className="section sponsors-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Partnerships</span>
-            <h2 className="section-title">Organizers, Sponsors & Media Partners</h2>
-            <p className="section-desc">
-              Supported by leading academic groups, corporate sponsors, and international media partners.
-            </p>
-          </div>
-          <div className="sponsors-ticker-wrapper">
-            <div className="sponsors-ticker-content">
-              {/* First set of logos */}
-              {/* <div className="sponsors-ticker-group">
-                {sponsorsList.map((sp) => (
-                  <div key={sp.id} className="sponsor-ticker-item">
-                    <SponsorLogo name={sp.sponsorName} />
-                  </div>
-                ))}
-                {sponsorsList.length === 0 && (
-                  <>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="IEEE" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Springer Nature" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Elsevier" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Google Scholar" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="CrossRef" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
-                  </>
-                )} */}
-              {/* </div> */} */
-              {/* Second set of logos (Duplicated for seamless loop) */}
-              {/* <div className="sponsors-ticker-group" aria-hidden="true">
-                {sponsorsList.map((sp) => (
-                  <div key={`dup-${sp.id}`} className="sponsor-ticker-item">
-                    <SponsorLogo name={sp.sponsorName} />
-                  </div>
-                ))}
-                {sponsorsList.length === 0 && (
-                  <>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="IEEE" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Springer Nature" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Elsevier" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Google Scholar" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="CrossRef" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Scopus" /></div>
-                    <div className="sponsor-ticker-item"><SponsorLogo name="Web of Science" /></div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
       {/* 19. GALLERY (REDESIGNED & DYNAMIC) */}
-      {(galleryVisible || isAdmin) && (
+      {galleryVisible && (
         <section className="section gallery-redesign" style={{ position: "relative" }}>
-          {/* Admin Indicator (only visible to admins when section is deactivated) */}
-          {isAdmin && !galleryVisible && (
-            <div style={{
-              position: "absolute",
-              top: "14px",
-              right: "20px",
-              zIndex: 50,
-            }}>
-              <span style={{
-                background: "rgba(239, 68, 68, 0.15)",
-                color: "#ef4444",
-                border: "1px solid rgba(239, 68, 68, 0.4)",
-                borderRadius: "6px",
-                padding: "6px 14px",
-                fontSize: "12.5px",
-                fontWeight: 700,
-                letterSpacing: "0.02em"
-              }}>
-                🚫 Hidden from public (Disabled in Admin Panel)
-              </span>
-            </div>
-          )}
-
-          {/* Section content — dimmed when hidden (admin preview) */}
-          <div style={{
-            opacity: !galleryVisible && isAdmin ? 0.35 : 1,
-            pointerEvents: !galleryVisible && isAdmin ? "none" : "auto",
-            transition: "opacity 0.3s ease"
-          }}>
+          <div>
             <div className="container">
               <div className="section-header">
                 <span className="section-tag">Visual Timeline</span>

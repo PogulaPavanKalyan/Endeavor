@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
@@ -67,7 +67,7 @@ const Footer = () => {
           {/* Column 1 – Brand */}
           <div className="footer-col-brand">
             <div className="footer-logo">
-              <img src="/logo.png" alt="Endeavor Research Group" className="footer-logo-img" />
+              <img src="/logo.png" alt="Intelevo Research" className="footer-logo-img" />
             </div>
             <p className="brand-desc">
               Empowering global research communities through international conferences,
@@ -181,7 +181,7 @@ const Footer = () => {
             <div id="footer-contact-info-container" className="contact-cards-container">
               <div className="contact-info-card">
                 <h4>Email</h4>
-                <p><a href="mailto:info@endeavorresearchgroup.com">info@endeavorresearchgroup.com</a></p>
+                <p><a href="mailto:info@intelevoresearch.org">info@intelevoresearch.org</a></p>
               </div>
               <div className="contact-info-card">
                 <h4>Phone</h4>
@@ -257,7 +257,7 @@ const Footer = () => {
       <div className="footer-bottom-bar">
         <div className="bottom-bar-container">
           <div className="bottom-copyright">
-            <p>© {new Date().getFullYear()} Endeavor Research Private Limited. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} Intelevo Research Private Limited. All Rights Reserved.</p>
           </div>
 
           <div className="bottom-legal-links">

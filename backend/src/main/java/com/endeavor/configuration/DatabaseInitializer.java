@@ -163,7 +163,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             foodScience.setStartDate("2026-07-08");
             foodScience.setEndDate("2026-07-10");
             foodScience.setVenue("Valencia, Spain");
-            foodScience.setContactEmail("foodscience@endeavorresearchgroup.net");
+            foodScience.setContactEmail("foodscience@intelevoresearch.org");
             foodScience.setContactPhone("+1 (209) 299-5348");
 
             ConferencePhoto p1 = new ConferencePhoto();
@@ -184,7 +184,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             medical.setStartDate("2026-09-12");
             medical.setEndDate("2026-09-14");
             medical.setVenue("London, UK");
-            medical.setContactEmail("medical@endeavorresearchgroup.net");
+            medical.setContactEmail("medical@intelevoresearch.org");
             medical.setContactPhone("+1 (209) 299-5348");
 
             ConferencePhoto p2 = new ConferencePhoto();
@@ -205,7 +205,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             engineering.setStartDate("2026-10-22");
             engineering.setEndDate("2026-10-24");
             engineering.setVenue("Dubai, UAE");
-            engineering.setContactEmail("engineering@endeavorresearchgroup.net");
+            engineering.setContactEmail("engineering@intelevoresearch.org");
             engineering.setContactPhone("+1 (209) 299-5348");
 
             ConferencePhoto p3 = new ConferencePhoto();
@@ -225,7 +225,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             materials.setStartDate("2026-11-15");
             materials.setEndDate("2026-11-17");
             materials.setVenue("Singapore");
-            materials.setContactEmail("materials@endeavorresearchgroup.net");
+            materials.setContactEmail("materials@intelevoresearch.org");
             materials.setContactPhone("+1 (209) 299-5348");
 
             ConferencePhoto p4 = new ConferencePhoto();

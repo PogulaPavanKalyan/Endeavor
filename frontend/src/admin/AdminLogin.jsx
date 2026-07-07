@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 import "./AdminLogin.css";
@@ -36,7 +36,7 @@ const AdminLogin = () => {
       <div className="login-overlay"></div>
       <div className="login-card">
         <div className="login-header">
-          <img src="/logo.png" alt="Endeavor Conferences" className="login-logo" />
+          <img src="/logo.png" alt="Intelevo Research" className="login-logo" />
           <h2>Admin Console</h2>
           <p>Sign in to configure speakers, schedules, and view submissions.</p>
         </div>

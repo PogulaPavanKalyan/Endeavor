@@ -18,7 +18,7 @@ import java.util.*;
     "http://127.0.0.1:5174",
     "http://127.0.0.1:5175",
     "http://51.21.159.47:8000"
-})
+}, originPatterns = {"https://*.intelevoresearch.org", "https://intelevoresearch.org"})
 public class DynamicContentController {
 
     @GetMapping("/homepage-dynamic-data")
@@ -29,26 +29,26 @@ public class DynamicContentController {
         Map<String, Object> about = new HashMap<>();
         about.put("title", "Empowering Global Scientific Discovery");
         about.put("tag", "About Organization");
-        about.put("description", "Research Endeavor acts as a pivotal axis connecting international experts, ideas, and publication pathways.");
+        about.put("description", "Intelevo Research acts as a pivotal axis connecting international experts, ideas, and publication pathways.");
 
         List<Map<String, String>> pillars = new ArrayList<>();
-        pillars.add(createPillar("👤", "Who We Are", "Endeavor Conferences brings together academicians, researchers, and engineers worldwide to exchange discoveries."));
+        pillars.add(createPillar("👤", "Who We Are", "Intelevo Research brings together academicians, researchers, and engineers worldwide to exchange discoveries."));
         pillars.add(createPillar("🎯", "What We Do", "We build communities through high-quality international meetings, workshops, virtual webinars, and proceedings."));
         pillars.add(createPillar("💡", "Why Choose Us", "Exceptional global networking, robust abstract review, and guaranteed distribution through indexed media channels."));
         about.put("pillars", pillars);
 
         Map<String, Map<String, Object>> tabs = new HashMap<>();
         tabs.put("about", createTab("About Company", 
-            "Research Endeavor is the scientific perseverance and so is the learning. Scientific Events are not just limited to discussion, but to connect people with people, people with ideas, and people with opportunities. Endeavor Research is one of the innovative organizers of webinars, conferences, workshops and exhibitions. Our webinars and conferences provide a great platform to share scientific research among the attendees turning up round the globe.",
+            "Intelevo Research is the scientific perseverance and so is the learning. Scientific Events are not just limited to discussion, but to connect people with people, people with ideas, and people with opportunities. Intelevo Research is one of the innovative organizers of webinars, conferences, workshops and exhibitions. Our webinars and conferences provide a great platform to share scientific research among the attendees turning up round the globe.",
             List.of("https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80", 
                     "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80")
         ));
-        tabs.put("scientific", createTab("Scientific Endeavor", 
+        tabs.put("scientific", createTab("Scientific Mission", 
             "The very cognizance of How, What, Why, When, Where has been at the core of scientific endeavor, and has been the forefront in understanding the needs and creating developments which have improved life on Earth in boundless manners. Presently, life on this planet is confronting new difficulties from both nature and the constructed world, and logical application is our best instrument with which to respond. Science is a worldwide undertaking and we as researchers have the responsibility to make meetings more reasonable, and open to thoughtful analysis and experts.",
             List.of("https://images.unsplash.com/photo-1579389083046-7c64c784dc24?auto=format&fit=crop&w=800&q=80", 
                     "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80")
         ));
-        tabs.put("meeting", createTab("Meeting Endeavor", 
+        tabs.put("meeting", createTab("Meeting Goals", 
             "The very conscience of explore-get-explored and connect in an inexorably interconnected world encouraged by innovative progressions in correspondence, choices have been investigated to supplant the in-person experience that is unreachable for some experts, and ideal occasion to change logical gatherings. Webinars and Video-and virtual-conferencing of talks can significantly upgrade gathering openness and improve the experience and interaction.",
             List.of("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80", 
                     "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80")
@@ -83,7 +83,7 @@ public class DynamicContentController {
         // 4. Programs Timeline
         Map<String, List<Map<String, Object>>> timeline = new HashMap<>();
         timeline.put("day1", List.of(
-            createSession(101, "Registration, Credentials Collection & Welcome Coffee", "08:30 AM - 09:30 AM", "Steering Committee", "Endeavor Board", "Attendees sign in and collect validation badges, folders, and conference catalogs."),
+            createSession(101, "Registration, Credentials Collection & Welcome Coffee", "08:30 AM - 09:30 AM", "Steering Committee", "Intelevo Research Board", "Attendees sign in and collect validation badges, folders, and conference catalogs."),
             createSession(102, "Official Opening Remarks & Plenary Keynote Address", "09:30 AM - 10:45 AM", "Dr. Andrea Miller", "University of Valencia", "Discussing agricultural stability, food security challenges, and technological adaptation."),
             createSession(103, "Track Session 01: Artificial Intelligence & Edge Paradigms", "11:00 AM - 01:00 PM", "Oral Presenters", "Track Chairs", "Presentations of accepted abstracts regarding deep learning models and diagnostics."),
             createSession(104, "Networking Lunch & Poster Presentation Walk", "01:00 PM - 02:00 PM", "All Attendees", "Exhibition Hall", "Interactions and evaluations of poster boards displayed in the main lobby.")
@@ -121,7 +121,7 @@ public class DynamicContentController {
 
         // 7. Associated Journals
         List<Map<String, String>> journals = new ArrayList<>();
-        journals.add(createJournal("International Journal of Food Sciences", "Endeavor Publications Group", "4.8", "ISSN 2643-9821", "Scopus, Web of Science, Google Scholar"));
+        journals.add(createJournal("International Journal of Food Sciences", "Intelevo Research Publications", "4.8", "ISSN 2643-9821", "Scopus, Web of Science, Google Scholar"));
         journals.add(createJournal("Global Medical & Health Review", "Scientific Press International", "5.2", "ISSN 2981-0043", "ESCI, PubMed Direct Link, Scopus"));
         journals.add(createJournal("Advanced Engineering & Tech Journal", "Academic Research Networks", "4.5", "ISSN 2544-7721", "DOAJ, Google Scholar, Web of Science"));
         data.put("journals", journals);
@@ -169,7 +169,7 @@ public class DynamicContentController {
         Map<String, Object> callForAbstracts = new HashMap<>();
         callForAbstracts.put("title", "Share Your Innovations Internationally");
         callForAbstracts.put("badge", "Call For Abstracts 2026");
-        callForAbstracts.put("description", "Submitting your proposal to Endeavor Conferences is streamlined. Authors must register, upload a short draft abstract (word/pdf format), and select their target research category.");
+        callForAbstracts.put("description", "Submitting your proposal to Intelevo Research is streamlined. Authors must register, upload a short draft abstract (word/pdf format), and select their target research category.");
         callForAbstracts.put("image", "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80");
         data.put("callForAbstracts", callForAbstracts);
 

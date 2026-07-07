@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
@@ -83,7 +83,7 @@ const Contact = () => {
                 </div>
                 <div className="contact-item-text">
                   <h4>Address</h4>
-                  <p><strong>Endeavor Research Private Limited</strong></p>
+                  <p><strong>Intelevo Research Private Limited</strong></p>
                   <p>1043 Garland Ave, Unit C #1012,</p>
                   <p>San Jose, CA 95126-3159</p>
                 </div>
@@ -98,8 +98,8 @@ const Contact = () => {
                 </div>
                 <div className="contact-item-text">
                   <h4>Emails</h4>
-                  <p>info@endeavorresearchgroup.com</p>
-                  <p>geology@endeavorresearchgroup.net</p>
+                  <p>info@intelevoresearch.org</p>
+                  <p>geology@intelevoresearch.org</p>
                 </div>
               </div>
 

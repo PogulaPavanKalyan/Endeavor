@@ -596,7 +596,7 @@
   
   .bottom-navbar {
     height: 0;
-    overflow: visible;
+    overflow: hidden;
   }
   
   .bottom-navbar-container,
@@ -671,123 +671,30 @@
     transform: translateY(-8px) rotate(-45deg);
   }
 
-  /* Navigation Drawer Panel */
+  /* ── Desktop nav-menu is fully hidden on mobile ──────────────────────
+     Navigation is handled by MobileDrawer component instead.
+  ─────────────────────────────────────────────────────────────────── */
   .nav-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: min(320px, 85vw);
-    height: 100vh;
-    background-color: var(--nav-navy);
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 80px 24px 60px 24px;
-    gap: 15px;
-    transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.77, 0.2, 0.05, 1);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
-    z-index: 1004;
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: none !important;
   }
 
-  .nav-menu.active {
-    transform: translateX(0);
+  /* Prevent header from overlapping the drawer overlay */
+  .header {
+    z-index: 1000;
   }
 
-  .nav-menu a {
-    font-size: 17px;
-    width: 100%;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    justify-content: space-between;
+  /* When drawer is open, push header behind the overlay */
+  .header.menu-active {
+    z-index: 999;
   }
 
-  .nav-menu a::after {
-    display: none; /* disable animated underline on mobile drawer */
+  /* Hide hamburger when drawer is open — drawer has its own close button */
+  .header.menu-active .hamburger {
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .nav-menu a.active {
-    color: var(--nav-accent);
-    font-weight: 700;
-  }
-
-  /* Accordion dropdown inside drawer */
-  .nav-item-dropdown {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mega-menu-panel {
-    display: none;
-    position: static;
-    transform: none !important;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    box-sizing: border-box;
-    border: none;
-    box-shadow: none;
-  }
-
-  .mega-menu-panel.show {
-    display: block;
-    max-height: none;
-    opacity: 1;
-    visibility: visible;
-    padding: 16px;
-    margin: 10px 0;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    animation: fadeIn 0.2s ease-in-out;
-  }
-
-  .mega-menu-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .mega-menu-col h4 {
-    font-size: 11px;
-    color: var(--nav-accent);
-    margin-bottom: 8px;
-    font-weight: 700;
-  }
-
-  .mega-menu-col ul {
-    gap: 6px;
-  }
-
-  .mega-menu-col ul li a {
-    font-size: 13.5px;
-    padding: 8px 0;
-    border: none;
-    color: #cbd5e1;
-    justify-content: flex-start;
-  }
-
-  .mega-menu-col ul li a:hover {
-    color: var(--nav-white);
-    padding-left: 0;
-  }
-
-  .featured-card {
-    padding: 15px;
-  }
-
-  .mobile-subscribe-wrapper {
-    display: block;
-    width: 100%;
-    margin-top: 25px;
-    padding-top: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .btn-subscribe.mobile {
-    width: 100%;
-    padding: 12px;
-  }
+  .mobile-subscribe-wrapper { display: none; }
 }
 
 @media (max-width: 576px) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAdmin } from './AdminContext';
 import './AdminLayout.css';
@@ -41,8 +41,8 @@ const AdminLayout = () => {
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         <div className="admin-sidebar-brand">
-          <img src="/logo.png" alt="Endeavor" className="admin-sidebar-logo" />
-          <span>Endeavor</span>
+          <img src="/logo.png" alt="Intelevo Research" className="admin-sidebar-logo" />
+          <span>Intelevo Research</span>
           <span className="brand-badge">Admin</span>
         </div>
 
@@ -103,6 +103,9 @@ const AdminLayout = () => {
           <div className="admin-nav-section-label">System</div>
           <NavLink to="/admin/hero" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🖼️</span> Hero Banners
+          </NavLink>
+          <NavLink to="/admin/statistics" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">📈</span> Statistics
           </NavLink>
           <NavLink to="/admin/settings" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">⚙️</span> Settings

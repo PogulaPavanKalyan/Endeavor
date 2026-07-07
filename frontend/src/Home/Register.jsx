@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
@@ -172,7 +172,7 @@ const Register = () => {
               <div className="ticket-header">
                 <div className="checkmark-large">✓</div>
                 <h2>Registration Confirmed</h2>
-                <p>Welcome to Endeavor Conferences 2026</p>
+                <p>Welcome to Intelevo Research 2026</p>
               </div>
 
               <div className="ticket-body">

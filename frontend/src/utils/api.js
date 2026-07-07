@@ -1,6 +1,6 @@
 import { getSubdomain } from './subdomain.jsx';
 
-export const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'http://51.21.159.47:8081');
+export const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://intelevoresearch.org');
 
 const getHeaders = (isMultipart = false) => {
   const headers = {};

@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import "./Proceedings.css";
@@ -19,7 +19,7 @@ const Proceedings = () => {
           <span className="badge-premium">ARCHIVES & PUBLICATIONS</span>
           <h1>Conference Proceedings</h1>
           <p>
-            Access official peer-reviewed research papers and publications from Endeavor Scientific Conferences.
+            Access official peer-reviewed research papers and publications from Intelevo Research Conferences.
             All publications are indexed in major international academic directories.
           </p>
         </div>

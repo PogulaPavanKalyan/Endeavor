@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
@@ -49,9 +49,9 @@ function AboutPage() {
               <span className="abt-new-breadcrumbs-sep">/</span>
               <span className="abt-new-breadcrumbs-active">About Us</span>
             </div>
-            <h1 className="abt-hero-new-title">About Endeavor Research</h1>
+            <h1 className="abt-hero-new-title">About Intelevo Research</h1>
             <p className="abt-hero-new-desc">
-              Research Endeavor brings together researchers, academicians, industry experts and innovators through international conferences, publications and scientific networking across 50+ countries worldwide.
+              Intelevo Research brings together researchers, academicians, industry experts and innovators through international conferences, publications and scientific networking across 50+ countries worldwide.
             </p>
             
             {/* Elegant Carousel Navigation Dots */}
@@ -83,7 +83,7 @@ function AboutPage() {
             <span className="abt-section-tag">Organization Overview</span>
             <h2 className="abt-section-heading">Who We Are</h2>
             <p className="abt-who-paragraph">
-              Research Endeavor is a premier global institution dedicated to fostering academic excellence, high-impact research dissemination, and scientific discovery. By bridging the gap between pioneering theories and industrial implementation, we serve as a vital catalyst for researchers and scholars worldwide.
+              Intelevo Research is a premier global institution dedicated to fostering academic excellence, high-impact research dissemination, and scientific discovery. By bridging the gap between pioneering theories and industrial implementation, we serve as a vital catalyst for researchers and scholars worldwide.
             </p>
             <p className="abt-who-paragraph">
               Our core focus is the design and execution of world-class double-blind peer-reviewed international conferences, specialized workshops, and scientific symposia. Through deep collaborations with renowned international publishers and indexing networks, we ensure accepted works gain maximum global recognition.

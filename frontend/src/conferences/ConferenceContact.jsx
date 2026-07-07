@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
 import "./ConferenceContact.css";
@@ -60,7 +60,7 @@ const ConferenceContact = () => {
                 </div>
                 <div className="conf-contact-item-text">
                   <h4>Address</h4>
-                  <p><strong>Endeavor Research Private Limited</strong></p>
+                  <p><strong>Intelevo Research Private Limited</strong></p>
                   <p>1043 Garland Ave, Unit C #1012,</p>
                   <p>San Jose, CA 95126-3159</p>
                 </div>
@@ -75,7 +75,7 @@ const ConferenceContact = () => {
                 </div>
                 <div className="conf-contact-item-text">
                   <h4>Secretariat Email</h4>
-                  <p>{conference?.email || "info@endeavorresearchgroup.com"}</p>
+                  <p>{conference?.email || "info@intelevoresearch.org"}</p>
                 </div>
               </div>
 

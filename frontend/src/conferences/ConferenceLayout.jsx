@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Link, Outlet, useParams, useLocation } from "react-router-dom";
 import { api } from "../utils/api";
 import { getSubdomain } from "../utils/subdomain.jsx";
@@ -88,7 +88,7 @@ const ConferenceLayout = () => {
             date: `${data.startDate} to ${data.endDate}`,
             countdownTarget: data.countdownEndDate || `${data.startDate}T09:00:00`,
             venue: data.venue,
-            email: data.contactEmail || "hello@endeavorresearchgroup.net",
+            email: data.contactEmail || "hello@intelevoresearch.org",
             phone: data.contactPhone || "+1 (209) 299-5348",
             image: data.photo?.filePath 
               ? `/uploads/conference/${data.photo.fileName}` 
@@ -248,7 +248,7 @@ const ConferenceLayout = () => {
         <div className="conf-header-container">
           <div className="conf-logo">
             <Link to={getSubRoutePath("")}>
-              <img src="/logo.png" alt="Endeavor Conferences" />
+              <img src="/logo.png" alt="Intelevo Research" />
             </Link>
           </div>
 
@@ -333,7 +333,7 @@ const ConferenceLayout = () => {
 
       {/* Clean Portal Footer */}
       <footer style={{ backgroundColor: "#111111", color: "#ffffff", padding: "30px 0", textAlign: "center", borderTop: "4px solid var(--conf-primary)", fontSize: "14px" }}>
-        <p>© {new Date().getFullYear()} {activeConf.title}. All Rights Reserved | Powered by Endeavor Research Group</p>
+        <p>© {new Date().getFullYear()} {activeConf.title}. All Rights Reserved | Powered by Intelevo Research</p>
       </footer>
     </div>
   );

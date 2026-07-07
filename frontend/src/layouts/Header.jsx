@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
+import MobileDrawer from "./MobileDrawer";
 
 const Header = () => {
   const [visible, setVisible] = useState(false);
@@ -75,7 +76,7 @@ const Header = () => {
             {/* Logo */}
             <div className="logo">
               <Link to="/">
-                <img src="/logo.png" alt="Endeavor Conferences" />
+                <img src="/logo.png" alt="Intelevo Research" />
               </Link>
             </div>
 
@@ -242,13 +243,6 @@ const Header = () => {
                 Contact
               </Link>
 
-              {/* Subscribe button inside mobile nav drawer */}
-              <div className="mobile-subscribe-wrapper">
-                <button className="btn-subscribe mobile" onClick={() => { setIsSubscribeOpen(true); setMenuOpen(false); }}>
-                  Subscribe
-                </button>
-              </div>
-
             </nav>
 
             {/* Subscribe in Sticky State (Fades in on scroll) */}
@@ -263,6 +257,14 @@ const Header = () => {
 
       </header>
 
+      {/* Premium Mobile Navigation Drawer */}
+      <MobileDrawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        isActive={isActive}
+        onSubscribeOpen={() => { setIsSubscribeOpen(true); setMenuOpen(false); }}
+      />
+
       {/* Glassmorphic Subscribe Modal Overlay */}
       {isSubscribeOpen && (
         <div className="subscribe-modal-overlay" onClick={() => setIsSubscribeOpen(false)}>
@@ -273,7 +275,7 @@ const Header = () => {
               <div className="success-modal-state">
                 <div className="success-checkmark">&#10003;</div>
                 <h2>Thank You!</h2>
-                <p>You have successfully subscribed to Endeavor updates and event news.</p>
+                <p>You have successfully subscribed to Intelevo Research updates and event news.</p>
               </div>
             ) : (
               <>

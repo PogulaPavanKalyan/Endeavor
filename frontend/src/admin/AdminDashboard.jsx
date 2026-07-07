@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
 import "./AdminDashboard.css";
@@ -423,7 +423,7 @@ const AdminDashboard = () => {
       {/* Sidebar Navigation */}
       <aside className="dashboard-sidebar">
         <div className="sidebar-brand">
-          <img src="/logo.png" alt="Endeavor" className="sidebar-logo" />
+          <img src="/logo.png" alt="Intelevo Research" className="sidebar-logo" />
           <span>Admin Portal</span>
         </div>
 

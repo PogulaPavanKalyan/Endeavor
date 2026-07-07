@@ -150,10 +150,10 @@ public class Security {
                 "https://51.21.159.47:*",
                 "http://localhost:*",
                 "http://127.0.0.1:*",
-                "http://*.endeavorresearchgroup.net:*",
-                "https://*.endeavorresearchgroup.net:*",
-                "http://endeavorresearchgroup.net:*",
-                "https://endeavorresearchgroup.net:*"
+                "http://*.intelevoresearch.org:*",
+                "https://*.intelevoresearch.org:*",
+                "http://intelevoresearch.org:*",
+                "https://intelevoresearch.org:*"
             )
         );
 

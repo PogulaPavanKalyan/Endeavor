@@ -46,9 +46,9 @@ public class AboutUsService {
         // Initialize and return default static content if empty
         AboutUsSection s = new AboutUsSection();
         s.setId(1L);
-        s.setHeroBadge("About Research Endeavor");
+        s.setHeroBadge("About Intelevo Research");
         s.setHeroTitle("Connecting Global\nResearch Communities");
-        s.setHeroDescription("Research Endeavor brings together researchers, academicians, industry experts and innovators through international conferences, publications and scientific networking across 50+ countries worldwide.");
+        s.setHeroDescription("Intelevo Research brings together researchers, academicians, industry experts and innovators through international conferences, publications and scientific networking across 50+ countries worldwide.");
         s.setHeroCtaText1("🏛️ Explore Conferences");
         s.setHeroCtaLink1("/conferences");
         s.setHeroCtaText2("Submit Abstract →");
@@ -57,7 +57,7 @@ public class AboutUsService {
 
         s.setOverviewLabel("Company Overview");
         s.setOverviewTitle("Who We Are");
-        s.setOverviewLead("Research Endeavor is a premier global platform designed specifically to connect researchers, scientists, academicians, and industry experts worldwide.");
+        s.setOverviewLead("Intelevo Research is a premier global platform designed specifically to connect researchers, scientists, academicians, and industry experts worldwide.");
         s.setOverviewBody("We focus on building international communities by organizing double-blind peer-reviewed conferences, workshops, and dynamic webinars. Through strategic indexing relationships, we ensure the dissemination of accepted abstracts inside recognized global proceedings.");
         s.setOverviewImage1("https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80");
         s.setOverviewImage2("https://images.unsplash.com/photo-1560439514-4e9645039924?auto=format&fit=crop&w=500&q=80");
@@ -195,7 +195,7 @@ public class AboutUsService {
         List<AboutTimelineMilestone> list = timelineMilestoneRepo.findAllByOrderByDisplayOrderAsc();
         if (list.isEmpty()) {
             list = new ArrayList<>();
-            list.add(createTimelineMilestone("2015", "Founded", "Research Endeavor incorporated with a mission to bring global researchers together through high-impact academic events.", "left", 1));
+            list.add(createTimelineMilestone("2015", "Founded", "Intelevo Research incorporated with a mission to bring global researchers together through high-impact academic events.", "left", 1));
             list.add(createTimelineMilestone("2017", "First International Conference", "Hosted our inaugural international conference with delegates from 18 countries, establishing our commitment to quality.", "right", 2));
             list.add(createTimelineMilestone("2019", "Scopus Partnership", "Established formal indexing agreements with Elsevier's Scopus, ensuring all proceedings reach global academic databases.", "left", 3));
             list.add(createTimelineMilestone("2021", "100+ Conferences Milestone", "Crossed the landmark of 100 successfully organized conferences across three continents.", "right", 4));

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { api } from "../utils/api";
 import "./BrochureModal.css";
 
@@ -34,7 +34,7 @@ const BrochureModal = ({ isOpen, onClose }) => {
       // Trigger automatic PDF download simulation
       const link = document.createElement("a");
       link.href = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"; // standard template
-      link.download = "Endeavor_Conferences_2026_Brochure.pdf";
+      link.download = "Intelevo_Research_2026_Brochure.pdf";
       link.target = "_blank";
       document.body.appendChild(link);
       link.click();
