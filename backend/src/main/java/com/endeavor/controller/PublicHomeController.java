@@ -14,13 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
-    "http://51.21.159.47:8000"
-}, originPatterns = {"https://*.intelevoresearch.org", "https://intelevoresearch.org"})
 public class PublicHomeController {
 
     @Autowired

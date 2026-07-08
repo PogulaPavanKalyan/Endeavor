@@ -8,7 +8,6 @@ import com.endeavor.service.ConferencePageService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class NavbarPageController {
 
     @Autowired

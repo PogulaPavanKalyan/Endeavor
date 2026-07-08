@@ -9,7 +9,6 @@ import com.endeavor.service.GalleryService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GalleryController {
 
     @Autowired

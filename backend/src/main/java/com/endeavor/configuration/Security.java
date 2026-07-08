@@ -146,14 +146,24 @@ public class Security {
 
         config.setAllowedOriginPatterns(
             Arrays.asList(
+                "http://51.21.159.47",
                 "http://51.21.159.47:*",
+                "https://51.21.159.47",
                 "https://51.21.159.47:*",
+                "http://localhost",
                 "http://localhost:*",
+                "http://127.0.0.1",
                 "http://127.0.0.1:*",
+                "http://*.intelevoresearch.org",
                 "http://*.intelevoresearch.org:*",
+                "https://*.intelevoresearch.org",
                 "https://*.intelevoresearch.org:*",
+                "http://intelevoresearch.org",
                 "http://intelevoresearch.org:*",
-                "https://intelevoresearch.org:*"
+                "https://intelevoresearch.org",
+                "https://intelevoresearch.org:*",
+                "https://www.intelevoresearch.org",
+                "https://www.intelevoresearch.org:*"
             )
         );
 

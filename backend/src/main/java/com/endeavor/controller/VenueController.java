@@ -7,7 +7,6 @@ import com.endeavor.entity.Venue;
 import com.endeavor.service.VenueService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class VenueController {
 
     @Autowired

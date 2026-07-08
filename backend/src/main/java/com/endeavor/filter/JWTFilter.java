@@ -36,7 +36,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         // Skip authentication for public endpoints
-        if (path.startsWith("/login") || path.startsWith("/getimage") || path.equals("/")) {
+        if (path.startsWith("/auth/login") || path.startsWith("/auth/signup") || path.startsWith("/getimage") || path.equals("/")) {
             filterChain.doFilter(request, response);
             return;
         }

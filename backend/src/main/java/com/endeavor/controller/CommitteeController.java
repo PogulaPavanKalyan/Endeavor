@@ -9,7 +9,6 @@ import com.endeavor.service.CommitteeMemberService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CommitteeController {
 
     @Autowired

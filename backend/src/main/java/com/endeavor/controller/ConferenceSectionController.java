@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/conference-sections")
 public class ConferenceSectionController {
 

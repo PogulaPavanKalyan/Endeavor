@@ -18,15 +18,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5175",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
-    "http://127.0.0.1:5175",
-    "http://51.21.159.47:8000"
-}, originPatterns = {"https://*.intelevoresearch.org", "https://intelevoresearch.org"})
 public class AboutUsController {
 
     @Autowired

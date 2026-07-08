@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/navbar-menus")
 public class NavbarMenuController {
 
