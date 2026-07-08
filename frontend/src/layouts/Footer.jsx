@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
@@ -212,46 +212,9 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ── SECTION 4: NEWSLETTER ────────────────────────────────────────── */}
-      {/* <div className="footer-newsletter-section">
-        <div className="newsletter-wrapper">
-          <div className="newsletter-glow-decor" />
-          <h3>Stay Updated with Global Research</h3>
-          <p className="newsletter-desc">
-            Get conference announcements, webinar schedules, publication opportunities,
-            and research insights delivered to your inbox.
-          </p>
 
-          {success ? (
-            <div className="newsletter-success-state">
-              <span className="success-icon">✓</span>
-              <p>Thank you! You have successfully subscribed to our newsletter.</p>
-            </div>
-          ) : (
-            <>
-              <form onSubmit={handleSubscribeSubmit} className="newsletter-form-premium">
-                <div className="input-group">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="newsletter-input-premium"
-                  />
-                  <button type="submit" disabled={loading} className="btn-newsletter-submit">
-                    {loading ? "Subscribing…" : "Subscribe"}
-                  </button>
-                </div>
-              </form>
-              <p className="newsletter-privacy">
-                No spam, ever. Read our{" "}
-                <Link to="/privacy">Privacy Policy</Link>.
-              </p>
-            </>
-          )}
-        </div>
-      </div> */}
+      {/* ── SECTION 4: NEWSLETTER (REMOVED) ── */}
+
 
       {/* ── SECTION 5: BOTTOM COPYRIGHT BAR (dark) ───────────────────────── */}
       <div className="footer-bottom-bar">

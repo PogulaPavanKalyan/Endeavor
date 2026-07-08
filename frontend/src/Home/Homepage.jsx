@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
@@ -775,20 +775,8 @@ const Homepage = () => {
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
                 </p>
 
-                {/* Action Buttons */}
+                {/* Action Buttons (Removed) */}
                 <div className="hero-cta-buttons">
-                  {/* <Link
-                    to="/submit-abstract"
-                    className="btn-premium-primary"
-                  >
-                    Submit Abstract
-                  </Link>
-                  <button
-                    className="btn-premium-secondary"
-                    onClick={() => navigate("/conferences")}
-                  >
-                    Explore Conferences
-                  </button> */}
                 </div>
               </div>
             </div>
