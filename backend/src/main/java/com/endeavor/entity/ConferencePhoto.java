@@ -20,9 +20,13 @@ public class ConferencePhoto {
     private String fileType;
     private String filePath;
 
-    @OneToOne(mappedBy = "photo")
+    @jakarta.persistence.ManyToOne
+    @jakarta.persistence.JoinColumn(name = "conference_id")
     @JsonBackReference
     private ConferenceDetails conferenceDetails;
+
+    private Integer displayOrder = 0;
+    private Boolean isPrimary = false;
 
     public ConferencePhoto() {
     }
@@ -33,6 +37,16 @@ public class ConferencePhoto {
         this.fileType = fileType;
         this.filePath = filePath;
         this.conferenceDetails = conferenceDetails;
+    }
+
+    public ConferencePhoto(Long id, String fileName, String fileType, String filePath, ConferenceDetails conferenceDetails, Integer displayOrder, Boolean isPrimary) {
+        this.id = id;
+        this.fileName = fileName;
+        this.fileType = fileType;
+        this.filePath = filePath;
+        this.conferenceDetails = conferenceDetails;
+        this.displayOrder = displayOrder;
+        this.isPrimary = isPrimary;
     }
 
     public Long getId() {
@@ -75,6 +89,22 @@ public class ConferencePhoto {
         this.conferenceDetails = conferenceDetails;
     }
 
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public Boolean getIsPrimary() {
+        return isPrimary;
+    }
+
+    public void setIsPrimary(Boolean isPrimary) {
+        this.isPrimary = isPrimary;
+    }
+
     @Override
     public String toString() {
         return "ConferencePhoto{" +
@@ -82,6 +112,8 @@ public class ConferencePhoto {
                 ", fileName='" + fileName + '\'' +
                 ", fileType='" + fileType + '\'' +
                 ", filePath='" + filePath + '\'' +
+                ", displayOrder=" + displayOrder +
+                ", isPrimary=" + isPrimary +
                 '}';
     }
 }

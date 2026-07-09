@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
-import "./ConferenceRegisterLegacy.css"; // The scoped bootstrap + old_style.css
+// import "./ConferenceRegisterLegacy.css"; // DISABLED: This file contains global Bootstrap styles that destroy the entire frontend UI when successfully compiled
 import "./ConferenceRegister.css";
 
 const DEFAULT_PRICING_TIERS = [

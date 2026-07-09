@@ -21,8 +21,10 @@ import ConferenceManager from "./admin/pages/ConferenceManager";
 import SpeakerManager from "./admin/pages/SpeakerManager";
 import SessionManager from "./admin/pages/SessionManager";
 import CommitteeManager from "./admin/pages/CommitteeManager";
+import AdvisoryBoardManager from "./admin/pages/AdvisoryBoardManager";
+import AgendaManager from "./admin/pages/AgendaManager";
 import VenueManager from "./admin/pages/VenueManager";
-import NavbarManager from "./admin/pages/NavbarManager";
+import NavigationManager from "./admin/pages/NavigationManager";
 import GalleryManager from "./admin/pages/GalleryManager";
 import RegistrationManager from "./admin/pages/RegistrationManager";
 import AbstractManager from "./admin/pages/AbstractManager";
@@ -49,6 +51,7 @@ import ConferenceVenue from "./conferences/ConferenceVenue";
 import ConferenceContact from "./conferences/ConferenceContact";
 import ConferenceSuggestSpeaker from "./conferences/ConferenceSuggestSpeaker";
 import DynamicConferencePage from "./conferences/DynamicConferencePage";
+import ConferenceTracks from "./conferences/ConferenceTracks";
 
 import NotFoundPage from "./components/NotFoundPage";
 import Sponsors from "./Home/Sponsors.jsx";
@@ -68,6 +71,7 @@ function App() {
             <Route path="brochure" element={<ConferenceBrochure />} />
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
+            <Route path="tracks" element={<ConferenceTracks />} />
             <Route path="submit-abstract" element={<ConferenceAbstract />} />
             <Route path="register" element={<ConferenceRegister />} />
             <Route path="venue" element={<ConferenceVenue />} />
@@ -93,6 +97,7 @@ function App() {
             <Route path="brochure" element={<ConferenceBrochure />} />
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
+            <Route path="tracks" element={<ConferenceTracks />} />
             <Route path="submit-abstract" element={<ConferenceAbstract />} />
             <Route path="register" element={<ConferenceRegister />} />
             <Route path="venue" element={<ConferenceVenue />} />
@@ -119,12 +124,14 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="conferences" element={<ConferenceManager />} />
             <Route path="speakers" element={<SpeakerManager />} />
+            <Route path="advisory-board" element={<AdvisoryBoardManager />} />
+            <Route path="agenda" element={<AgendaManager />} />
             <Route path="tracks" element={<TrackManager />} />
             <Route path="sessions" element={<SessionManager />} />
             <Route path="committee" element={<CommitteeManager />} />
             <Route path="sections" element={<ConferenceSectionManager />} />
             <Route path="venue" element={<VenueManager />} />
-            <Route path="navbar" element={<NavbarManager />} />
+            <Route path="navbar" element={<NavigationManager />} />
             <Route path="gallery" element={<GalleryManager />} />
             <Route path="registrations" element={<RegistrationManager />} />
             <Route path="abstracts" element={<AbstractManager />} />

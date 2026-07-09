@@ -54,6 +54,9 @@ public class Security {
                     "/errors",
 
                     "/api/speakers/**",
+                    "/api/advisory-board/**",
+                    "/api/agenda/**",
+                    "/api/tracks/**",
                     "/api/sessions/**",
                     "/api/contact/**",
                     "/api/brochure/**",

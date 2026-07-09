@@ -29,6 +29,7 @@ const ConferenceManager = () => {
   const [step, setStep] = useState(1);
   const [photoFile, setPhotoFile] = useState(null);
   const [brochureFile, setBrochureFile] = useState(null);
+  const [aboutImageFile, setAboutImageFile] = useState(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -47,6 +48,18 @@ const ConferenceManager = () => {
     name: '', designation: '', affiliation: '', country: '', bio: '', type: 'KEYNOTE_SPEAKER', speakerAbstract: ''
   });
   const [speakerPhoto, setSpeakerPhoto] = useState(null);
+
+  // Important Dates management states
+  const [importantDates, setImportantDates] = useState([]);
+  const [showImportantDateForm, setShowImportantDateForm] = useState(false);
+  const [editingDate, setEditingDate] = useState(null);
+  const [dateFormData, setDateFormData] = useState({
+    eventTitle: '',
+    eventDescription: '',
+    eventDate: '',
+    isActive: true,
+    isHighlighted: false
+  });
   const [sessionsList, setSessionsList] = useState([]);
   const [showSessionForm, setShowSessionForm] = useState(false);
   const [sessionData, setSessionData] = useState({
@@ -104,6 +117,7 @@ const ConferenceManager = () => {
     setEditingConf(conf);
     setPhotoFile(null);
     setBrochureFile(null);
+    setAboutImageFile(null);
     setStep(1);
     setSpeakers([]);
     setSessionsList([]);
@@ -134,8 +148,20 @@ const ConferenceManager = () => {
         seriesId: conf.series?.id || '',
         year: conf.year || new Date().getFullYear()
       });
+      
+      // Fetch fresh details with photos
+      api.get(`/api/conference-details?id=${conf.id}`)
+        .then(freshConf => {
+          setEditingConf(freshConf);
+        })
+        .catch(err => {
+          console.error("Failed to load fresh details", err);
+        });
+
       fetchSpeakersForConf(conf.id);
       fetchSessionsForConf(conf.id);
+      setImportantDates([]);
+      fetchImportantDatesForConf(conf.id);
     } else {
       setFormData({
         tittle: '', slug: '', description: '', startDate: '', endDate: '',
@@ -163,6 +189,91 @@ const ConferenceManager = () => {
     } catch (e) { console.error(e); }
   };
 
+  const fetchImportantDatesForConf = async (confId) => {
+    try {
+      const data = await api.get(`/api/admin/conference-details/${confId}/important-dates`);
+      setImportantDates(data || []);
+    } catch (e) {
+      console.error("Failed to fetch important dates", e);
+    }
+  };
+
+  const handleSaveImportantDate = async (e) => {
+    e.preventDefault();
+    if (!editingConf) return;
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      if (editingDate) {
+        const updated = await api.put(`/api/admin/important-dates/${editingDate.id}`, dateFormData);
+        setImportantDates(prev => prev.map(d => d.id === editingDate.id ? updated : d));
+        setSuccess('Important date updated successfully.');
+      } else {
+        const created = await api.post(`/api/admin/conference-details/${editingConf.id}/important-dates`, dateFormData);
+        setImportantDates(prev => [...prev, created]);
+        setSuccess('Important date added successfully.');
+      }
+      
+      setShowImportantDateForm(false);
+      setEditingDate(null);
+      setDateFormData({ eventTitle: '', eventDescription: '', eventDate: '', isActive: true, isHighlighted: false });
+    } catch (err) {
+      setError(err.message || 'Failed to save important date.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteImportantDate = async (dateId) => {
+    if (!window.confirm('Are you sure you want to delete this important date?')) return;
+    setLoading(true);
+    try {
+      await api.delete(`/api/admin/important-dates/${dateId}`);
+      setImportantDates(prev => prev.filter(d => d.id !== dateId));
+      setSuccess('Important date deleted successfully.');
+    } catch (err) {
+      setError('Failed to delete important date.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleImportantDateFlag = async (date, field) => {
+    const updatedPayload = {
+      ...date,
+      [field]: !date[field]
+    };
+    try {
+      const updated = await api.put(`/api/admin/important-dates/${date.id}`, updatedPayload);
+      setImportantDates(prev => prev.map(d => d.id === date.id ? updated : d));
+      setSuccess('Status updated successfully.');
+    } catch (err) {
+      setError('Failed to update status.');
+    }
+  };
+
+  const handleMoveImportantDate = async (index, direction) => {
+    const newDates = [...importantDates];
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= newDates.length) return;
+    
+    const temp = newDates[index];
+    newDates[index] = newDates[targetIndex];
+    newDates[targetIndex] = temp;
+    
+    setImportantDates(newDates);
+    
+    try {
+      const ids = newDates.map(d => d.id);
+      await api.put(`/api/admin/conference-details/${editingConf.id}/important-dates/reorder`, ids);
+      setSuccess('Dates order saved successfully.');
+    } catch (err) {
+      setError('Failed to save order in backend.');
+    }
+  };
+
   // ── Step 1: Save basic details ──
   const handleSaveStep1 = async (e) => {
     e.preventDefault();
@@ -188,6 +299,11 @@ const ConferenceManager = () => {
         bd.append('file', brochureFile);
         finalConf = await api.postMultipart(`/api/admin/conference-details/${saved.id}/brochure`, bd);
       }
+      if (aboutImageFile && saved.id) {
+        const ad = new FormData();
+        ad.append('file', aboutImageFile);
+        finalConf = await api.postMultipart(`/api/admin/conference-details/${saved.id}/about-image`, ad);
+      }
 
       await fetchConferences();
       setActiveConferenceId(saved.id.toString());
@@ -195,6 +311,80 @@ const ConferenceManager = () => {
       setStep(2);
     } catch (err) {
       setError('Failed to save conference details.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadExtraPhoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !editingConf) return;
+    
+    setLoading(true);
+    setError('');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const updatedConf = await api.postMultipart(`/api/admin/conference-details/${editingConf.id}/photo`, fd);
+      
+      setEditingConf(updatedConf);
+      await fetchConferences();
+    } catch (err) {
+      setError('Failed to upload background image.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSetPrimaryPhoto = async (photoId) => {
+    if (!editingConf) return;
+    setLoading(true);
+    setError('');
+    try {
+      await api.put(`/api/admin/conference-photos/${photoId}/primary`, {});
+      const updatedConf = await api.get(`/api/conference-details?id=${editingConf.id}`);
+      setEditingConf(updatedConf);
+      await fetchConferences();
+    } catch (err) {
+      setError('Failed to set primary image.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeletePhoto = async (photoId) => {
+    if (!editingConf) return;
+    if (!window.confirm('Are you sure you want to delete this background image?')) return;
+    setLoading(true);
+    setError('');
+    try {
+      await api.delete(`/api/admin/conference-photos/${photoId}`);
+      const updatedConf = await api.get(`/api/conference-details?id=${editingConf.id}`);
+      setEditingConf(updatedConf);
+      await fetchConferences();
+    } catch (err) {
+      setError('Failed to delete image.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMovePhoto = async (fromIdx, toIdx) => {
+    if (!editingConf || !editingConf.photos) return;
+    setLoading(true);
+    setError('');
+    try {
+      const reorderedPhotos = [...editingConf.photos];
+      const [removed] = reorderedPhotos.splice(fromIdx, 1);
+      reorderedPhotos.splice(toIdx, 0, removed);
+      
+      const photoIds = reorderedPhotos.map(p => p.id);
+      const updatedConf = await api.put(`/api/admin/conference-details/${editingConf.id}/photos/reorder`, photoIds);
+      
+      setEditingConf(updatedConf);
+      await fetchConferences();
+    } catch (err) {
+      setError('Failed to reorder images.');
     } finally {
       setLoading(false);
     }
@@ -392,6 +582,7 @@ const ConferenceManager = () => {
     { num: 2, label: 'Speakers' },
     { num: 3, label: 'Program & Tracks' },
     { num: 4, label: 'Pricing' },
+    { num: 5, label: 'Important Dates' }
   ];
 
   return (
@@ -752,6 +943,28 @@ const ConferenceManager = () => {
                       onChange={e => setFormData({ ...formData, description: e.target.value })} />
                   </div>
 
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">About the Congress Section Image</label>
+                    <div className="admin-file-upload" onClick={() => document.getElementById('aboutImageInput').click()}>
+                      <div className="admin-file-upload-icon">🖼️</div>
+                      <div className="admin-file-upload-text">
+                        {aboutImageFile ? aboutImageFile.name : (editingConf?.aboutImage ? 'Change About Image' : 'Click to upload image')}
+                      </div>
+                      <div className="admin-file-upload-hint">JPG, PNG, WebP — Max 5MB</div>
+                      <input id="aboutImageInput" type="file" accept="image/*" style={{ display: 'none' }}
+                        onChange={e => setAboutImageFile(e.target.files[0])} />
+                    </div>
+                    {editingConf?.aboutImage && !aboutImageFile && (
+                      <div style={{ marginTop: '10px' }}>
+                        <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Current image:</span>
+                        <img 
+                          src={editingConf.aboutImage.startsWith('http') ? editingConf.aboutImage : `${BASE_URL}/uploads/conference/${editingConf.aboutImage}`} 
+                          style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #e2e8f0' }} 
+                        />
+                      </div>
+                    )}
+                  </div>
+
                   <div className="admin-form-row">
                     <div className="admin-form-group">
                       <label className="admin-form-label">Start Date</label>
@@ -826,6 +1039,70 @@ const ConferenceManager = () => {
                       </div>
                     </div>
                   </div>
+
+                  {editingConf && (
+                    <div className="admin-form-group" style={{ width: '100%', marginTop: '20px', marginBottom: '20px' }}>
+                      <label className="admin-form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>Conference Background Images (Hero Slider)</span>
+                        <div>
+                          <button 
+                            type="button" 
+                            className="btn-admin btn-admin-primary" 
+                            style={{ padding: '6px 12px', fontSize: '13px', margin: 0 }} 
+                            onClick={() => document.getElementById('extraPhotoInput').click()}
+                          >
+                            + Upload Image
+                          </button>
+                          <input 
+                            id="extraPhotoInput" 
+                            type="file" 
+                            accept="image/*" 
+                            style={{ display: 'none' }} 
+                            onChange={handleUploadExtraPhoto} 
+                          />
+                        </div>
+                      </label>
+                      
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginTop: '10px' }}>
+                        {editingConf.photos && editingConf.photos.map((p, idx) => (
+                          <div key={p.id} style={{ position: 'relative', width: '120px', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ height: '80px', overflow: 'hidden', position: 'relative' }}>
+                              <img src={`${BASE_URL}/uploads/conference/${p.fileName}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              {p.isPrimary && (
+                                <span style={{ position: 'absolute', top: '4px', left: '4px', background: '#22c55e', color: '#fff', fontSize: '9px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px' }}>
+                                  Primary
+                                </span>
+                              )}
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px', borderTop: '1px solid #cbd5e1', backgroundColor: '#fff', gap: '4px' }}>
+                              {!p.isPrimary && (
+                                <button type="button" title="Set Primary" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13px', padding: 0 }} onClick={() => handleSetPrimaryPhoto(p.id)}>
+                                  ⭐
+                                </button>
+                              )}
+                              <button type="button" title="Delete" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13px', color: '#ef4444', padding: 0 }} onClick={() => handleDeletePhoto(p.id)}>
+                                🗑️
+                              </button>
+                              {idx > 0 && (
+                                <button type="button" title="Move Left" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13px', padding: 0 }} onClick={() => handleMovePhoto(idx, idx - 1)}>
+                                  ◀️
+                                </button>
+                              )}
+                              {idx < editingConf.photos.length - 1 && (
+                                <button type="button" title="Move Right" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '13px', padding: 0 }} onClick={() => handleMovePhoto(idx, idx + 1)}>
+                                  ▶️
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {(!editingConf.photos || editingConf.photos.length === 0) && (
+                          <p style={{ color: '#64748b', fontSize: '13px', margin: 0, padding: '10px' }}>No background images uploaded yet. Please upload at least one image.</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="admin-form-row">
                     <div className="admin-form-group">
@@ -1072,6 +1349,153 @@ const ConferenceManager = () => {
                   </button>
                 </div>
               )}
+
+              {/* ── STEP 5: Important Dates ── */}
+              {step === 5 && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--admin-text-secondary)' }}>
+                      Manage milestones, deadlines, and highlights.
+                    </p>
+                    {!showImportantDateForm && (
+                      <button type="button" className="btn-admin btn-admin-primary btn-admin-sm" onClick={() => {
+                        setEditingDate(null);
+                        setDateFormData({ eventTitle: '', eventDescription: '', eventDate: '', isActive: true, isHighlighted: false });
+                        setShowImportantDateForm(true);
+                      }}>
+                        + Add Milestone
+                      </button>
+                    )}
+                  </div>
+
+                  {showImportantDateForm && (
+                    <form onSubmit={handleSaveImportantDate} style={{
+                      padding: '16px', background: 'var(--admin-bg)', borderRadius: '10px',
+                      border: '1px solid var(--admin-border)', marginBottom: '20px'
+                    }}>
+                      <h4 style={{ margin: '0 0 12px 0', fontSize: '14px' }}>
+                        {editingDate ? 'Edit Milestone' : 'Add New Milestone'}
+                      </h4>
+                      <div className="admin-form-group" style={{ marginBottom: '12px' }}>
+                        <label className="admin-form-label">Event Title *</label>
+                        <input className="admin-form-input" placeholder="e.g. Abstract Submission Opens" required
+                          value={dateFormData.eventTitle} onChange={e => setDateFormData(prev => ({ ...prev, eventTitle: e.target.value }))} />
+                      </div>
+                      <div className="admin-form-group" style={{ marginBottom: '12px' }}>
+                        <label className="admin-form-label">Event Description</label>
+                        <input className="admin-form-input" placeholder="e.g. Optional description or details"
+                          value={dateFormData.eventDescription} onChange={e => setDateFormData(prev => ({ ...prev, eventDescription: e.target.value }))} />
+                      </div>
+                      <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+                        <label className="admin-form-label">Event Date *</label>
+                        <input type="date" className="admin-form-input" required
+                          value={dateFormData.eventDate} onChange={e => setDateFormData(prev => ({ ...prev, eventDate: e.target.value }))} />
+                      </div>
+                      <div style={{ display: 'flex', gap: '20px', marginBottom: '16px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                          <input type="checkbox" checked={dateFormData.isActive}
+                            onChange={e => setDateFormData(prev => ({ ...prev, isActive: e.target.checked }))} />
+                          Active (Visible on Site)
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                          <input type="checkbox" checked={dateFormData.isHighlighted}
+                            onChange={e => setDateFormData(prev => ({ ...prev, isHighlighted: e.target.checked }))} />
+                          Highlight (Mark as Important)
+                        </label>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                        <button type="button" className="btn-admin btn-admin-sm" onClick={() => setShowImportantDateForm(false)}>Cancel</button>
+                        <button type="submit" className="btn-admin btn-admin-primary btn-admin-sm" disabled={loading}>
+                          {loading ? 'Saving...' : 'Save Date'}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+
+                  <div className="admin-table-container" style={{ maxHeight: '350px', overflowY: 'auto' }}>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Event</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Highlight</th>
+                          <th>Order</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {importantDates.length === 0 ? (
+                          <tr>
+                            <td colSpan="6" style={{ textAlign: 'center', padding: '20px', color: 'var(--admin-text-secondary)' }}>
+                              No milestones added yet. Add one to get started!
+                            </td>
+                          </tr>
+                        ) : (
+                          importantDates.map((item, index) => (
+                            <tr key={item.id}>
+                              <td>
+                                <div style={{ fontWeight: '600' }}>{item.eventTitle}</div>
+                                <div style={{ fontSize: '11px', color: 'var(--admin-text-secondary)' }}>{item.eventDescription}</div>
+                              </td>
+                              <td style={{ fontSize: '13px' }}>{item.eventDate}</td>
+                              <td>
+                                <button type="button" 
+                                  onClick={() => handleToggleImportantDateFlag(item, 'isActive')}
+                                  style={{
+                                    border: 'none', background: 'none', cursor: 'pointer',
+                                    fontSize: '18px'
+                                  }}
+                                  title={item.isActive ? 'Deactivate' : 'Activate'}
+                                >
+                                  {item.isActive ? '🟢' : '🔴'}
+                                </button>
+                              </td>
+                              <td>
+                                <button type="button" 
+                                  onClick={() => handleToggleImportantDateFlag(item, 'isHighlighted')}
+                                  style={{
+                                    border: 'none', background: 'none', cursor: 'pointer',
+                                    fontSize: '18px'
+                                  }}
+                                  title={item.isHighlighted ? 'Remove Highlight' : 'Highlight'}
+                                >
+                                  {item.isHighlighted ? '⭐' : '☆'}
+                                </button>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', gap: '4px' }}>
+                                  <button type="button" className="btn-admin btn-admin-sm" disabled={index === 0}
+                                    onClick={() => handleMoveImportantDate(index, -1)} style={{ padding: '2px 6px' }}>▲</button>
+                                  <button type="button" className="btn-admin btn-admin-sm" disabled={index === importantDates.length - 1}
+                                    onClick={() => handleMoveImportantDate(index, 1)} style={{ padding: '2px 6px' }}>▼</button>
+                                </div>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', gap: '6px' }}>
+                                  <button type="button" className="btn-admin btn-admin-sm" onClick={() => {
+                                    setEditingDate(item);
+                                    setDateFormData({
+                                      eventTitle: item.eventTitle,
+                                      eventDescription: item.eventDescription || '',
+                                      eventDate: item.eventDate,
+                                      isActive: item.isActive,
+                                      isHighlighted: item.isHighlighted
+                                    });
+                                    setShowImportantDateForm(true);
+                                  }}>Edit</button>
+                                  <button type="button" className="btn-admin btn-admin-sm btn-admin-danger" 
+                                    onClick={() => handleDeleteImportantDate(item.id)}>Delete</button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Modal Footer */}
@@ -1099,6 +1523,12 @@ const ConferenceManager = () => {
               {step === 4 && (
                 <>
                   <button type="button" className="btn-admin" onClick={() => setStep(3)}>← Back</button>
+                  <button type="button" className="btn-admin btn-admin-primary" onClick={() => setStep(5)}>Next: Dates →</button>
+                </>
+              )}
+              {step === 5 && (
+                <>
+                  <button type="button" className="btn-admin" onClick={() => setStep(4)}>← Back</button>
                   <button type="button" className="btn-admin btn-admin-success" onClick={handleFinalSave} disabled={loading}>
                     {loading ? 'Saving...' : '✓ Save Conference'}
                   </button>

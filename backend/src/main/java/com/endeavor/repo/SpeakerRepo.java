@@ -8,6 +8,7 @@ import java.util.List;
 @Repository
 public interface SpeakerRepo extends JpaRepository<Speaker, Long> {
     List<Speaker> findByType(String type);
-
     List<Speaker> findByConferenceId(Long conferenceId);
+    List<Speaker> findByConferenceIdOrderByDisplayOrderAsc(Long conferenceId);
+    long countByConferenceId(Long conferenceId);
 }

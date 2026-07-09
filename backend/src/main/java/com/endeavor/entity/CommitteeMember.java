@@ -91,4 +91,21 @@ public class CommitteeMember {
     public void setDisplayOrder(Integer displayOrder) {
         this.displayOrder = displayOrder;
     }
+
+    private String designation;
+
+    @Column(columnDefinition = "TEXT")
+    private String biography;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    public String getDesignation() { return designation; }
+    public void setDesignation(String designation) { this.designation = designation; }
+
+    public String getBiography() { return biography; }
+    public void setBiography(String biography) { this.biography = biography; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

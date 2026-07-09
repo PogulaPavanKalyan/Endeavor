@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import com.endeavor.entity.CommitteeMember;
 import com.endeavor.service.CommitteeMemberService;
 import java.util.List;
+import java.util.Optional;
+import java.io.File;
+import java.util.UUID;
 
 @RestController
 public class CommitteeController {
@@ -38,6 +41,9 @@ public class CommitteeController {
             member.setCountry(details.getCountry());
             member.setPhotoUrl(details.getPhotoUrl());
             member.setDisplayOrder(details.getDisplayOrder());
+            member.setDesignation(details.getDesignation());
+            member.setBiography(details.getBiography());
+            member.setIsActive(details.getIsActive());
             return ResponseEntity.ok(service.save(member));
         }).orElse(ResponseEntity.notFound().build());
     }
@@ -49,5 +55,44 @@ public class CommitteeController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping(value = "/api/admin/committee/{id}/photo", consumes = "multipart/form-data")
+    public ResponseEntity<CommitteeMember> uploadCommitteePhoto(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        return service.getById(id).map(member -> {
+            try {
+                String folder = "uploads/committee/";
+                File uploadDir = new File(folder);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+                String ext = "";
+                String origName = file.getOriginalFilename();
+                if (origName != null && origName.contains(".")) {
+                    ext = origName.substring(origName.lastIndexOf("."));
+                }
+                String fileName = UUID.randomUUID().toString() + ext;
+                File destFile = new File(uploadDir, fileName);
+                file.transferTo(destFile);
+                
+                member.setPhotoUrl("/uploads/committee/" + fileName);
+                return ResponseEntity.ok(service.save(member));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).<CommitteeMember>build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/api/admin/committee/reorder")
+    public ResponseEntity<Void> reorderCommittee(@RequestBody List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Optional<CommitteeMember> opt = service.getById(ids.get(i));
+            if (opt.isPresent()) {
+                CommitteeMember m = opt.get();
+                m.setDisplayOrder(i);
+                service.save(m);
+            }
+        }
+        return ResponseEntity.ok().build();
     }
 }

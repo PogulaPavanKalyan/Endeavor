@@ -38,6 +38,6 @@ public class SpeakerService {
     }
 
     public List<Speaker> getByConferenceId(Long conferenceId) {
-        return speakerRepo.findByConferenceId(conferenceId);
+        return speakerRepo.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
     }
 }

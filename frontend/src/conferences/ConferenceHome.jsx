@@ -18,9 +18,79 @@ const parseLocalDate = (dateStr) => {
   return new Date(dateStr);
 };
 
+const getEventEmoji = (title) => {
+  const t = (title || "").toLowerCase();
+  if (t.includes("opens") || t.includes("start")) return "📄";
+  if (t.includes("deadline") || t.includes("close")) return "📝";
+  if (t.includes("acceptance") || t.includes("notification")) return "📢";
+  if (t.includes("full paper") || t.includes("paper")) return "📚";
+  if (t.includes("early bird") || t.includes("early")) return "💳";
+  if (t.includes("regular") || t.includes("registration")) return "💰";
+  if (t.includes("speaker")) return "🎤";
+  if (t.includes("ceremony") || t.includes("award")) return "🏆";
+  if (t.includes("certificate")) return "🎓";
+  if (t.includes("proceeding") || t.includes("publication")) return "📖";
+  return "📅";
+};
+
+const getGoogleCalendarUrl = (event, fallbackDateStr) => {
+  const title = encodeURIComponent(event.eventTitle || event.sessionTitle || "Conference Event");
+  const desc = encodeURIComponent(event.eventDescription || event.description || "");
+  const baseDate = event.eventDate || fallbackDateStr || new Date().toISOString().split("T")[0];
+  const dateStr = baseDate.replace(/-/g, "");
+  const nextDay = new Date(baseDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+  const nextDayStr = nextDay.toISOString().split("T")[0].replace(/-/g, "");
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${desc}&dates=${dateStr}/${nextDayStr}`;
+};
+
+const getOutlookCalendarUrl = (event, fallbackDateStr) => {
+  const title = encodeURIComponent(event.eventTitle || event.sessionTitle || "Conference Event");
+  const desc = encodeURIComponent(event.eventDescription || event.description || "");
+  const baseDate = event.eventDate || fallbackDateStr || new Date().toISOString().split("T")[0];
+  const start = `${baseDate}T00:00:00Z`;
+  const nextDay = new Date(baseDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+  const end = `${nextDay.toISOString().split("T")[0]}T00:00:00Z`;
+  return `https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&subject=${title}&body=${desc}&startdt=${start}&enddt=${end}&allday=true`;
+};
+
+const downloadIcsFile = (event, fallbackDateStr) => {
+  const title = event.eventTitle || event.sessionTitle || "Conference Event";
+  const desc = event.eventDescription || event.description || "";
+  const baseDate = event.eventDate || fallbackDateStr || new Date().toISOString().split("T")[0];
+  const dateStr = baseDate.replace(/-/g, "");
+  const nextDay = new Date(baseDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+  const nextDayStr = nextDay.toISOString().split("T")[0].replace(/-/g, "");
+
+  const icsContent = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Intelevo Research//Conference Event//EN",
+    "BEGIN:VEVENT",
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${desc}`,
+    `DTSTART;VALUE=DATE:${dateStr}`,
+    `DTEND;VALUE=DATE:${nextDayStr}`,
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${title.toLowerCase().replace(/[^a-z0-9]/g, "-")}.ics`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 const ConferenceHome = () => {
   const { conference, getSubRoutePath } = useOutletContext();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [deadlineTimeLeft, setDeadlineTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [sessions, setSessions] = useState([]);
   const [sections, setSections] = useState([]);
   const [activeSection, setActiveSection] = useState(null);
@@ -29,7 +99,170 @@ const ConferenceHome = () => {
   const [sponsors, setSponsors] = useState([]);
   const [activeTab, setActiveTab] = useState("");
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
+  const [speakersList, setSpeakersList] = useState([]);
+  const [advisoryBoard, setAdvisoryBoard] = useState([]);
+  const [committee, setCommittee] = useState([]);
+  const [agendaDays, setAgendaDays] = useState([]);
+  const [activeAgendaDayId, setActiveAgendaDayId] = useState(null);
+  const [selectedBioSpeaker, setSelectedBioSpeaker] = useState(null);
+  const [selectedHall, setSelectedHall] = useState("");
+  const [selectedTrack, setSelectedTrack] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAgendaDetail, setSelectedAgendaDetail] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAllSpeakers, setShowAllSpeakers] = useState(false);
+
+  const getEventStatus = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const eventDate = new Date(dateStr);
+    eventDate.setHours(0, 0, 0, 0);
+    if (eventDate.getTime() === today.getTime()) {
+      return "today";
+    } else if (eventDate.getTime() < today.getTime()) {
+      return "completed";
+    } else {
+      return "upcoming";
+    }
+  };
+
+  useEffect(() => {
+    const rawDates = conference.importantDates || [];
+    const activeDates = rawDates
+      .filter(d => d.isActive)
+      .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingDates = activeDates.filter(d => {
+      const eventDate = new Date(d.eventDate);
+      eventDate.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
+
+    const nextDeadline = upcomingDates[0];
+    if (!nextDeadline) {
+      setDeadlineTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      return;
+    }
+
+    const targetDate = new Date(`${nextDeadline.eventDate}T23:59:59`);
+
+    const updateTimer = () => {
+      const difference = targetDate.getTime() - new Date().getTime();
+      if (difference <= 0) {
+        setDeadlineTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      setDeadlineTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60)
+      });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [conference.importantDates]);
+
+  // Background Slider & Date Formatter
+  const heroImages = conference.images || [conference.image];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [loadedSlides, setLoadedSlides] = useState([0]);
+
+  useEffect(() => {
+    if (heroImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  useEffect(() => {
+    if (!loadedSlides.includes(activeIndex)) {
+      setLoadedSlides((prev) => [...prev, activeIndex]);
+    }
+  }, [activeIndex, loadedSlides]);
+
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev + 1) % heroImages.length);
+  };
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const formatDateRangeAndLocation = () => {
+    if (!conference.startDate || !conference.endDate) {
+      return { formattedDate: conference.date || "", venue: conference.venue || "" };
+    }
+    try {
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const startParts = conference.startDate.split('-');
+      const endParts = conference.endDate.split('-');
+
+      if (startParts.length === 3 && endParts.length === 3) {
+        const startYear = startParts[0];
+        const startMonth = months[parseInt(startParts[1]) - 1];
+        const startDay = parseInt(startParts[2]);
+
+        const endYear = endParts[0];
+        const endMonth = months[parseInt(endParts[1]) - 1];
+        const endDay = parseInt(endParts[2]);
+
+        let formattedDate = "";
+        if (startYear === endYear) {
+          if (startMonth === endMonth) {
+            if (startDay === endDay) {
+              formattedDate = `${startMonth} ${startDay}, ${startYear}`;
+            } else {
+              formattedDate = `${startMonth} ${startDay}–${endDay}, ${startYear}`;
+            }
+          } else {
+            formattedDate = `${startMonth} ${startDay} – ${endMonth} ${endDay}, ${startYear}`;
+          }
+        } else {
+          formattedDate = `${startMonth} ${startDay}, ${startYear} – ${endMonth} ${endDay}, ${endYear}`;
+        }
+
+        return {
+          formattedDate,
+          venue: conference.venue
+        };
+      }
+    } catch (e) {
+      console.error("Error formatting date range:", e);
+    }
+    return { formattedDate: conference.date || "", venue: conference.venue || "" };
+  };
+
+  const { formattedDate, venue } = formatDateRangeAndLocation();
+
+  const getSessionTypeBadgeStyle = (type) => {
+    switch (type) {
+      case "Keynote":
+      case "Keynote Session":
+        return { bg: "#fef08a", color: "#854d0e" };
+      case "Break":
+      case "Lunch":
+      case "Tea Break":
+        return { bg: "#f1f5f9", color: "#475569" };
+      case "Technical Session":
+      case "Oral Presentation":
+        return { bg: "#dbeafe", color: "#1e40af" };
+      case "Poster Session":
+        return { bg: "#fce7f3", color: "#9d174d" };
+      case "Workshop":
+        return { bg: "#dcfce3", color: "#166534" };
+      case "Panel Discussion":
+        return { bg: "#fae8ff", color: "#86198f" };
+      default:
+        return { bg: "#f3f4f6", color: "#374151" };
+    }
+  };
 
   const getActivePhase = () => {
     if (!conference.startDate) return "Early Bird";
@@ -64,7 +297,7 @@ const ConferenceHome = () => {
   const getTicketPrice = (category) => {
     const dbTiers = conference.pricingTiers || [];
     let tier;
-    
+
     if (category === "students") {
       // Find "academic" in DB, fallback to Academic Registration default tier (index 1)
       tier = dbTiers.find(t => t.type.toLowerCase().includes("academic")) || DEFAULT_PRICING_TIERS[1];
@@ -75,7 +308,7 @@ const ConferenceHome = () => {
       // Find "delegate" or "business" in DB, fallback to Business Delegate default tier (index 2)
       tier = dbTiers.find(t => t.type.toLowerCase().includes("delegate") || t.type.toLowerCase().includes("business")) || DEFAULT_PRICING_TIERS[2];
     }
-    
+
     if (!tier) return 0;
     if (activePhase === "Early Bird") return tier.earlyPrice;
     if (activePhase === "Mid-On") return tier.midPrice;
@@ -115,12 +348,26 @@ const ConferenceHome = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [sessionsData, sectionsData, infoData, tracksData, sponsorsData] = await Promise.all([
+        const [
+          sessionsData,
+          sectionsData,
+          infoData,
+          tracksData,
+          sponsorsData,
+          speakersData,
+          boardData,
+          committeeData,
+          agendaData
+        ] = await Promise.all([
           api.get(`/api/sessions?conferenceId=${conference.id}`),
           api.get(`/api/conference-sections?conferenceId=${conference.id}`),
           api.get("/api/info-updates"),
           api.get(`/api/tracks?conferenceId=${conference.id}`),
-          api.get(`/api/sponsors?conferenceId=${conference.id}`).catch(() => [])
+          api.get(`/api/sponsors?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/speakers?conferenceId=${conference.id}`),
+          api.get(`/api/advisory-board?conferenceId=${conference.id}`),
+          api.get(`/api/committee?conferenceId=${conference.id}`),
+          api.get(`/api/agenda/days?conferenceId=${conference.id}`)
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
@@ -140,6 +387,22 @@ const ConferenceHome = () => {
         }
         if (Array.isArray(sponsorsData)) {
           setSponsors(sponsorsData);
+        }
+        if (Array.isArray(speakersData)) {
+          setSpeakersList(speakersData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)));
+        }
+        if (Array.isArray(boardData)) {
+          setAdvisoryBoard(boardData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)));
+        }
+        if (Array.isArray(committeeData)) {
+          setCommittee(committeeData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)));
+        }
+        if (Array.isArray(agendaData)) {
+          const sortedDays = agendaData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+          setAgendaDays(sortedDays);
+          if (sortedDays.length > 0) {
+            setActiveAgendaDayId(sortedDays[0].id);
+          }
         }
       } catch (err) {
         console.error("Failed to load home page dynamic details:", err);
@@ -179,7 +442,7 @@ const ConferenceHome = () => {
         const cardRect = card.getBoundingClientRect();
         const cardCenter = cardRect.left + cardRect.width / 2;
         const distance = cardCenter - containerCenter;
-        
+
         // Normalize distance based on half-width of container
         const normalizedDistance = distance / (containerRect.width / 2 || 1);
         const clampedDistance = Math.max(-1.5, Math.min(1.5, normalizedDistance));
@@ -276,50 +539,50 @@ const ConferenceHome = () => {
 
   // Mock fallbacks if database is empty
   const mockSpeakers = [
-    { 
-      id: "mock-1", 
-      name: "Prof. Sarah Higgins", 
-      designation: "Scientific Committee Chair", 
-      affiliation: "University of Oxford", 
-      country: "UK", 
-      type: "ADVISORY_BOARD", 
+    {
+      id: "mock-1",
+      name: "Prof. Sarah Higgins",
+      designation: "Scientific Committee Chair",
+      affiliation: "University of Oxford",
+      country: "UK",
+      type: "ADVISORY_BOARD",
       bio: "Prof. Higgins is a leading scholar in biochemical adaptation and has published over 120 papers in highly-indexed journals.",
-      photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80" 
+      photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80"
     },
-    { 
-      id: "mock-2", 
-      name: "Dr. Kenji Sato", 
-      designation: "Plenary Chair", 
-      affiliation: "Tokyo Institute of Technology", 
-      country: "Japan", 
-      type: "ADVISORY_BOARD", 
+    {
+      id: "mock-2",
+      name: "Dr. Kenji Sato",
+      designation: "Plenary Chair",
+      affiliation: "Tokyo Institute of Technology",
+      country: "Japan",
+      type: "ADVISORY_BOARD",
       bio: "Dr. Sato specializes in nanotechnology integrations and has collaborated on several international research projects.",
-      photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80" 
+      photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80"
     },
-    { 
-      id: "mock-3", 
-      name: "Dr. Andrea Miller", 
-      designation: "Invited Keynote Presenter", 
-      affiliation: "University of Valencia", 
-      country: "Spain", 
-      type: "KEYNOTE", 
+    {
+      id: "mock-3",
+      name: "Dr. Andrea Miller",
+      designation: "Invited Keynote Presenter",
+      affiliation: "University of Valencia",
+      country: "Spain",
+      type: "KEYNOTE",
       bio: "Dr. Miller's research centers on international adaptation models and sustainable agricultural systems.",
-      photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&h=300&q=80" 
+      photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&h=300&q=80"
     },
-    { 
-      id: "mock-4", 
-      name: "Prof. Alan Vance", 
-      designation: "Technical Lead", 
-      affiliation: "CERN Particle Accelerator", 
-      country: "Switzerland", 
-      type: "KEYNOTE", 
+    {
+      id: "mock-4",
+      name: "Prof. Alan Vance",
+      designation: "Technical Lead",
+      affiliation: "CERN Particle Accelerator",
+      country: "Switzerland",
+      type: "KEYNOTE",
       bio: "Prof. Vance is an experimental physicist coordinating major detector validation campaigns globally.",
-      photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80" 
+      photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&h=300&q=80"
     }
   ];
 
   // Resolve which lists to display
-  const activeSessions = sessions.length > 0 
+  const activeSessions = sessions.length > 0
     ? sessions.map(s => ({ title: s.name, desc: s.description }))
     : (conference.sessions || []);
 
@@ -337,15 +600,50 @@ const ConferenceHome = () => {
   return (
     <div className="conf-home-portal">
       {/* Hero Section */}
-      <section 
-        className="conf-home-hero" 
-        style={{ backgroundImage: `url(${conference.image})` }}
-      >
+      <section className="conf-home-hero">
+        <div className="conf-home-hero-slider">
+          {heroImages.map((imgUrl, idx) => (
+            <div
+              key={idx}
+              className={`conf-home-hero-slide ${idx === activeIndex ? 'active' : ''}`}
+              style={{
+                backgroundImage: loadedSlides.includes(idx) ? `url(${imgUrl})` : 'none'
+              }}
+            />
+          ))}
+        </div>
+
+        {heroImages.length > 1 && (
+          <>
+            <button className="conf-slider-arrow prev" onClick={prevSlide}>
+              &#10094;
+            </button>
+            <button className="conf-slider-arrow next" onClick={nextSlide}>
+              &#10095;
+            </button>
+            <div className="conf-slider-dots">
+              {heroImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`conf-slider-dot ${idx === activeIndex ? 'active' : ''}`}
+                  onClick={() => setActiveIndex(idx)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         <div className="conf-home-hero-content">
-          <div className="conf-home-hero-meta">
-            {conference.date} {conference.venue}
-          </div>
           <h1>{conference.title}</h1>
+          <div className="conf-home-hero-meta">
+            <span className="conf-meta-item">
+              <span className="meta-icon">📅</span> {formattedDate}
+            </span>
+            <span className="conf-meta-separator"> @ </span>
+            <span className="conf-meta-item">
+              <span className="meta-icon">📍</span> {venue}
+            </span>
+          </div>
 
           {/* Countdown circles */}
           <div className="conf-countdown">
@@ -377,7 +675,7 @@ const ConferenceHome = () => {
               About the Congress
               <span style={{ display: "block", width: "60px", height: "4px", backgroundColor: "var(--conf-primary)", marginTop: "8px", borderRadius: "2px" }}></span>
             </h2>
-            
+
             <div style={{ marginBottom: "20px" }}>
               {renderAboutText(conference.about)}
             </div>
@@ -389,7 +687,7 @@ const ConferenceHome = () => {
                 <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Scientific tracks</h4>
                 <p style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Deep dive into state-of-the-art presentations and panel reviews.</p>
               </div>
-              
+
               <div className="conf-highlight-card" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)", transition: "transform 0.3s ease" }}>
                 <div style={{ fontSize: "28px", marginBottom: "12px" }}>🌐</div>
                 <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Global Reach</h4>
@@ -403,42 +701,29 @@ const ConferenceHome = () => {
               </div>
             </div>
 
-            
+
           </div>
           <div className="conf-about-image" style={{ alignSelf: "start", marginTop: "15px" }}>
-            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80" alt="Conference Presentation" style={{ width: "100%", borderRadius: "12px", boxShadow: "0 15px 40px rgba(15, 23, 42, 0.08)" }} />
+            <img
+              src={
+                conference.aboutImage
+                  ? (conference.aboutImage.startsWith('http') ? conference.aboutImage : `${BASE_URL}/uploads/conference/${conference.aboutImage}`)
+                  : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"
+              }
+              alt="About the Congress"
+              style={{ width: "100%", borderRadius: "12px", boxShadow: "0 15px 40px rgba(15, 23, 42, 0.08)" }}
+            />
           </div>
         </div>
       </section>
 
       {/* Scientific Sessions Grid */}
       {(() => {
-        const defaultTracks = [
-          "Advanced Research and Trends in Food Sciences",
-          "Functional Food and Nutraceuticals",
-          "Early Nutrition Influence – Preventive and Therapeutic Aspects",
-          "Food Microbiology and Enzymology",
-          "COVID-19 and Food Security Challenges",
-          "Global and Public Health Nutrition",
-          "Food Safety and Policies",
-          "Beverages Production and Processing",
-          "Immunity Booster Green Foods",
-          "Nutritional Genetics and Genomics",
-          "Food & Nutritional Toxicology",
-          "Food Quality and Nutritional Values",
-          "Meat, Poultry, Seafood and its Preservation",
-          "Food Processing and Engineering",
-          "Agricultural Food Science and Sustainable Food Systems",
-          "Food Packaging and Preservation",
-          "Clinical and Translational Nutrition",
-          "Malnutrition and Under-nutrition",
-          "Nutrition, Metabolism and Cardiovascular Diseases",
-          "Food Hydrocolloids"
-        ];
+        if (!tracks || tracks.length === 0) {
+          return null;
+        }
 
-        const tracksList = tracks && tracks.length > 0
-          ? tracks.map(t => t.name)
-          : defaultTracks;
+        const tracksList = tracks.map(t => t.name);
 
         const midPoint = Math.ceil(tracksList.length / 2);
         const leftColumnTracks = tracksList.slice(0, midPoint);
@@ -467,7 +752,7 @@ const ConferenceHome = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                   {rightColumnTracks.map((track, index) => (
                     <div key={index} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
@@ -478,75 +763,594 @@ const ConferenceHome = () => {
                     </div>
                   ))}
                 </div>
-                
+
               </div>
               <div style={{ marginTop: "35px", display: "flex", gap: "15px", flexWrap: "wrap" }}>
-              <Link to={getSubRoutePath ? getSubRoutePath("register") : "register"} className="btn-conf-submit" style={{ textDecoration: "none", display: "inline-block" }}>Register Now</Link>
-              <Link to={getSubRoutePath ? getSubRoutePath("submit-abstract") : "submit-abstract"} className="btn-conf-download" style={{ textDecoration: "none", display: "inline-block" }}>Submit Abstract</Link>
-            </div>
+                <Link to={getSubRoutePath ? getSubRoutePath("register") : "register"} className="btn-conf-submit" style={{ textDecoration: "none", display: "inline-block" }}>Register Now</Link>
+                <Link to={getSubRoutePath ? getSubRoutePath("submit-abstract") : "submit-abstract"} className="btn-conf-download" style={{ textDecoration: "none", display: "inline-block" }}>Submit Abstract</Link>
+              </div>
             </div>
           </section>
         );
       })()}
 
-      {/* Dynamic Tab Sections */}
-      {sections.length > 0 && (
-        <section className="conf-speakers-section" id="speakers-list">
-          <div className="container">
-            <div className="conf-section-header">
-              <h2>Speakers, Committees & Partners</h2>
-              <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-                Explore our keynote presenters, organizing committees, sponsors, and supporting organizations.
-              </p>
-            </div>
+      {/* Important Dates Section */}
+      {(() => {
+        const rawDates = conference.importantDates || [];
+        const activeDates = rawDates
+          .filter(d => d.isActive)
+          .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
-            {/* Tab buttons */}
-            <div className="conf-speaker-tabs" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px" }}>
-              {sections.map((sec) => (
-                <button 
-                  key={sec.id}
-                  className={`conf-tab-btn ${activeTab === sec.sectionSlug ? "active" : ""}`}
-                  onClick={() => {
-                    setActiveTab(sec.sectionSlug);
-                    setActiveSection(sec);
-                  }}
-                >
-                  {sec.sectionName}
-                </button>
-              ))}
-            </div>
+        if (activeDates.length === 0) return null;
 
-            {/* Tab Entries Grid */}
-            <div className="conf-speakers-grid">
-              {currentItems.length === 0 ? (
-                <p style={{ textAlign: "center", gridColumn: "1/-1", color: "#718096", padding: "40px 0" }}>
-                  No entries registered for this section yet.
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const upcomingDates = activeDates.filter(d => {
+          const eventDate = new Date(d.eventDate);
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate >= today;
+        });
+        const nextDeadline = upcomingDates[0];
+
+        return (
+          <section className="conf-important-dates-section" id="important-dates">
+            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+              <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "45px" }}>
+                <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "15px" }}>
+                  Important Dates
+                </h2>
+                <p style={{ color: "#475569", fontSize: "16px", maxWidth: "700px", margin: "0 auto" }}>
+                  Stay informed about all important conference milestones and deadlines.
                 </p>
-              ) : (
-                currentItems.map((item) => (
-                  <div key={item.id} className="conf-speaker-card" onClick={() => setSelectedSpeaker(item)}>
-                    <div className="speaker-image-wrapper">
-                      <img 
-                        src={item.imagePath || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"} 
-                        alt={item.name}
-                        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
-                      />
-                      <div className="speaker-hover-overlay">
-                        <span className="plus-icon">+</span>
-                      </div>
+              </div>
+
+              {/* Countdown Component if next deadline exists */}
+              {nextDeadline && (
+                <div className="deadline-countdown-banner">
+                  <div className="countdown-info">
+                    <span className="countdown-label">NEXT DEADLINE:</span>
+                    <span className="countdown-title">{nextDeadline.eventTitle}</span>
+                  </div>
+                  <div className="countdown-timer">
+                    <div className="timer-unit">
+                      <span className="timer-val">{deadlineTimeLeft.days}</span>
+                      <span className="timer-lbl">Days</span>
                     </div>
-                    <div className="speaker-info">
-                      <h3>{item.name}</h3>
-                      <p className="speaker-description">
-                        {item.designation}{item.organization ? `, ${item.organization}` : ''} {item.country ? `(${item.country})` : ''}
-                      </p>
+                    <div className="timer-separator">:</div>
+                    <div className="timer-unit">
+                      <span className="timer-val">{deadlineTimeLeft.hours}</span>
+                      <span className="timer-lbl">Hrs</span>
+                    </div>
+                    <div className="timer-separator">:</div>
+                    <div className="timer-unit">
+                      <span className="timer-val">{deadlineTimeLeft.minutes}</span>
+                      <span className="timer-lbl">Mins</span>
+                    </div>
+                    <div className="timer-separator">:</div>
+                    <div className="timer-unit">
+                      <span className="timer-val">{deadlineTimeLeft.seconds}</span>
+                      <span className="timer-lbl">Secs</span>
                     </div>
                   </div>
-                ))
+                </div>
               )}
+
+              {/* Timeline List */}
+              <div className="dates-timeline-container">
+                {activeDates.map((item, idx) => {
+                  const status = getEventStatus(item.eventDate);
+                  const formattedDate = new Date(item.eventDate).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric"
+                  });
+
+                  return (
+                    <div
+                      key={item.id || idx}
+                      className={`timeline-row ${status} ${item.isHighlighted ? 'highlighted' : ''}`}
+                    >
+                      <div className="timeline-col-event">
+                        <span className="event-emoji">{getEventEmoji(item.eventTitle)}</span>
+                        <div className="event-details">
+                          <h4 className="event-title">{item.eventTitle}</h4>
+                          {item.eventDescription && (
+                            <p className="event-desc">{item.eventDescription}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="timeline-col-date-badge">
+                        <div className="event-date-display">{formattedDate}</div>
+                        <div className="status-badge-container">
+                          {status === 'completed' && <span className="badge badge-completed">Completed</span>}
+                          {status === 'today' && <span className="badge badge-today">Today</span>}
+                          {status === 'upcoming' && <span className="badge badge-upcoming">Upcoming</span>}
+
+                          {status !== 'completed' && (
+                            <div className="calendar-export-actions">
+                              <button
+                                onClick={() => window.open(getGoogleCalendarUrl(item), '_blank')}
+                                title="Add to Google Calendar"
+                                className="cal-btn google"
+                              >
+                                Google
+                              </button>
+                              <button
+                                onClick={() => window.open(getOutlookCalendarUrl(item), '_blank')}
+                                title="Add to Outlook Calendar"
+                                className="cal-btn outlook"
+                              >
+                                Outlook
+                              </button>
+                              <button
+                                onClick={() => downloadIcsFile(item)}
+                                title="Download .ics Calendar Event"
+                                className="cal-btn ics"
+                              >
+                                iCal
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Print action helper */}
+              <div style={{ textAlign: "right", marginTop: "20px" }} className="no-print">
+                <button
+                  onClick={() => window.print()}
+                  style={{
+                    background: "none",
+                    border: "1px solid #cbd5e1",
+                    color: "#64748b",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px"
+                  }}
+                >
+                  🖨️ Print Important Dates
+                </button>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* 1. Keynote & Invited Speakers Section */}
+      <section className="conf-speakers-section" id="keynote-speakers">
+        <div className="container">
+          <div className="conf-section-header">
+            <span className="sponsors-tag-pill">Presentations</span>
+            <h2>Keynote & Invited Speakers</h2>
+            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+              Meet the internationally recognized experts presenting at the conference.
+            </p>
+          </div>
+
+          {speakersList && speakersList.filter(s => s.isActive !== false).length > 0 ? (
+            <>
+              <div className="conf-speakers-grid-redesigned">
+                {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => (
+                  <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
+                    <div className="speaker-image-wrapper-premium">
+                      <img
+                        src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
+                        alt={spk.name}
+                        onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                      />
+                      {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
+                    </div>
+                    <div className="speaker-info-premium">
+                      <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
+                      <p className="speaker-designation-premium">{spk.designation}</p>
+                      <p className="speaker-org-premium">{spk.affiliation}, {spk.country}</p>
+                      {spk.researchAreas && (
+                        <div className="speaker-research-areas-premium">
+                          {spk.researchAreas.split(',').map((area, aIdx) => (
+                            <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
+                          ))}
+                        </div>
+                      )}
+
+
+                      <button type="button" className="btn-read-bio-premium" onClick={() => setSelectedBioSpeaker({
+                        name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                        designation: spk.designation,
+                        org: `${spk.affiliation}, ${spk.country}`,
+                        photoUrl: spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg"),
+                        bio: spk.bio,
+                        linkedin: spk.linkedin,
+                        orcid: spk.orcid,
+                        website: spk.website,
+                        research: spk.researchAreas
+                      })}>
+                        View Profile & Bio →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {speakersList.filter(s => s.isActive !== false).length > 8 && (
+                <div style={{ textAlign: "center", marginTop: "40px" }}>
+                  <button
+                    onClick={() => setShowAllSpeakers(!showAllSpeakers)}
+                    className="btn-print-program-premium"
+                    style={{ padding: "12px 30px", fontSize: "14px" }}
+                  >
+                    {showAllSpeakers ? "View Less" : "View All Speakers"}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Speakers to be Announced</h3>
+              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>We are currently curating an exceptional lineup of experts and keynote speakers for this conference. Please check back soon for updates.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 2. International Advisory Board Section */}
+      <section className="conf-advisory-section-redesigned" id="advisory-board">
+        <div className="container">
+          <div className="conf-section-header">
+            <span className="sponsors-tag-pill">Academic Guidance</span>
+            <h2>International Advisory Board</h2>
+            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+              Our distinguished advisory board members provide academic guidance and strategic direction.
+            </p>
+          </div>
+
+          {advisoryBoard && advisoryBoard.filter(m => m.isActive !== false).length > 0 ? (
+            <div className="conf-advisory-grid-redesigned">
+              {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
+                <div key={member.id} className="advisory-card-premium">
+                  <div className="advisory-avatar-wrap-premium">
+                    <img
+                      src={member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                      alt={member.name}
+                      onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                    />
+                  </div>
+                  <div className="advisory-info-premium">
+                    <h3>{member.name}</h3>
+                    <p className="advisory-role-premium">{member.designation}</p>
+                    <p className="advisory-org-premium">{member.organization}, {member.country}</p>
+                    {member.researchExpertise && (
+                      <div className="advisory-expertise-premium">
+                        <strong>Expertise:</strong> {member.researchExpertise}
+                      </div>
+                    )}
+                    {member.bio && (
+                      <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
+                        name: member.name,
+                        designation: member.designation,
+                        org: `${member.organization}, ${member.country}`,
+                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                        bio: member.bio,
+                        research: member.researchExpertise
+                      })}>
+                        Read Biography
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "60px 20px", background: "#ffffff", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Advisory Board to be Announced</h3>
+              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The advisory board members are currently being finalized. Please check back later.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 3. Organizing Committee Section */}
+      <section className="conf-committee-section-redesigned" id="organizing-committee">
+        <div className="container">
+          <div className="conf-section-header">
+            <span className="sponsors-tag-pill">Committee</span>
+            <h2>Organizing Committee</h2>
+            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+              Meet the coordinators, track chairs, and reviewers organizing the event.
+            </p>
+          </div>
+
+          {committee && committee.filter(c => c.isActive !== false).length > 0 ? (
+            <div className="conf-advisory-grid-redesigned">
+              {(() => {
+                const roleOrder = [
+                  "Chair",
+                  "Co-Chair",
+                  "Conference Secretary",
+                  "Scientific Committee",
+                  "Technical Committee",
+                  "Publication Committee",
+                  "Registration Committee",
+                  "Finance Committee",
+                  "Local Organizing Committee"
+                ];
+
+                const getRoleRank = (role) => {
+                  const idx = roleOrder.indexOf(role);
+                  return idx === -1 ? 999 : idx;
+                };
+
+                return [...committee.filter(c => c.isActive !== false)]
+                  .sort((a, b) => getRoleRank(a.role || "Local Organizing Committee") - getRoleRank(b.role || "Local Organizing Committee"))
+                  .map((cm) => (
+                    <div key={cm.id} className="advisory-card-premium">
+                      <div className="advisory-avatar-wrap-premium">
+                        <img
+                          src={cm.photo?.fileName ? `${BASE_URL}/uploads/committee/${cm.photo.fileName}` : (cm.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
+                          alt={cm.name}
+                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                        />
+                      </div>
+                      <div className="advisory-info-premium">
+                        <h3>{cm.academicTitle && !cm.name.trim().startsWith(cm.academicTitle.trim()) ? `${cm.academicTitle} ` : ''}{cm.name}</h3>
+                        <p className="advisory-role-premium">{cm.role || "Local Organizing Committee"}</p>
+                        <p className="advisory-org-premium">{cm.affiliation}{cm.country ? `, ${cm.country}` : ""}</p>
+                      </div>
+                    </div>
+                  ));
+              })()}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Committee Members to be Announced</h3>
+              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The organizing committee is currently being formed. Information will be updated shortly.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 4. Conference Agenda Section */}
+      <section className="conf-agenda-section-redesigned" id="agenda-schedule">
+        <div className="container">
+          <div className="conf-section-header">
+            <span className="sponsors-tag-pill">Scientific Timetable</span>
+            <h2>Conference Agenda & Program</h2>
+            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto", marginBottom: "20px" }}>
+              Explore scheduled keynotes, oral presentations, breaks, and workshops. Click any row to view abstract and biography details.
+            </p>
+
+            {conference.agendaPdfPath && (
+              <div style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginTop: "15px", marginBottom: "30px" }}>
+                <a
+                  href={`${BASE_URL}${conference.agendaPdfPath}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-download-agenda-premium"
+                >
+                  📄 Download Program PDF File
+                </a>
+                <button type="button" onClick={() => window.print()} className="btn-print-program-premium">
+                  🖨️ Print Scientific Program
+                </button>
+              </div>
+            )}
+          </div>
+
+          {agendaDays && agendaDays.length > 0 ? (
+            <React.Fragment>
+              <div className="classic-agenda-tabs">
+                {agendaDays.map((d) => (
+                  <button
+                    type="button"
+                    key={d.id}
+                    className={`classic-tab-btn ${activeAgendaDayId === d.id ? "active" : ""}`}
+                    onClick={() => setActiveAgendaDayId(d.id)}
+                  >
+                    DAY {d.dayNumber} - {d.dayTitle}
+                  </button>
+                ))}
+              </div>
+
+              {(() => {
+                const activeD = agendaDays.find(d => d.id === activeAgendaDayId);
+                const activeSessionsList = activeD ? activeD.sessions || [] : [];
+
+                // Group by hall
+                const groupedByHall = {};
+                activeSessionsList.filter(s => s.status !== "INACTIVE").forEach(s => {
+                  const h = s.hall || "Meeting Hall-1";
+                  if (!groupedByHall[h]) groupedByHall[h] = [];
+                  groupedByHall[h].push(s);
+                });
+
+                return (
+                  <div className="classic-agenda-layout">
+                    {/* Left Timeline Anchor */}
+                    <div className="classic-timeline-sidebar no-print">
+                      <div className="classic-timeline-day">
+                        DAY {activeD?.dayNumber} AGENDA<br />
+                        <span style={{ fontWeight: 'normal', fontSize: '13px', color: '#64748b' }}>
+                          {activeD?.date ? new Date(activeD.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }) : ''}
+                        </span>
+                      </div>
+                      <div className="classic-timeline-time-block">
+                        <div className="classic-time-label">08:00</div>
+                        <div className="classic-timeline-line">
+                          <div className="classic-timeline-arrow"></div>
+                        </div>
+                        <div className="classic-time-label">17:00</div>
+                      </div>
+                    </div>
+
+                    {/* Main Container */}
+                    <div className="classic-agenda-container">
+                      <div className="classic-agenda-header-box">
+                        <h2 className="classic-conf-title">{conference.title || "Conference Title"}</h2>
+                        <h3 className="classic-conf-subtitle">({conference.shortName || "Conference Short Name"})</h3>
+                        <div className="classic-conf-date-loc">
+                          September 09-10, 2026, Paris-France
+                        </div>
+                      </div>
+
+                      {Object.keys(groupedByHall).length === 0 ? (
+                        <p style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>No active sessions found for this day.</p>
+                      ) : (
+                        Object.keys(groupedByHall).map(hall => {
+                          const hallSessions = groupedByHall[hall].sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
+
+                          return (
+                            <div key={hall} className="classic-hall-group">
+                              <div className="classic-hall-header">Scientific Program</div>
+                              <div className="classic-hall-header">Day {activeD?.dayNumber} - {activeD?.date || "September 09, 2026"}</div>
+                              <div className="classic-hall-header">{hall}</div>
+
+                              <table className="classic-agenda-table">
+                                <tbody>
+                                  {hallSessions.map(slot => {
+                                    const isMerged = !slot.speakerName || slot.sessionType?.toLowerCase().includes('break') || slot.sessionType?.toLowerCase().includes('registration') || slot.sessionType?.toLowerCase().includes('opening');
+
+                                    if (isMerged) {
+                                      const isPurple = slot.sessionType?.toLowerCase().includes('break') || slot.sessionType?.toLowerCase().includes('keynote');
+                                      return (
+                                        <tr key={slot.id} className="classic-merged-row">
+                                          <td colSpan="3" className={`classic-merged-cell ${isPurple ? 'text-purple' : 'text-green'}`}>
+                                            {slot.sessionTitle} {slot.startTime ? `(${slot.startTime}-${slot.endTime})` : ''}
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
+
+                                    return (
+                                      <tr key={slot.id} className="classic-data-row" onClick={() => setSelectedAgendaDetail(slot)}>
+                                        <td className="classic-presenter-cell">
+                                          <div className="classic-presenter-name">{slot.speakerName}</div>
+                                          <div className="classic-presenter-org">
+                                            {slot.organization}{slot.country ? `, ${slot.country}` : ""}
+                                          </div>
+                                        </td>
+                                        <td className="classic-time-cell">
+                                          {slot.startTime} - {slot.endTime}
+                                        </td>
+                                        <td className="classic-title-cell">
+                                          {slot.sessionTitle}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </React.Fragment>
+          ) : (
+            <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1", marginTop: "20px" }}>
+              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Agenda to be Announced</h3>
+              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The scientific program and timetable are currently under review. Please check back later for detailed session schedules.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Dynamic Scientific Session Details Modal */}
+      {selectedAgendaDetail && (
+        <div className="conf-modal-overlay" onClick={() => setSelectedAgendaDetail(null)}>
+          <div className="conf-modal-premium" onClick={e => e.stopPropagation()} style={{ padding: 0, overflow: 'hidden' }}>
+            <button className="conf-modal-close" onClick={() => setSelectedAgendaDetail(null)}>×</button>
+
+            <div className="agenda-modal-header-premium">
+              <span className="type-badge" style={{
+                background: getSessionTypeBadgeStyle(selectedAgendaDetail.sessionType).bg,
+                color: getSessionTypeBadgeStyle(selectedAgendaDetail.sessionType).color,
+                marginBottom: '12px',
+                display: 'inline-block'
+              }}>
+                {selectedAgendaDetail.sessionType}
+              </span>
+              <h2 className="agenda-modal-main-title">
+                {selectedAgendaDetail.sessionTitle}
+              </h2>
+            </div>
+
+            <div className="agenda-modal-body-premium">
+              <div className="agenda-modal-meta-grid">
+                <div className="agenda-meta-item">
+                  <div className="agenda-meta-label">🕒 Time</div>
+                  <div className="agenda-meta-value">{selectedAgendaDetail.startTime} - {selectedAgendaDetail.endTime}</div>
+                </div>
+                <div className="agenda-meta-item">
+                  <div className="agenda-meta-label">📍 Venue</div>
+                  <div className="agenda-meta-value">{selectedAgendaDetail.hall || 'Main Hall'}</div>
+                </div>
+                {selectedAgendaDetail.track && (
+                  <div className="agenda-meta-item">
+                    <div className="agenda-meta-label">📑 Track</div>
+                    <div className="agenda-meta-value">{selectedAgendaDetail.track}</div>
+                  </div>
+                )}
+                {selectedAgendaDetail.chairperson && (
+                  <div className="agenda-meta-item">
+                    <div className="agenda-meta-label">👤 Session Chair</div>
+                    <div className="agenda-meta-value">{selectedAgendaDetail.chairperson}</div>
+                  </div>
+                )}
+              </div>
+
+              {selectedAgendaDetail.speakerName && (
+                <div className="agenda-presenter-card">
+                  <div className="agenda-presenter-avatar-placeholder">
+                    {selectedAgendaDetail.speakerName.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="agenda-meta-label" style={{ marginBottom: '2px' }}>Presenter</div>
+                    <div style={{ fontSize: '15px', color: '#0f172a', fontWeight: '800' }}>
+                      {selectedAgendaDetail.speakerName}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px', fontWeight: '500' }}>
+                      {selectedAgendaDetail.organization}{selectedAgendaDetail.country ? `, ${selectedAgendaDetail.country}` : ''}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedAgendaDetail.abstractText && (
+                <div className="agenda-modal-text-section">
+                  <h4 className="agenda-modal-section-title">📄 Abstract Summary</h4>
+                  <p className="agenda-modal-text">
+                    {selectedAgendaDetail.abstractText}
+                  </p>
+                </div>
+              )}
+
+              {selectedAgendaDetail.biography && (
+                <div className="agenda-modal-text-section">
+                  <h4 className="agenda-modal-section-title">🎤 Speaker Biography</h4>
+                  <p className="agenda-modal-text">
+                    {selectedAgendaDetail.biography}
+                  </p>
+                </div>
+              )}
+
+              {/* Exports inside modal */}
+              <div className="agenda-modal-footer-actions no-print">
+                <button type="button" onClick={() => downloadIcsFile(selectedAgendaDetail, conference?.startDate)} className="cal-btn-outline">📅 Export ICS</button>
+                <a href={getGoogleCalendarUrl(selectedAgendaDetail, conference?.startDate)} target="_blank" rel="noreferrer" className="cal-btn-outline">🌐 Google Calendar</a>
+                <a href={getOutlookCalendarUrl(selectedAgendaDetail, conference?.startDate)} target="_blank" rel="noreferrer" className="cal-btn-outline">💻 Outlook Web</a>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
       )}
 
       {/* Media Partners & Sponsors Section (Admin added only) */}
@@ -617,59 +1421,7 @@ const ConferenceHome = () => {
         </section>
       )}
 
-      {/* Registration Section below Speakers */}
-      <section 
-        className="conf-registration-home-section"
-        style={{ backgroundImage: `url(https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80)` }}
-      >
-        <div className="conf-registration-home-container">
-          <h2>Registration</h2>
-          
-          <div className="tickets-grid">
-            {/* Young Research Forum/Students Ticket */}
-            <div className="ticket-card">
-              <div className="ticket-title">Young Research Forum/Students</div>
-              <div className="ticket-price-container">
-                <div className="ticket-price">
-                  <span>$</span>{getTicketPrice("students")}
-                </div>
-                <div className="ticket-line"></div>
-              </div>
-              <Link to={getSubRoutePath("register")} className="btn-ticket-register">
-                Register
-              </Link>
-            </div>
 
-            {/* Speaker Ticket */}
-            <div className="ticket-card">
-              <div className="ticket-title">Speaker</div>
-              <div className="ticket-price-container">
-                <div className="ticket-price">
-                  <span>$</span>{getTicketPrice("speaker")}
-                </div>
-                <div className="ticket-line"></div>
-              </div>
-              <Link to={getSubRoutePath("register")} className="btn-ticket-register">
-                Register
-              </Link>
-            </div>
-
-            {/* Delegate Ticket */}
-            <div className="ticket-card">
-              <div className="ticket-title">Delegate</div>
-              <div className="ticket-price-container">
-                <div className="ticket-price">
-                  <span>$</span>{getTicketPrice("delegate")}
-                </div>
-                <div className="ticket-line"></div>
-              </div>
-              <Link to={getSubRoutePath("register")} className="btn-ticket-register">
-                Register
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Info Update Section below Registration */}
       {(() => {
@@ -706,15 +1458,15 @@ const ConferenceHome = () => {
 
               <div ref={scrollRef} className="info-updates-grid">
                 {activeInfoUpdates.map((item, idx) => (
-                  <Link 
-                    key={idx} 
+                  <Link
+                    key={idx}
                     to={getSubRoutePath ? getSubRoutePath(item.link) : `/${item.link}`}
                     className="info-update-card"
                   >
                     <div className="info-update-card-img-wrap">
-                      <img 
-                        src={item.imageUrl} 
-                        alt={item.title} 
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
                         className="info-card-image"
                       />
                     </div>
@@ -733,48 +1485,43 @@ const ConferenceHome = () => {
 
 
 
-      {/* Speaker Details Modal */}
-      {selectedSpeaker && (
-        <div className="conf-modal-overlay" onClick={() => setSelectedSpeaker(null)}>
-          <div className="conf-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="conf-modal-close" onClick={() => setSelectedSpeaker(null)}>×</button>
-            <div className="conf-modal-content-grid">
-              <div className="conf-modal-img-wrap">
-                <img 
-                  src={selectedSpeaker.imagePath || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"} 
-                  alt={selectedSpeaker.name}
-                  onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
+      {/* Redesigned Premium Bio & Profile Modal */}
+      {selectedBioSpeaker && (
+        <div className="conf-modal-overlay" onClick={() => setSelectedBioSpeaker(null)}>
+          <div className="conf-modal-card-premium" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="conf-modal-close-premium" onClick={() => setSelectedBioSpeaker(null)}>×</button>
+            <div className="conf-modal-content-grid-premium">
+              <div className="conf-modal-img-wrap-premium">
+                <img
+                  src={selectedBioSpeaker.photoUrl}
+                  alt={selectedBioSpeaker.name}
+                  onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
                 />
               </div>
-              <div className="conf-modal-text-wrap">
-                <h2>{selectedSpeaker.name}</h2>
-                <p className="modal-role" style={{ color: "var(--conf-primary, #e74c3c)", fontWeight: "700" }}>
-                  {selectedSpeaker.designation || "Participant"}
-                </p>
-                <p className="modal-affiliation">
-                  {selectedSpeaker.organization}{selectedSpeaker.country ? `, ${selectedSpeaker.country}` : ''}
-                </p>
-                
-                {/* Social/Web links */}
-                <div style={{ display: "flex", gap: "14px", marginTop: "10px", marginBottom: "15px" }}>
-                  {selectedSpeaker.websiteUrl && (
-                    <a href={selectedSpeaker.websiteUrl} target="_blank" rel="noreferrer" style={{ fontSize: "13.5px", color: "var(--conf-primary, #e74c3c)", fontWeight: "700", textDecoration: "none", borderBottom: "1px solid transparent" }}>
-                      🌐 Website
-                    </a>
-                  )}
-                  {selectedSpeaker.linkedinUrl && (
-                    <a href={selectedSpeaker.linkedinUrl} target="_blank" rel="noreferrer" style={{ fontSize: "13.5px", color: "#0077b5", fontWeight: "700", textDecoration: "none", borderBottom: "1px solid transparent" }}>
-                      🔗 LinkedIn
-                    </a>
-                  )}
-                </div>
+              <div className="conf-modal-text-wrap-premium">
+                <h2>{selectedBioSpeaker.name}</h2>
+                <p className="modal-role-premium">{selectedBioSpeaker.designation}</p>
+                <p className="modal-affiliation-premium">{selectedBioSpeaker.org}</p>
 
-                <div className="modal-divider"></div>
-                <div className="modal-bio">
-                  <h3>Details & Description</h3>
-                  <p style={{ whiteSpace: "pre-line" }}>
-                    {selectedSpeaker.description || "Details and description are pending publication."}
-                  </p>
+                {/* Social/Profile links in modal */}
+                {(selectedBioSpeaker.linkedin || selectedBioSpeaker.orcid || selectedBioSpeaker.website) && (
+                  <div className="modal-social-links-premium">
+                    {selectedBioSpeaker.linkedin && <a href={selectedBioSpeaker.linkedin} target="_blank" rel="noreferrer">🔗 LinkedIn</a>}
+                    {selectedBioSpeaker.orcid && <a href={`https://orcid.org/${selectedBioSpeaker.orcid}`} target="_blank" rel="noreferrer">🆔 ORCID Identifier</a>}
+                    {selectedBioSpeaker.website && <a href={selectedBioSpeaker.website} target="_blank" rel="noreferrer">🌐 Personal Website</a>}
+                  </div>
+                )}
+
+                <div className="modal-divider-premium"></div>
+                <div className="modal-bio-premium">
+                  <h3>Biography</h3>
+                  <p style={{ whiteSpace: "pre-line" }}>{selectedBioSpeaker.bio || "Biography details are currently pending publication."}</p>
+
+                  {selectedBioSpeaker.research && (
+                    <div style={{ marginTop: '15px' }}>
+                      <strong>Expertise:</strong> {selectedBioSpeaker.research}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

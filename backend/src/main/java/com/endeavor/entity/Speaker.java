@@ -128,4 +128,47 @@ public class Speaker {
 
     public Long getConferenceId() { return conferenceId; }
     public void setConferenceId(Long conferenceId) { this.conferenceId = conferenceId; }
+
+    @Column(name = "academic_title")
+    private String academicTitle;
+
+    private String orcid;
+    private String website;
+    private String linkedin;
+
+    @Column(name = "research_areas", columnDefinition = "TEXT")
+    private String researchAreas;
+
+    @Column(name = "is_featured")
+    private Boolean isFeatured = false;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @Column(name = "display_order")
+    private Integer displayOrder = 0;
+
+    public String getAcademicTitle() { return academicTitle; }
+    public void setAcademicTitle(String academicTitle) { this.academicTitle = academicTitle; }
+
+    public String getOrcid() { return orcid; }
+    public void setOrcid(String orcid) { this.orcid = orcid; }
+
+    public String getWebsite() { return website; }
+    public void setWebsite(String website) { this.website = website; }
+
+    public String getLinkedin() { return linkedin; }
+    public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
+
+    public String getResearchAreas() { return researchAreas; }
+    public void setResearchAreas(String researchAreas) { this.researchAreas = researchAreas; }
+
+    public Boolean getIsFeatured() { return isFeatured; }
+    public void setIsFeatured(Boolean isFeatured) { this.isFeatured = isFeatured; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public Integer getDisplayOrder() { return displayOrder; }
+    public void setDisplayOrder(Integer displayOrder) { this.displayOrder = displayOrder; }
 }

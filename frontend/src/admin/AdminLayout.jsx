@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAdmin } from './AdminContext';
 import './AdminLayout.css';
@@ -58,10 +58,16 @@ const AdminLayout = () => {
             {conferences.length > 0 && <span className="nav-badge nav-badge-primary">{conferences.length}</span>}
           </NavLink>
           <NavLink to="/admin/speakers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
-            <span className="nav-icon">🎙️</span> Speakers
+            <span className="nav-icon">🎙️</span> Keynote Speakers
+          </NavLink>
+          <NavLink to="/admin/advisory-board" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">🎓</span> Advisory Board
           </NavLink>
           <NavLink to="/admin/committee" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">👥</span> Committee
+          </NavLink>
+          <NavLink to="/admin/agenda" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">📅</span> Conference Agenda
           </NavLink>
           <NavLink to="/admin/sections" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🗂️</span> Dynamic Tabs

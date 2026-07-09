@@ -60,6 +60,16 @@ public class ConferenceDetailsService {
     }
 
     public ConferenceDetails saveConferenceDetails(ConferenceDetails details) {
+        // Normalize primary photo and photos list references to prevent Multiple representations of the same entity exception
+        if (details.getPhoto() != null && details.getPhotos() != null) {
+            for (com.endeavor.entity.ConferencePhoto p : details.getPhotos()) {
+                if (p.getId() != null && p.getId().equals(details.getPhoto().getId())) {
+                    details.setPhoto(p);
+                    break;
+                }
+            }
+        }
+
         if (details.getPhoto() != null) {
             details.getPhoto().setConferenceDetails(details);
         }

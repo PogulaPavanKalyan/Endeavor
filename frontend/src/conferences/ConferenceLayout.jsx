@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useParams, useLocation } from "react-router-dom";
 import { api } from "../utils/api";
 import { getSubdomain } from "../utils/subdomain.jsx";
@@ -90,25 +90,34 @@ const ConferenceLayout = () => {
             venue: data.venue,
             email: data.contactEmail || "hello@intelevoresearch.org",
             phone: data.contactPhone || "+1 (209) 299-5348",
-            image: data.photo?.filePath 
-              ? `/uploads/conference/${data.photo.fileName}` 
+            image: data.photo?.filePath
+              ? `/uploads/conference/${data.photo.fileName}`
               : "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+            images: data.photos && data.photos.length > 0
+              ? [...data.photos]
+                .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+                .map(p => `/uploads/conference/${p.fileName}`)
+              : [data.photo?.filePath
+                ? `/uploads/conference/${data.photo.fileName}`
+                : "https://images.unsplash.com/photo-1540575467063-178a50c2df87"],
             theme: {
               primary: data.themePrimary || "#e74c3c",
               primaryHover: data.themePrimaryHover || "#c0392b",
               accent: data.themeAccent || "#f39c12"
             },
             about: data.description || "Welcome to our premium international congress event. Meet and network with leaders in this discipline.",
+            aboutImage: data.aboutImage,
             scientificSessions: data.scientificSessions || [],
             pricingTiers: data.pricingTiers || [],
+            importantDates: data.importantDates || [],
             startDate: data.startDate,
-            sessions: data.scientificSessions && data.scientificSessions.length > 0 
+            sessions: data.scientificSessions && data.scientificSessions.length > 0
               ? data.scientificSessions.map(session => ({ title: session, desc: "Join us for an exciting deep-dive into " + session }))
               : [
-                  { title: "Session Track 1", desc: "Keynote speaking and panel presentations by senior researchers." },
-                  { title: "Session Track 2", desc: "Oral presentations and paper abstract reviews." },
-                  { title: "Session Track 3", desc: "Young research forum and poster contest sessions." }
-                ]
+                { title: "Session Track 1", desc: "Keynote speaking and panel presentations by senior researchers." },
+                { title: "Session Track 2", desc: "Oral presentations and paper abstract reviews." },
+                { title: "Session Track 3", desc: "Young research forum and poster contest sessions." }
+              ]
           });
         } else {
           setError("Conference details not found in database.");
@@ -120,7 +129,7 @@ const ConferenceLayout = () => {
         setLoading(false);
       }
     };
-    
+
     if (activeConfId) {
       fetchConferenceData();
     }
@@ -303,9 +312,9 @@ const ConferenceLayout = () => {
                   );
                 }
                 return (
-                  <Link 
+                  <Link
                     key={page.id || page.pageKey}
-                    to={getSubRoutePath(page.route)} 
+                    to={getSubRoutePath(page.route)}
                     className={`conf-nav-link ${isLinkActive(page.route) ? "active" : ""}`}
                   >
                     {page.label}
@@ -314,8 +323,8 @@ const ConferenceLayout = () => {
               })}
           </nav>
 
-          <button 
-            className="conf-hamburger" 
+          <button
+            className="conf-hamburger"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation"
           >

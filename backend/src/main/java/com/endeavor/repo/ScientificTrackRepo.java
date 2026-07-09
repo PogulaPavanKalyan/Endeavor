@@ -9,4 +9,5 @@ import com.endeavor.entity.ScientificTrack;
 public interface ScientificTrackRepo extends JpaRepository<ScientificTrack, Long> {
 
     List<ScientificTrack> findByConferenceIdOrderByDisplayOrderAsc(Long conferenceId);
+    long countByConferenceId(Long conferenceId);
 }

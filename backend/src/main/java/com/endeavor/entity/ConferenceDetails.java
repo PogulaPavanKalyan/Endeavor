@@ -11,9 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.FetchType;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "conference_details")
@@ -68,14 +71,23 @@ public class ConferenceDetails {
     @Column(columnDefinition = "TEXT")
     private String shortDescription;
 
+    private String aboutImage;
+
 
     @ElementCollection
     private List<PricingTier> pricingTiers;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "photo_id", referencedColumnName = "id")
-    @JsonManagedReference
     private ConferencePhoto photo;
+
+    @OneToMany(mappedBy = "conferenceDetails", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ConferencePhoto> photos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "conferenceDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<ConferenceImportantDate> importantDates = new ArrayList<>();
 
     public ConferenceDetails() {
     }
@@ -89,6 +101,14 @@ public class ConferenceDetails {
         this.mapUrl = mapUrl;
         this.description = description;
         this.photo = photo;
+    }
+
+    public List<ConferencePhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<ConferencePhoto> photos) {
+        this.photos = photos;
     }
 
     public Long getId() {
@@ -308,5 +328,31 @@ public class ConferenceDetails {
 
     public void setSeries(ConferenceSeries series) {
         this.series = series;
+    }
+
+    public String getAboutImage() {
+        return aboutImage;
+    }
+
+    public void setAboutImage(String aboutImage) {
+        this.aboutImage = aboutImage;
+    }
+
+    public List<ConferenceImportantDate> getImportantDates() {
+        return importantDates;
+    }
+
+    public void setImportantDates(List<ConferenceImportantDate> importantDates) {
+        this.importantDates = importantDates;
+    }
+
+    private String agendaPdfPath;
+
+    public String getAgendaPdfPath() {
+        return agendaPdfPath;
+    }
+
+    public void setAgendaPdfPath(String agendaPdfPath) {
+        this.agendaPdfPath = agendaPdfPath;
     }
 }

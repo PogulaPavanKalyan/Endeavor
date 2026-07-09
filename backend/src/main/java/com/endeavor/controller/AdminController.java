@@ -24,6 +24,7 @@ import com.endeavor.entity.AbstractSubmission;
 import com.endeavor.entity.BrochureRequest;
 import com.endeavor.entity.ConferenceDetails;
 import com.endeavor.entity.ConferencePhoto;
+import com.endeavor.entity.ConferenceImportantDate;
 import com.endeavor.entity.ContactMessage;
 import com.endeavor.entity.Registration;
 import com.endeavor.entity.ScientificSession;
@@ -84,6 +85,12 @@ public class AdminController {
 
     @Autowired
     private ConferencePhotoService conferencePhotoService;
+
+    @Autowired
+    private com.endeavor.repo.ConferencePhotoRepo conferencePhotoRepo;
+
+    @Autowired
+    private com.endeavor.repo.ConferenceImportantDateRepo importantDateRepo;
 
     @Autowired
     private SponsorService sponsorService;
@@ -215,6 +222,14 @@ public class AdminController {
             speaker.setCountry(speakerDetails.getCountry());
             speaker.setBio(speakerDetails.getBio());
             speaker.setType(speakerDetails.getType());
+            speaker.setAcademicTitle(speakerDetails.getAcademicTitle());
+            speaker.setOrcid(speakerDetails.getOrcid());
+            speaker.setWebsite(speakerDetails.getWebsite());
+            speaker.setLinkedin(speakerDetails.getLinkedin());
+            speaker.setResearchAreas(speakerDetails.getResearchAreas());
+            speaker.setIsFeatured(speakerDetails.getIsFeatured());
+            speaker.setIsActive(speakerDetails.getIsActive());
+            speaker.setDisplayOrder(speakerDetails.getDisplayOrder());
             if (speakerDetails.getPhoto() != null) {
                 speaker.setPhoto(speakerDetails.getPhoto());
             }
@@ -232,6 +247,19 @@ public class AdminController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/speakers/reorder")
+    public ResponseEntity<Void> reorderSpeakers(@RequestBody List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Optional<Speaker> speakerOpt = speakerService.getSpeakerById(ids.get(i));
+            if (speakerOpt.isPresent()) {
+                Speaker speaker = speakerOpt.get();
+                speaker.setDisplayOrder(i);
+                speakerService.saveSpeaker(speaker);
+            }
+        }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sessions")
@@ -341,7 +369,17 @@ public class AdminController {
         try {
             ConferencePhoto savedPhoto = conferencePhotoService.saveConferencePhoto(file);
             ConferenceDetails details = detailsOpt.get();
-            details.setPhoto(savedPhoto);
+            
+            savedPhoto.setConferenceDetails(details);
+            boolean isFirst = details.getPhotos().isEmpty();
+            savedPhoto.setIsPrimary(isFirst);
+            savedPhoto.setDisplayOrder(details.getPhotos().size());
+            
+            details.getPhotos().add(savedPhoto);
+            if (isFirst) {
+                details.setPhoto(savedPhoto);
+            }
+            
             ConferenceDetails updated = conferenceDetailsService.saveConferenceDetails(details);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
@@ -349,6 +387,230 @@ public class AdminController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save conference photo: " + e.getMessage());
         }
+    }
+
+    @PostMapping(value = "/conference-details/{id}/about-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadConferenceAboutImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        Optional<ConferenceDetails> detailsOpt = conferenceDetailsService.getConferenceDetailsById(id);
+        if (!detailsOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ConferenceDetails not found with ID: " + id);
+        }
+        try {
+            String fileName = conferencePhotoService.saveAboutImage(file);
+            ConferenceDetails details = detailsOpt.get();
+            details.setAboutImage(fileName);
+            ConferenceDetails updated = conferenceDetailsService.saveConferenceDetails(details);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save conference about image: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/conference-photos/{photoId}")
+    public ResponseEntity<?> deleteConferencePhoto(@PathVariable Long photoId) {
+        Optional<ConferencePhoto> photoOpt = conferencePhotoRepo.findById(photoId);
+        if (!photoOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+        }
+        
+        ConferencePhoto photo = photoOpt.get();
+        ConferenceDetails details = photo.getConferenceDetails();
+        
+        if (details != null) {
+            details.getPhotos().remove(photo);
+            
+            if (photo.getIsPrimary() || (details.getPhoto() != null && details.getPhoto().getId().equals(photoId))) {
+                if (!details.getPhotos().isEmpty()) {
+                    ConferencePhoto newPrimary = details.getPhotos().get(0);
+                    newPrimary.setIsPrimary(true);
+                    details.setPhoto(newPrimary);
+                } else {
+                    details.setPhoto(null);
+                }
+            }
+            
+            for (int i = 0; i < details.getPhotos().size(); i++) {
+                details.getPhotos().get(i).setDisplayOrder(i);
+            }
+            
+            conferenceDetailsService.saveConferenceDetails(details);
+        } else {
+            conferencePhotoRepo.delete(photo);
+        }
+        
+        try {
+            java.io.File file = new java.io.File(photo.getFilePath());
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to delete file from disk: " + e.getMessage());
+        }
+        
+        return ResponseEntity.ok(java.util.Map.of("message", "Photo deleted successfully"));
+    }
+
+    @PutMapping("/conference-details/{id}/photos/reorder")
+    public ResponseEntity<?> reorderConferencePhotos(@PathVariable Long id, @RequestBody List<Long> photoIds) {
+        Optional<ConferenceDetails> detailsOpt = conferenceDetailsService.getConferenceDetailsById(id);
+        if (!detailsOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ConferenceDetails not found");
+        }
+        
+        ConferenceDetails details = detailsOpt.get();
+        List<ConferencePhoto> photos = details.getPhotos();
+        
+        java.util.Map<Long, ConferencePhoto> photoMap = new java.util.HashMap<>();
+        for (ConferencePhoto p : photos) {
+            photoMap.put(p.getId(), p);
+        }
+        
+        List<ConferencePhoto> newOrderList = new java.util.ArrayList<>();
+        for (int i = 0; i < photoIds.size(); i++) {
+            Long pid = photoIds.get(i);
+            if (photoMap.containsKey(pid)) {
+                ConferencePhoto p = photoMap.get(pid);
+                p.setDisplayOrder(i);
+                newOrderList.add(p);
+            }
+        }
+        
+        for (ConferencePhoto p : photos) {
+            if (!newOrderList.contains(p)) {
+                p.setDisplayOrder(newOrderList.size());
+                newOrderList.add(p);
+            }
+        }
+        
+        details.getPhotos().clear();
+        details.getPhotos().addAll(newOrderList);
+        
+        ConferenceDetails saved = conferenceDetailsService.saveConferenceDetails(details);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/conference-photos/{photoId}/primary")
+    public ResponseEntity<?> setPrimaryConferencePhoto(@PathVariable Long photoId) {
+        Optional<ConferencePhoto> photoOpt = conferencePhotoRepo.findById(photoId);
+        if (!photoOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+        }
+        
+        ConferencePhoto photo = photoOpt.get();
+        ConferenceDetails details = photo.getConferenceDetails();
+        
+        if (details != null) {
+            for (ConferencePhoto p : details.getPhotos()) {
+                p.setIsPrimary(p.getId().equals(photoId));
+            }
+            details.setPhoto(photo);
+            ConferenceDetails saved = conferenceDetailsService.saveConferenceDetails(details);
+            return ResponseEntity.ok(saved);
+        }
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Photo is not associated with a conference");
+    }
+
+    // ==========================================
+    // CONFERENCE IMPORTANT DATES API
+    // ==========================================
+
+    @GetMapping("/conference-details/{id}/important-dates")
+    public ResponseEntity<?> getConferenceImportantDates(@PathVariable Long id) {
+        Optional<ConferenceDetails> detailsOpt = conferenceDetailsService.getConferenceDetailsById(id);
+        if (!detailsOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ConferenceDetails not found");
+        }
+        List<ConferenceImportantDate> dates = importantDateRepo.findAll().stream()
+                .filter(d -> d.getConferenceDetails() != null && d.getConferenceDetails().getId().equals(id))
+                .sorted((a, b) -> Integer.compare(a.getDisplayOrder() != null ? a.getDisplayOrder() : 0, b.getDisplayOrder() != null ? b.getDisplayOrder() : 0))
+                .toList();
+        return ResponseEntity.ok(dates);
+    }
+
+    @PostMapping("/conference-details/{id}/important-dates")
+    public ResponseEntity<?> addConferenceImportantDate(@PathVariable Long id, @RequestBody ConferenceImportantDate importantDate) {
+        Optional<ConferenceDetails> detailsOpt = conferenceDetailsService.getConferenceDetailsById(id);
+        if (!detailsOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ConferenceDetails not found");
+        }
+        ConferenceDetails details = detailsOpt.get();
+        importantDate.setConferenceDetails(details);
+        
+        if (importantDate.getDisplayOrder() == null || importantDate.getDisplayOrder() == 0) {
+            int maxOrder = details.getImportantDates().stream()
+                    .mapToInt(d -> d.getDisplayOrder() != null ? d.getDisplayOrder() : 0)
+                    .max()
+                    .orElse(-1);
+            importantDate.setDisplayOrder(maxOrder + 1);
+        }
+        
+        ConferenceImportantDate saved = importantDateRepo.save(importantDate);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/important-dates/{dateId}")
+    public ResponseEntity<?> updateConferenceImportantDate(@PathVariable Long dateId, @RequestBody ConferenceImportantDate updateData) {
+        Optional<ConferenceImportantDate> dateOpt = importantDateRepo.findById(dateId);
+        if (!dateOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Important Date not found");
+        }
+        ConferenceImportantDate existingDate = dateOpt.get();
+        existingDate.setEventTitle(updateData.getEventTitle());
+        existingDate.setEventDescription(updateData.getEventDescription());
+        existingDate.setEventDate(updateData.getEventDate());
+        existingDate.setIsActive(updateData.getIsActive() != null ? updateData.getIsActive() : true);
+        existingDate.setIsHighlighted(updateData.getIsHighlighted() != null ? updateData.getIsHighlighted() : false);
+        if (updateData.getDisplayOrder() != null) {
+            existingDate.setDisplayOrder(updateData.getDisplayOrder());
+        }
+        
+        ConferenceImportantDate saved = importantDateRepo.save(existingDate);
+        return ResponseEntity.ok(saved);
+    }
+
+    @DeleteMapping("/important-dates/{dateId}")
+    public ResponseEntity<?> deleteConferenceImportantDate(@PathVariable Long dateId) {
+        Optional<ConferenceImportantDate> dateOpt = importantDateRepo.findById(dateId);
+        if (!dateOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Important Date not found");
+        }
+        ConferenceImportantDate date = dateOpt.get();
+        if (date.getConferenceDetails() != null) {
+            date.getConferenceDetails().getImportantDates().remove(date);
+        }
+        importantDateRepo.delete(date);
+        return ResponseEntity.ok(java.util.Map.of("message", "Important Date deleted successfully"));
+    }
+
+    @PutMapping("/conference-details/{id}/important-dates/reorder")
+    public ResponseEntity<?> reorderConferenceImportantDates(@PathVariable Long id, @RequestBody List<Long> dateIds) {
+        Optional<ConferenceDetails> detailsOpt = conferenceDetailsService.getConferenceDetailsById(id);
+        if (!detailsOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ConferenceDetails not found");
+        }
+        
+        List<ConferenceImportantDate> dates = importantDateRepo.findAll().stream()
+                .filter(d -> d.getConferenceDetails() != null && d.getConferenceDetails().getId().equals(id))
+                .toList();
+                
+        java.util.Map<Long, ConferenceImportantDate> dateMap = new java.util.HashMap<>();
+        for (ConferenceImportantDate d : dates) {
+            dateMap.put(d.getId(), d);
+        }
+        
+        for (int i = 0; i < dateIds.size(); i++) {
+            Long did = dateIds.get(i);
+            if (dateMap.containsKey(did)) {
+                ConferenceImportantDate d = dateMap.get(did);
+                d.setDisplayOrder(i);
+                importantDateRepo.save(d);
+            }
+        }
+        
+        return ResponseEntity.ok(java.util.Map.of("message", "Important Dates reordered successfully"));
     }
 
     @PostMapping(value = "/conference-details/{id}/brochure", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
