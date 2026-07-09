@@ -241,6 +241,35 @@ const ConferenceHome = () => {
 
   const { formattedDate, venue } = formatDateRangeAndLocation();
 
+  const getDayDateString = (dayNumber) => {
+    if (!conference.startDate) return "";
+    try {
+      const start = new Date(conference.startDate);
+      start.setDate(start.getDate() + (dayNumber - 1));
+      return start.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "2-digit",
+        year: "numeric"
+      });
+    } catch (e) {
+      return "";
+    }
+  };
+
+  const getDayTabTitle = (d) => {
+    if (!conference.startDate) return `DAY ${d.dayNumber}`;
+    try {
+      const start = new Date(conference.startDate);
+      start.setDate(start.getDate() + (d.dayNumber - 1));
+      const monthStr = start.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+      const dayStr = start.toLocaleDateString("en-US", { day: "2-digit" });
+      return `DAY ${d.dayNumber} - ${monthStr} ${dayStr}`;
+    } catch (e) {
+      return `DAY ${d.dayNumber}`;
+    }
+  };
+
   const getSessionTypeBadgeStyle = (type) => {
     switch (type) {
       case "Keynote":
@@ -1152,7 +1181,7 @@ const ConferenceHome = () => {
                     className={`classic-tab-btn ${activeAgendaDayId === d.id ? "active" : ""}`}
                     onClick={() => setActiveAgendaDayId(d.id)}
                   >
-                    DAY {d.dayNumber} - {d.dayTitle}
+                    {getDayTabTitle(d)}
                   </button>
                 ))}
               </div>
@@ -1176,7 +1205,7 @@ const ConferenceHome = () => {
                       <div className="classic-timeline-day">
                         DAY {activeD?.dayNumber} AGENDA<br />
                         <span style={{ fontWeight: 'normal', fontSize: '13px', color: '#64748b' }}>
-                          {activeD?.date ? new Date(activeD.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }) : ''}
+                          {getDayDateString(activeD?.dayNumber)}
                         </span>
                       </div>
                       <div className="classic-timeline-time-block">
@@ -1194,7 +1223,7 @@ const ConferenceHome = () => {
                         <h2 className="classic-conf-title">{conference.title || "Conference Title"}</h2>
                         <h3 className="classic-conf-subtitle">({conference.shortName || "Conference Short Name"})</h3>
                         <div className="classic-conf-date-loc">
-                          September 09-10, 2026, Paris-France
+                          {formattedDate}, {venue}
                         </div>
                       </div>
 
@@ -1207,7 +1236,7 @@ const ConferenceHome = () => {
                           return (
                             <div key={hall} className="classic-hall-group">
                               <div className="classic-hall-header">Scientific Program</div>
-                              <div className="classic-hall-header">Day {activeD?.dayNumber} - {activeD?.date || "September 09, 2026"}</div>
+                              <div className="classic-hall-header">Day {activeD?.dayNumber} - {getDayDateString(activeD?.dayNumber)}</div>
                               <div className="classic-hall-header">{hall}</div>
 
                               <table className="classic-agenda-table">

@@ -59,6 +59,9 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Autowired
     private com.endeavor.repo.AgendaSessionRepo agendaSessionRepo;
 
+    @Autowired
+    private com.endeavor.repo.ScientificTrackRepo trackRepo;
+
     @Override
     public void run(String... args) throws Exception {
         try {
@@ -108,6 +111,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         seedCommittee();
         seedAgenda();
         seedSponsors();
+        seedTracks();
         migrateWebinarRegistrationUrls();
 
         try {
@@ -539,5 +543,70 @@ public class DatabaseInitializer implements CommandLineRunner {
         } catch (Exception e) {
             System.err.println(">>> Webinar registration URL update failed: " + e.getMessage() + " <<<");
         }
+    }
+
+    private void seedTracks() {
+        for (ConferenceDetails cd : repo.findAll()) {
+            if (trackRepo.countByConferenceId(cd.getId()) == 0) {
+                String title = cd.getTitle() != null ? cd.getTitle() : cd.getTittle();
+                if (title != null) {
+                    if (title.toLowerCase().contains("food")) {
+                        saveTrackEntity(cd.getId(), "Food Chemistry and Biochemistry", 0);
+                        saveTrackEntity(cd.getId(), "Nutrition and Human Health", 1);
+                        saveTrackEntity(cd.getId(), "Food Safety, Quality, and Control", 2);
+                        saveTrackEntity(cd.getId(), "Food Biotechnology and Fermentation", 3);
+                        saveTrackEntity(cd.getId(), "Innovations in Food Processing", 4);
+                        saveTrackEntity(cd.getId(), "Sustainable Food Systems", 5);
+                    } else if (title.toLowerCase().contains("medical") || title.toLowerCase().contains("health")) {
+                        saveTrackEntity(cd.getId(), "Clinical Medicine and Diagnostics", 0);
+                        saveTrackEntity(cd.getId(), "Public Health and Healthcare Management", 1);
+                        saveTrackEntity(cd.getId(), "Nursing and Patient Care", 2);
+                        saveTrackEntity(cd.getId(), "Biomedical Engineering and Research", 3);
+                        saveTrackEntity(cd.getId(), "Pharmacology and Therapeutics", 4);
+                        saveTrackEntity(cd.getId(), "Pediatrics and Maternal Health", 5);
+                    } else if (title.toLowerCase().contains("engineering") || title.toLowerCase().contains("applied")) {
+                        saveTrackEntity(cd.getId(), "Advanced Materials and Metallurgy", 0);
+                        saveTrackEntity(cd.getId(), "Mechanical and Manufacturing Engineering", 1);
+                        saveTrackEntity(cd.getId(), "Civil and Structural Engineering", 2);
+                        saveTrackEntity(cd.getId(), "Electrical and Electronic Systems", 3);
+                        saveTrackEntity(cd.getId(), "Chemical and Process Engineering", 4);
+                        saveTrackEntity(cd.getId(), "Environmental Technologies", 5);
+                    } else if (title.toLowerCase().contains("materials") || title.toLowerCase().contains("nano")) {
+                        saveTrackEntity(cd.getId(), "Synthesis of Nanomaterials", 0);
+                        saveTrackEntity(cd.getId(), "Biomaterials and Tissue Engineering", 1);
+                        saveTrackEntity(cd.getId(), "Polymers and Soft Materials", 2);
+                        saveTrackEntity(cd.getId(), "Electronic and Optical Materials", 3);
+                        saveTrackEntity(cd.getId(), "Energy Conversion and Storage Materials", 4);
+                        saveTrackEntity(cd.getId(), "Computational Materials Science", 5);
+                    } else if (title.toLowerCase().contains("geology") || title.toLowerCase().contains("earth") || title.toLowerCase().contains("geo")) {
+                        saveTrackEntity(cd.getId(), "Mineralogy and Geochemistry", 0);
+                        saveTrackEntity(cd.getId(), "Petrology and Volcanology", 1);
+                        saveTrackEntity(cd.getId(), "Structural Geology and Tectonics", 2);
+                        saveTrackEntity(cd.getId(), "Paleontology and Stratigraphy", 3);
+                        saveTrackEntity(cd.getId(), "Geophysics and Seismology", 4);
+                        saveTrackEntity(cd.getId(), "Hydrology and Hydrogeology", 5);
+                        saveTrackEntity(cd.getId(), "Environmental Geology and Climate Change", 6);
+                        saveTrackEntity(cd.getId(), "Natural Hazards and Risk Assessment", 7);
+                    } else {
+                        saveTrackEntity(cd.getId(), "General Session Track 1", 0);
+                        saveTrackEntity(cd.getId(), "General Session Track 2", 1);
+                        saveTrackEntity(cd.getId(), "General Session Track 3", 2);
+                    }
+                }
+            }
+        }
+        System.out.println(">>> Database Seeded Successfully with default tracks! <<<");
+    }
+
+    private void saveTrackEntity(Long conferenceId, String name, int order) {
+        com.endeavor.entity.ScientificTrack track = new com.endeavor.entity.ScientificTrack();
+        track.setConferenceId(conferenceId);
+        track.setName(name);
+        track.setDisplayOrder(order);
+        track.setIsEnabled(true);
+        track.setIsFeatured(order < 2);
+        track.setShortDescription("Scientific session track focused on " + name + " and related disciplines.");
+        track.setKeywords(name.replace(" and ", ", ").replace(" ", ", "));
+        trackRepo.save(track);
     }
 }

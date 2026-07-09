@@ -4,6 +4,7 @@ com\endeavor\repo\AgendaSessionRepo.class
 com\endeavor\controller\ConferenceSectionController.class
 com\endeavor\controller\VenueController.class
 com\endeavor\service\AdminActivityLogService.class
+com\endeavor\controller\ConferenceNavigationController.class
 com\endeavor\service\ScientificSessionService.class
 com\endeavor\entity\Webinar.class
 com\endeavor\controller\AgendaController.class
@@ -23,6 +24,7 @@ com\endeavor\entity\AboutPartnerNetwork.class
 com\endeavor\repo\ConferenceDetailsRepo.class
 com\endeavor\entity\AboutUsSection.class
 com\endeavor\repo\ConferenceImportantDateRepo.class
+com\endeavor\entity\ConferenceNavigation.class
 com\endeavor\controller\AboutUsController.class
 com\endeavor\entity\Speaker.class
 com\endeavor\repo\AdvisoryBoardMemberRepo.class
@@ -92,6 +94,7 @@ com\endeavor\entity\GalleryImage.class
 com\endeavor\entity\Sponsor.class
 com\endeavor\controller\ConferenceController.class
 com\endeavor\service\AboutUsService.class
+com\endeavor\service\ConferenceNavigationService.class
 com\endeavor\repo\ConferencePageRepo.class
 com\endeavor\service\ConferencePageService.class
 com\endeavor\configuration\DataSeeder.class
@@ -110,6 +113,7 @@ com\endeavor\controller\GalleryController.class
 com\endeavor\service\jwtservice.class
 com\endeavor\service\principal.class
 com\endeavor\controller\DynamicContentController.class
+com\endeavor\repository\ConferenceNavigationRepository.class
 com\endeavor\service\GalleryService.class
 com\endeavor\repo\RegistrationRepo.class
 com\endeavor\dto\LoginDTO.class

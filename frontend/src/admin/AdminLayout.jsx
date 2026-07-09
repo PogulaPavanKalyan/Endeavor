@@ -150,7 +150,7 @@ const AdminLayout = () => {
                 <option value="">— All Conferences —</option>
                 {conferences.filter(c => !c.isDeleted).map(conf => (
                   <option key={conf.id} value={conf.id}>
-                    {conf.tittle || conf.title || `Conference #${conf.id}`}
+                    {conf.tittle || conf.title || `Conference #${conf.id}`} ({conf.slug})
                   </option>
                 ))}
               </select>

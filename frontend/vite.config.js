@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import fs from 'fs'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,6 +19,19 @@ export default defineConfig({
       '/uploads': {
         target: 'http://localhost:8081',
         changeOrigin: true,
+        bypass: (req, res, proxyOptions) => {
+          // Resolve local filesystem path for the upload file
+          const localPath = path.join(__dirname, '..', 'backend', req.url.split('?')[0]);
+          if (!fs.existsSync(localPath)) {
+            // File does not exist locally, redirect to the live staging server
+            res.writeHead(302, {
+              Location: `https://intelevoresearch.org${req.url}`
+            });
+            res.end();
+            return false;
+          }
+          return null; // Proceed with proxying to localhost:8081
+        }
       }
     }
   }

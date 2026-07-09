@@ -36,6 +36,24 @@ const ConferenceLayout = () => {
   const [navPages, setNavPages] = useState([]);
   const [submenuItems, setSubmenuItems] = useState([]);
 
+  const [subName, setSubName] = useState("");
+  const [subEmail, setSubEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribeSubmit = (e) => {
+    e.preventDefault();
+    if (!subEmail || !subName) return;
+    setSubscribing(true);
+    setTimeout(() => {
+      setSubscribing(false);
+      setSubscribed(true);
+      setSubName("");
+      setSubEmail("");
+      setTimeout(() => setSubscribed(false), 4000);
+    }, 1200);
+  };
+
   useEffect(() => {
     if (activeConf && activeConf.id) {
       const fetchNavPages = async () => {
@@ -340,9 +358,80 @@ const ConferenceLayout = () => {
         <Outlet context={{ conference: activeConf, getSubRoutePath }} />
       </div>
 
-      {/* Clean Portal Footer */}
-      <footer style={{ backgroundColor: "#111111", color: "#ffffff", padding: "30px 0", textAlign: "center", borderTop: "4px solid var(--conf-primary)", fontSize: "14px" }}>
-        <p>© {new Date().getFullYear()} {activeConf.title}. All Rights Reserved | Powered by Intelevo Research</p>
+      {/* Compact Footer */}
+      <footer className="saas-footer">
+        {/* Main Row */}
+        <div className="saas-footer-main">
+          {/* Left: Brand + Links + Socials */}
+          <div className="saas-footer-brand-col">
+            <div className="saas-footer-links-row">
+              <Link to={getSubRoutePath("register")} className="saas-pill-link">🤝 Sponsorship</Link>
+              <Link to={getSubRoutePath("submit-abstract")} className="saas-pill-link">📄 Guidelines</Link>
+              <Link to={getSubRoutePath("contact")} className="saas-pill-link">✉️ Contact</Link>
+              <Link to={getSubRoutePath("privacy")} className="saas-pill-link">🛡️ Privacy</Link>
+            </div>
+            <div className="saas-footer-socials">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="saas-social-icon fb" title="Facebook">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M14 13.5h2.5l1-3H14V8.6c0-.8.2-1.1 1-1.1h1.5V4.7c-.5-.1-1.6-.2-2.7-.2-2.8 0-4.3 1.4-4.3 4v2.5H7v3h2.5V20h4.5v-6.5z"/></svg>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="saas-social-icon li" title="LinkedIn">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="saas-social-icon tw" title="Twitter/X">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.2 4h2.7l-5.9 6.8 6.9 9.2h-5.4l-4.2-5.5-4.8 5.5H4.8l6.3-7.2L4.5 4h5.6l3.9 5.1L18.2 4zm-.9 14.4h1.5L9.3 5.8H7.7l10.6 12.6z"/></svg>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="saas-social-icon ig" title="Instagram">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m8.4 2.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="saas-social-icon yt" title="YouTube">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.6a2.7 2.7 0 0 0-1.9-1.9C18 5.2 12 5.2 12 5.2s-6 0-7.7.5a2.7 2.7 0 0 0-1.9 1.9C2 9.3 2 12 2 12s0 2.7.4 4.4a2.7 2.7 0 0 0 1.9 1.9c1.7.5 7.7.5 7.7.5s6 0 7.7-.5a2.7 2.7 0 0 0 1.9-1.9c.4-1.7.4-4.4.4-4.4s0-2.7-.4-4.4zM9.8 15.5V8.5l6 3.5-6 3.5z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Right: Compact Subscribe */}
+          <div className="saas-footer-subscribe-col">
+            <p className="saas-sub-label">📬 Stay Updated</p>
+            <form onSubmit={handleSubscribeSubmit} className="saas-sub-inline-form">
+              <input
+                type="text"
+                placeholder="Full Name"
+                required
+                value={subName}
+                onChange={(e) => setSubName(e.target.value)}
+                className="saas-inline-input"
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                required
+                value={subEmail}
+                onChange={(e) => setSubEmail(e.target.value)}
+                className="saas-inline-input"
+              />
+              <button type="submit" className="saas-inline-btn" disabled={subscribing}>
+                {subscribing ? "..." : "Subscribe"}
+              </button>
+              {subscribed && <span className="saas-success-icon">✅</span>}
+            </form>
+          </div>
+        </div>
+
+        {/* Footer Bottom Bar */}
+        <div className="saas-footer-bottom">
+          <div className="saas-bottom-container">
+            <div className="saas-bottom-copyright">
+              © {new Date().getFullYear()} {activeConf.title || "Innovinc International"}. All Rights Reserved.
+            </div>
+            <div className="saas-bottom-links">
+              <Link to={getSubRoutePath("privacy")}>Privacy Policy</Link>
+              <span className="saas-separator">|</span>
+              <Link to={getSubRoutePath("terms")}>Terms</Link>
+              <span className="saas-separator">|</span>
+              <Link to={getSubRoutePath("cookies")}>Cookies</Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
