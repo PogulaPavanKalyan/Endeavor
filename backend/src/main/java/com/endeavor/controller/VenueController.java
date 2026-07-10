@@ -16,14 +16,14 @@ public class VenueController {
     public ResponseEntity<Venue> getPublicVenue(@RequestParam Long conferenceId) {
         return service.getByConferenceId(conferenceId)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.ok().build());
     }
 
     @GetMapping("/api/admin/venue")
     public ResponseEntity<Venue> getAdminVenue(@RequestParam Long conferenceId) {
         return service.getByConferenceId(conferenceId)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.ok().build());
     }
 
     @PostMapping("/api/admin/venue")

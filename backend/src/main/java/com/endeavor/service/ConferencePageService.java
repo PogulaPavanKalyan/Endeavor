@@ -35,22 +35,10 @@ public class ConferencePageService {
             pages = seedDefaultPages(conferenceId);
         }
 
-        // Dynamically check data existence
-        for (ConferencePage page : pages) {
-            String key = page.getPageKey();
-            if ("speakers".equals(key)) {
-                page.setIsEnabled(speakerRepo.countByConferenceId(conferenceId) > 0);
-            } else if ("program".equals(key)) {
-                page.setIsEnabled(!agendaRepo.findByConferenceId(conferenceId).isEmpty());
-            } else if ("venue".equals(key)) {
-                page.setIsEnabled(venueRepo.findByConferenceId(conferenceId).isPresent());
-            } else if ("tracks".equals(key)) {
-                page.setIsEnabled(trackRepo.countByConferenceId(conferenceId) > 0);
-            } else if ("brochure".equals(key)) {
-                java.util.Optional<com.endeavor.entity.ConferenceDetails> confOpt = conferenceDetailsRepo.findById(conferenceId);
-                page.setIsEnabled(confOpt.isPresent() && confOpt.get().getBrochureFileName() != null && !confOpt.get().getBrochureFileName().isEmpty());
-            }
-        }
+        // We are removing the dynamic data existence checks because they override 
+        // the admin's manual toggle choices in the Pages Menu. 
+        // If an admin sets a page to Active, it should show up.
+        
         return pages;
     }
 

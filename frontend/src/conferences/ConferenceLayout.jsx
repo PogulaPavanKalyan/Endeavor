@@ -60,9 +60,17 @@ const ConferenceLayout = () => {
     if (activeConf && activeConf.id) {
       const fetchNavPages = async () => {
         try {
-          const res = await api.get(`/api/conference-pages?conferenceId=${activeConf.id}`);
+          const res = await api.get(`/api/navigation?conferenceId=${activeConf.id}`);
           if (Array.isArray(res)) {
-            setNavPages(res);
+            const mappedPages = res.map(nav => ({
+              id: nav.id,
+              pageKey: nav.slug,
+              label: nav.menuName,
+              route: nav.url,
+              isEnabled: nav.status !== false,
+              displayOrder: nav.displayOrder || 0
+            }));
+            setNavPages(mappedPages);
           }
         } catch (err) {
           console.error("Failed to load nav pages:", err);

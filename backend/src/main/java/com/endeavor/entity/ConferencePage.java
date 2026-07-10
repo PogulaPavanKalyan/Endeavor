@@ -21,6 +21,8 @@ public class ConferencePage {
     private String pageKey;
     private String label;
     private String route;
+    
+    @com.fasterxml.jackson.annotation.JsonProperty("isEnabled")
     private Boolean isEnabled = true;
     private Integer displayOrder = 0;
     private Long parentPageId;

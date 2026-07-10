@@ -417,7 +417,7 @@ const AgendaManager = () => {
           </button>
         </div>
       ) : (
-        <div style={{display: 'grid', gridTemplateColumns: '220px 1fr', gap: '20px'}}>
+        <div style={{display: 'grid', gridTemplateColumns: '220px minmax(0, 1fr)', gap: '20px'}}>
           {/* Days sidebar list */}
           <div className="admin-card" style={{padding: '16px'}}>
             <h3 style={{margin: '0 0 12px 0', fontSize: '13px', textTransform: 'uppercase', color: '#64748b'}}>Program Days</h3>
@@ -555,7 +555,7 @@ const AgendaManager = () => {
                           <button type="button" className="btn-admin-sm" disabled={idx === sessions.length - 1} onClick={() => handleMoveSession(idx, 1)} style={{padding: '2px 6px', border: '1px solid #cbd5e1', background: '#fff', borderRadius: '4px', cursor: 'pointer'}}>▼</button>
                         </div>
                       </td>
-                      <td style={{textAlign: 'right'}}>
+                      <td style={{textAlign: 'right', whiteSpace: 'nowrap'}}>
                         <button className="btn-action-edit" onClick={() => handleDuplicateSession(s.id)} style={{background: '#dcfce7', color: '#166534', marginRight: '5px'}}>Duplicate</button>
                         <button className="btn-action-edit" onClick={() => handleOpenSessionModal(s)}>Edit</button>
                         <button className="btn-action-delete" onClick={() => handleDeleteSession(s.id)}>Delete</button>
@@ -583,7 +583,7 @@ const AgendaManager = () => {
           backgroundColor: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(4px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000
         }}>
-          <div style={{background: '#fff', borderRadius: '16px', width: '450px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', overflow: 'hidden'}}>
+          <div style={{background: '#fff', borderRadius: '16px', width: '450px', maxWidth: '95%', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', overflow: 'hidden'}}>
             <div style={{padding: '16px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <h3 style={{margin: 0, fontSize: '16px'}}>{editingDay ? "Edit Day Details" : "Add Conference Day"}</h3>
               <button onClick={() => setShowDayModal(false)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer'}}>&times;</button>

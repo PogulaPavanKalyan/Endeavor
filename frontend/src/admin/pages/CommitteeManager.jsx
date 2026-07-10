@@ -330,7 +330,7 @@ const CommitteeManager = () => {
                         <button type="button" className="btn-admin-sm" disabled={globalIdx === members.length - 1} onClick={() => handleMoveOrder(globalIdx, 1)} style={{padding: '4px 8px', border: '1px solid #cbd5e1', background: '#fff', borderRadius: '4px', cursor: 'pointer'}}>▼</button>
                       </div>
                     </td>
-                    <td style={{padding: '16px 20px', textAlign: 'right'}}>
+                    <td style={{padding: '16px 20px', textAlign: 'right', whiteSpace: 'nowrap'}}>
                       <button className="btn-action-edit" onClick={() => handleOpenModal(member)}>Edit</button>
                       <button className="btn-action-delete" onClick={() => handleDelete(member.id)}>Delete</button>
                     </td>

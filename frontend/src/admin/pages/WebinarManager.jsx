@@ -369,16 +369,12 @@ const WebinarManager = () => {
                       </td>
                       <td style={{ padding: '16px 24px', textAlign: 'right' }}>
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                          <button className="btn-action-edit" style={{ background: '#f1f5f9', color: '#475569' }} onClick={() => handleOpenPreview(web)}>
+                          <button className="btn-action-secondary" onClick={() => handleOpenPreview(web)}>
                             Preview
                           </button>
                           {web.status !== 'ARCHIVED' && (
                             <button 
-                              className="btn-action-edit" 
-                              style={{ 
-                                background: web.status === 'PUBLISHED' ? '#fee2e2' : '#dcfce7', 
-                                color: web.status === 'PUBLISHED' ? '#b91c1c' : '#15803d' 
-                              }} 
+                              className={web.status === 'PUBLISHED' ? "btn-action-warning" : "btn-action-edit"}
                               onClick={() => handlePublishToggle(web)}
                             >
                               {web.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}

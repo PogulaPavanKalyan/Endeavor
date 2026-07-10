@@ -532,8 +532,8 @@ const ConferenceSectionManager = () => {
                     </p>
                   </div>
                   <button 
+                    className="btn-admin-primary"
                     onClick={handleOpenAddItemModal}
-                    style={{ padding: '8px 16px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
                   >
                     + Add New Entry
                   </button>

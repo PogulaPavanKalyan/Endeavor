@@ -340,7 +340,7 @@ const ProgramManager = () => {
       {/* CATEGORY MODAL */}
       {showCategoryModal && (
         <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '500px'}}>
+          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '500px', maxWidth: '95%'}}>
             <h3>{editingCategory ? "Edit Category" : "Add Category"}</h3>
             <form onSubmit={handleSaveCategory} style={{display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px'}}>
               <div>
@@ -359,7 +359,7 @@ const ProgramManager = () => {
       {/* ITEM MODAL */}
       {showItemModal && (
         <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '600px', maxHeight: '90vh', overflowY: 'auto'}}>
+          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '600px', maxWidth: '95%', maxHeight: '90vh', overflowY: 'auto'}}>
             <h3>{editingItem ? "Edit Program Item" : "Add Program Item"}</h3>
             <form onSubmit={handleSaveItem} style={{display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px'}}>
               
