@@ -126,8 +126,14 @@ public class Speaker {
     @Column(name="conference_id")
     private Long conferenceId;
 
+    @Column(name="category_id")
+    private Long categoryId;
+
     public Long getConferenceId() { return conferenceId; }
     public void setConferenceId(Long conferenceId) { this.conferenceId = conferenceId; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
     @Column(name = "academic_title")
     private String academicTitle;

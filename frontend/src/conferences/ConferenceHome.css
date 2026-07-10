@@ -1,11 +1,35 @@
 /* Hero section specific to conference home page */
 .conf-home-hero {
   position: relative;
-  background-size: cover;
-  background-position: center;
   padding: 100px 0 120px 0;
   color: #ffffff;
   text-align: center;
+  overflow: hidden;
+}
+
+.conf-home-hero-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.conf-home-hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.conf-home-hero-slide.active {
+  opacity: 1;
 }
 
 .conf-home-hero::before {
@@ -124,9 +148,14 @@
 }
 
 .conf-section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   margin-bottom: 45px;
 }
+
+
 
 .conf-section-header h2 {
   font-size: 28px;
@@ -148,6 +177,16 @@
   width: 60px;
   height: 3px;
   background-color: var(--conf-primary);
+}
+
+.conf-section-header.text-left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.conf-section-header.text-left h2::after {
+  left: 0;
+  transform: none;
 }
 
 .conf-sessions-grid {
@@ -1783,6 +1822,11 @@
 }
 
 /* Advisory Board and Organizing Committee Premium Layouts */
+.conf-committee-section-redesigned {
+  padding: 80px 0;
+  background-color: #f8fafc;
+}
+
 .conf-advisory-grid-redesigned {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../utils/api';
+import { useAdmin } from '../AdminContext';
 import './NavigationManager.css';
 
-const NavigationManager = ({ activeConfId }) => {
+const NavigationManager = () => {
+  const { activeConferenceId: activeConfId } = useAdmin();
   const [navItems, setNavItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,8 +25,11 @@ const NavigationManager = ({ activeConfId }) => {
   });
 
   useEffect(() => {
-    if (activeConfId) {
+    if (activeConfId && activeConfId !== 'generic') {
       fetchNavigation();
+    } else {
+      setLoading(false);
+      setNavItems([]);
     }
   }, [activeConfId]);
 
@@ -189,7 +194,18 @@ const NavigationManager = ({ activeConfId }) => {
     });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (activeConfId === 'generic' || !activeConfId) {
+    return (
+      <div className="navigation-manager">
+        <div className="empty-state" style={{marginTop: '40px', padding: '40px', textAlign: 'center'}}>
+          <h3>No Conference Selected</h3>
+          <p>Please select a specific conference from the top dropdown menu to manage its navigation pages.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) return <div style={{padding: '40px', textAlign: 'center'}}>Loading navigation data...</div>;
 
   return (
     <div className="navigation-manager">

@@ -295,9 +295,22 @@ public class AdminController {
         return ResponseEntity.notFound().build();
     }
 
+    @Autowired
+    private com.endeavor.service.SpeakerCategoryService speakerCategoryService;
+
+    @Autowired
+    private com.endeavor.service.ProgramCategoryService programCategoryService;
+
     @PostMapping("/conference-details")
-    public ResponseEntity<ConferenceDetails> updateConferenceDetails(@RequestBody ConferenceDetails details, java.security.Principal principal) {
+    public ResponseEntity<ConferenceDetails> updateConferenceDetails(@RequestBody ConferenceDetails details, jakarta.servlet.http.HttpServletRequest servletRequest, java.security.Principal principal) {
+        boolean isNew = details.getId() == null;
         ConferenceDetails saved = conferenceDetailsService.saveConferenceDetails(details);
+        
+        if (isNew) {
+            speakerCategoryService.generateDefaultCategories(saved.getId());
+            programCategoryService.generateDefaultCategories(saved.getId());
+        }
+
         String username = principal != null ? principal.getName() : "admin";
         String ip = servletRequest.getRemoteAddr();
         activityLogService.logActivity(username, "SAVE_CONFERENCE", "Saved/updated conference: " + (saved.getTitle() != null ? saved.getTitle() : saved.getTittle()) + " (Slug: " + saved.getSlug() + ")", ip);

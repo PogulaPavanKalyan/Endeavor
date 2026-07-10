@@ -366,38 +366,9 @@ const TrackManager = () => {
             <div style={{padding: '24px', overflowY: 'auto', maxHeight: '70vh'}}>
               <form id="trackForm" onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
                 
-                <div style={{display: 'flex', gap: '16px'}}>
-                  <div style={{flex: 1}}>
-                    <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Track Name *</label>
-                    <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none'}} />
-                  </div>
-                  <div style={{flex: 1}}>
-                    <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Keywords (comma separated)</label>
-                    <input type="text" placeholder="AI, Deep Learning..." value={formData.keywords} onChange={e => setFormData({...formData, keywords: e.target.value})} style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none'}} />
-                  </div>
-                </div>
-
                 <div>
-                  <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Short Description</label>
-                  <input type="text" value={formData.shortDescription} onChange={e => setFormData({...formData, shortDescription: e.target.value})} placeholder="A brief 1-2 sentence overview..." style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none'}} />
-                </div>
-
-                <div>
-                  <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Detailed Description</label>
-                  <textarea rows="4" value={formData.detailedDescription} onChange={e => setFormData({...formData, detailedDescription: e.target.value})} style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none', resize: 'vertical'}}></textarea>
-                </div>
-
-                <div style={{display: 'flex', gap: '16px', background: '#f8fafc', padding: '16px', borderRadius: '8px'}}>
-                  <div style={{flex: 1}}>
-                    <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Track Icon</label>
-                    <input type="file" accept="image/*" onChange={e => setIconFile(e.target.files[0])} style={{fontSize: '12px'}} />
-                    {formData.trackIcon && !iconFile && <p style={{fontSize: '12px', color: '#10b981', marginTop: '4px'}}>Current icon loaded.</p>}
-                  </div>
-                  <div style={{flex: 1}}>
-                    <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Banner Image</label>
-                    <input type="file" accept="image/*" onChange={e => setBannerFile(e.target.files[0])} style={{fontSize: '12px'}} />
-                    {formData.trackBannerImage && !bannerFile && <p style={{fontSize: '12px', color: '#10b981', marginTop: '4px'}}>Current banner loaded.</p>}
-                  </div>
+                  <label style={{display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155'}}>Track Name *</label>
+                  <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', outline: 'none'}} />
                 </div>
 
                 <div style={{display: 'flex', gap: '24px', marginTop: '8px'}}>

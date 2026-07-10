@@ -11,4 +11,6 @@ public interface SpeakerRepo extends JpaRepository<Speaker, Long> {
     List<Speaker> findByConferenceId(Long conferenceId);
     List<Speaker> findByConferenceIdOrderByDisplayOrderAsc(Long conferenceId);
     long countByConferenceId(Long conferenceId);
+    long countByConferenceIdAndCategoryId(Long conferenceId, Long categoryId);
+    long countByConferenceIdAndCategoryIdAndIsActiveTrue(Long conferenceId, Long categoryId);
 }

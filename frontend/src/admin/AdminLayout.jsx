@@ -78,6 +78,9 @@ const AdminLayout = () => {
           <NavLink to="/admin/sessions" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📋</span> Sessions & Program
           </NavLink>
+          <NavLink to="/admin/program" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">🔬</span> Scientific Program
+          </NavLink>
           <NavLink to="/admin/venue" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📍</span> Venue
           </NavLink>

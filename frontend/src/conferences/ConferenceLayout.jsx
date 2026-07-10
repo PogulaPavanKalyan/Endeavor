@@ -35,6 +35,8 @@ const ConferenceLayout = () => {
   const [error, setError] = useState(null);
   const [navPages, setNavPages] = useState([]);
   const [submenuItems, setSubmenuItems] = useState([]);
+  const [speakerCategories, setSpeakerCategories] = useState([]);
+  const [programCategories, setProgramCategories] = useState([]);
 
   const [subName, setSubName] = useState("");
   const [subEmail, setSubEmail] = useState("");
@@ -78,8 +80,32 @@ const ConferenceLayout = () => {
         }
       };
 
+      const fetchSpeakerCategories = async () => {
+        try {
+          const res = await api.get(`/api/speaker-categories?conferenceId=${activeConf.id}`);
+          if (Array.isArray(res)) {
+            setSpeakerCategories(res);
+          }
+        } catch (err) {
+          console.error("Failed to load speaker categories:", err);
+        }
+      };
+
+      const fetchProgramCategories = async () => {
+        try {
+          const res = await api.get(`/api/program-categories?conferenceId=${activeConf.id}`);
+          if (Array.isArray(res)) {
+            setProgramCategories(res);
+          }
+        } catch (err) {
+          console.error("Failed to load program categories:", err);
+        }
+      };
+
       fetchNavPages();
       fetchSubmenuItems();
+      fetchSpeakerCategories();
+      fetchProgramCategories();
     }
   }, [activeConf?.id]);
 
@@ -285,45 +311,36 @@ const ConferenceLayout = () => {
               .sort((a, b) => a.displayOrder - b.displayOrder)
               .map(page => {
                 if (page.pageKey === "speakers") {
-                  const items = submenuItems.filter(sub => sub.menuType === "Speakers");
                   return (
                     <div key={page.id || page.pageKey} className="conf-nav-dropdown">
                       <span className="conf-nav-link">{page.label} ▾</span>
                       <div className="conf-dropdown-menu">
-                        {items.length > 0 ? (
-                          items.map(sub => (
-                            <Link key={sub.id} to={getSubRoutePath(sub.slug)} className="conf-dropdown-item">
-                              {sub.title}
+                        {speakerCategories.length > 0 ? (
+                          speakerCategories.map(cat => (
+                            <Link key={cat.id} to={getSubRoutePath(`speakers?categoryId=${cat.id}`)} className="conf-dropdown-item">
+                              {cat.categoryName}
                             </Link>
                           ))
                         ) : (
-                          <>
-                            <Link to={getSubRoutePath("speakers")} className="conf-dropdown-item">Keynote Speakers</Link>
-                            <Link to={getSubRoutePath("speakers?type=oral")} className="conf-dropdown-item">Oral Presenters</Link>
-                          </>
+                          <Link to={getSubRoutePath("speakers")} className="conf-dropdown-item">Speakers</Link>
                         )}
                       </div>
                     </div>
                   );
                 }
                 if (page.pageKey === "program") {
-                  const items = submenuItems.filter(sub => sub.menuType === "Scientific Program");
                   return (
                     <div key={page.id || page.pageKey} className="conf-nav-dropdown">
                       <span className="conf-nav-link">{page.label} ▾</span>
                       <div className="conf-dropdown-menu">
-                        {items.length > 0 ? (
-                          items.map(sub => (
-                            <Link key={sub.id} to={getSubRoutePath(sub.slug)} className="conf-dropdown-item">
-                              {sub.title}
+                        {programCategories.length > 0 ? (
+                          programCategories.map(cat => (
+                            <Link key={cat.id} to={getSubRoutePath(`program?categoryId=${cat.id}`)} className="conf-dropdown-item">
+                              {cat.categoryName}
                             </Link>
                           ))
                         ) : (
-                          <>
-                            <Link to={getSubRoutePath("program")} className="conf-dropdown-item">Scientific Program</Link>
-                            <Link to={getSubRoutePath("program#schedule")} className="conf-dropdown-item">Program Schedule</Link>
-                            <Link to={getSubRoutePath("program#tracks")} className="conf-dropdown-item">Scientific Tracks</Link>
-                          </>
+                          <Link to={getSubRoutePath("program")} className="conf-dropdown-item">Scientific Program</Link>
                         )}
                       </div>
                     </div>

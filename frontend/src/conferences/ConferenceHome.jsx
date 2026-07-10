@@ -170,7 +170,14 @@ const ConferenceHome = () => {
   }, [conference.importantDates]);
 
   // Background Slider & Date Formatter
-  const heroImages = conference.images || [conference.image];
+  const formatImageUrl = (url) => {
+    if (!url) return '';
+    return url.startsWith('http') || url.startsWith('data:') ? url : `${BASE_URL}/uploads/conference/${url}`;
+  };
+  const rawHeroImages = conference.photos && conference.photos.length > 0
+    ? conference.photos.map(p => p.fileName)
+    : (conference.image ? [conference.image] : ["https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1920&q=80"]);
+  const heroImages = rawHeroImages.map(formatImageUrl).filter(Boolean);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loadedSlides, setLoadedSlides] = useState([0]);
 
@@ -388,15 +395,15 @@ const ConferenceHome = () => {
           committeeData,
           agendaData
         ] = await Promise.all([
-          api.get(`/api/sessions?conferenceId=${conference.id}`),
-          api.get(`/api/conference-sections?conferenceId=${conference.id}`),
-          api.get("/api/info-updates"),
-          api.get(`/api/tracks?conferenceId=${conference.id}`),
+          api.get(`/api/sessions?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/conference-sections?conferenceId=${conference.id}`).catch(() => []),
+          api.get("/api/info-updates").catch(() => []),
+          api.get(`/api/tracks?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/sponsors?conferenceId=${conference.id}`).catch(() => []),
-          api.get(`/api/speakers?conferenceId=${conference.id}`),
-          api.get(`/api/advisory-board?conferenceId=${conference.id}`),
-          api.get(`/api/committee?conferenceId=${conference.id}`),
-          api.get(`/api/agenda/days?conferenceId=${conference.id}`)
+          api.get(`/api/speakers?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/advisory-board?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/committee?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/agenda/days?conferenceId=${conference.id}`).catch(() => [])
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
@@ -412,7 +419,7 @@ const ConferenceHome = () => {
           setInfoUpdates(infoData);
         }
         if (Array.isArray(tracksData)) {
-          setTracks(tracksData.filter(t => t.isEnabled));
+          setTracks(tracksData.filter(t => t.enabled !== false && t.isEnabled !== false));
         }
         if (Array.isArray(sponsorsData)) {
           setSponsors(sponsorsData);
@@ -761,7 +768,7 @@ const ConferenceHome = () => {
         return (
           <section className="conf-sessions-section" style={{ padding: "60px 0", backgroundColor: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
-              <div className="conf-section-header" style={{ textAlign: "left", marginBottom: "35px" }}>
+              <div className="conf-section-header text-left" style={{ marginBottom: "35px" }}>
                 <h2 style={{ fontSize: "28px", fontWeight: "800", color: "#0f172a", marginBottom: "15px", textTransform: "none" }}>
                   Scientific Tracks & Sessions
                 </h2>

@@ -6,30 +6,46 @@ import "./ConferenceSpeakers.css";
 const ConferenceSpeakers = () => {
   const { conference } = useOutletContext();
   const [searchParams] = useSearchParams();
-  const speakerType = searchParams.get("type") || "";
+  const categoryId = searchParams.get("categoryId") || "";
   const [speakers, setSpeakers] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
 
   useEffect(() => {
-    const fetchSpeakers = async () => {
+    const fetchSpeakersAndCategory = async () => {
       try {
         const queryParams = new URLSearchParams();
         if (conference && conference.id) queryParams.append("conferenceId", conference.id);
-        if (speakerType) queryParams.append("type", speakerType);
         
+        let fetchedSpeakers = [];
         const data = await api.get(`/api/speakers?${queryParams.toString()}`);
         if (Array.isArray(data)) {
-          setSpeakers(data);
+          fetchedSpeakers = data;
         }
+
+        // Filter by category if categoryId is provided
+        if (categoryId) {
+          fetchedSpeakers = fetchedSpeakers.filter(s => s.categoryId && s.categoryId.toString() === categoryId);
+          // Also fetch categories to get the name
+          const catData = await api.get(`/api/speaker-categories?conferenceId=${conference.id}`);
+          if (Array.isArray(catData)) {
+            const currentCat = catData.find(c => c.id.toString() === categoryId);
+            if (currentCat) setCategoryName(currentCat.categoryName);
+          }
+        }
+
+        setSpeakers(fetchedSpeakers);
       } catch (err) {
         console.error("Failed to load speakers:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchSpeakers();
-  }, [speakerType]);
+    if (conference?.id) {
+      fetchSpeakersAndCategory();
+    }
+  }, [categoryId, conference?.id]);
 
   // Fallback speakers if database is empty
   const mockSpeakers = [
@@ -44,7 +60,7 @@ const ConferenceSpeakers = () => {
     <section className="conf-subpage-section">
       <div className="conf-subpage-container">
         <h2 className="conf-page-title">
-          {speakerType ? `${speakerType} Presenters` : "Scientific Committee & Speakers"}
+          {categoryName ? categoryName : "Scientific Committee & Speakers"}
         </h2>
         {loading ? (
           <p>Loading speakers...</p>

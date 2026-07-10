@@ -39,6 +39,7 @@ import SettingsManager from "./admin/pages/SettingsManager";
 import LogsManager from "./admin/pages/LogsManager";
 import WebinarManager from "./admin/pages/WebinarManager";
 import ConferenceSectionManager from "./admin/pages/ConferenceSectionManager";
+import ProgramManager from "./admin/pages/ProgramManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -144,6 +145,7 @@ function App() {
             <Route path="settings" element={<SettingsManager />} />
             <Route path="logs" element={<LogsManager />} />
             <Route path="webinars" element={<WebinarManager />} />
+            <Route path="program" element={<ProgramManager />} />
           </Route>
 
           {/* Main Website 404 route */}
