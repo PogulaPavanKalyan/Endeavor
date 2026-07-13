@@ -1473,13 +1473,13 @@ const ConferenceHome = () => {
           {
             title: "Conferences",
             imageUrl: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80",
-            link: "",
+            link: "https://intelevoresearch.org",
             color: "#f97316"
           },
           {
             title: "Latest News",
             imageUrl: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80",
-            link: "speakers",
+            link: "latest-news",
             color: "#f97316"
           }
         ];
@@ -1495,26 +1495,34 @@ const ConferenceHome = () => {
               </div>
 
               <div ref={scrollRef} className="info-updates-grid">
-                {activeInfoUpdates.map((item, idx) => (
-                  <Link
-                    key={idx}
-                    to={getSubRoutePath ? getSubRoutePath(item.link) : `/${item.link}`}
-                    className="info-update-card"
-                  >
-                    <div className="info-update-card-img-wrap">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="info-card-image"
-                      />
-                    </div>
-                    <div className="info-update-card-body">
-                      <h3 className="info-update-card-title" style={{ color: item.color }}>
-                        {item.title}
-                      </h3>
-                    </div>
-                  </Link>
-                ))}
+                {activeInfoUpdates.map((item, idx) => {
+                  const isExternal = item.link.startsWith('http');
+                  const CardWrapper = isExternal ? 'a' : Link;
+                  const hrefProp = isExternal 
+                    ? { href: item.link, target: '_blank', rel: 'noopener noreferrer' } 
+                    : { to: getSubRoutePath ? getSubRoutePath(item.link) : `/${item.link}` };
+
+                  return (
+                    <CardWrapper
+                      key={idx}
+                      {...hrefProp}
+                      className="info-update-card"
+                    >
+                      <div className="info-update-card-img-wrap">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="info-card-image"
+                        />
+                      </div>
+                      <div className="info-update-card-body">
+                        <h3 className="info-update-card-title" style={{ color: item.color }}>
+                          {item.title}
+                        </h3>
+                      </div>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </div>
           </section>
