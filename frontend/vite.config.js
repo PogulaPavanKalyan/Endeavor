@@ -9,15 +9,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
       },
       '/auth': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
       },
       '/uploads': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
         bypass: (req, res, proxyOptions) => {
           // Resolve local filesystem path for the upload file
@@ -30,7 +30,7 @@ export default defineConfig({
             res.end();
             return false;
           }
-          return null; // Proceed with proxying to localhost:8081
+          return null; // Proceed with proxying to https://intelevoresearch.org
         }
       }
     }
