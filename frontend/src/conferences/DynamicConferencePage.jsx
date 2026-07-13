@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useOutletContext, Link } from 'react-router-dom';
-import { api } from '../utils/api';
+import { api, BASE_URL } from '../utils/api';
 import NotFoundPage from '../components/NotFoundPage';
 import './DynamicConferencePage.css';
 
@@ -67,9 +67,15 @@ const DynamicConferencePage = () => {
 
   const { title, pageTitle, menuType, content, bannerPath, thumbnailPath } = pageData;
 
-  // Banner image styling
+  const getBannerUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http') || path.startsWith('data:')) return path;
+    if (path.startsWith('/uploads')) return `${BASE_URL}${path}`;
+    return `${BASE_URL}/uploads/conference/${path}`;
+  };
+
   const heroStyle = bannerPath 
-    ? { backgroundImage: `url(${bannerPath})` } 
+    ? { backgroundImage: `url(${getBannerUrl(bannerPath)})` } 
     : { background: `linear-gradient(135deg, #1e293b 0%, #0f172a 100%)` };
 
   return (

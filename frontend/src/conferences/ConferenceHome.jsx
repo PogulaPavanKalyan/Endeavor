@@ -172,7 +172,9 @@ const ConferenceHome = () => {
   // Background Slider & Date Formatter
   const formatImageUrl = (url) => {
     if (!url) return '';
-    return url.startsWith('http') || url.startsWith('data:') ? url : `${BASE_URL}/uploads/conference/${url}`;
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    if (url.startsWith('/uploads')) return `${BASE_URL}${url}`;
+    return `${BASE_URL}/uploads/conference/${url}`;
   };
   const rawHeroImages = conference.photos && conference.photos.length > 0
     ? conference.photos.map(p => p.fileName)
