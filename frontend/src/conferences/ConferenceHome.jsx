@@ -176,9 +176,16 @@ const ConferenceHome = () => {
     if (url.startsWith('/uploads')) return `${BASE_URL}${url}`;
     return `${BASE_URL}/uploads/conference/${url}`;
   };
-  const rawHeroImages = conference.photos && conference.photos.length > 0
-    ? conference.photos.map(p => p.fileName)
-    : (conference.image ? [conference.image] : ["https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1920&q=80"]);
+  let rawHeroImages = conference.photos && conference.photos.length > 0
+    ? conference.photos.map(p => p.fileName).filter(Boolean)
+    : [];
+  
+  if (rawHeroImages.length === 0) {
+    rawHeroImages = conference.photo?.fileName 
+      ? [conference.photo.fileName] 
+      : (conference.image ? [conference.image] : ["https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1920&q=80"]);
+  }
+
   const heroImages = rawHeroImages.map(formatImageUrl).filter(Boolean);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loadedSlides, setLoadedSlides] = useState([0]);
@@ -645,7 +652,7 @@ const ConferenceHome = () => {
               key={idx}
               className={`conf-home-hero-slide ${idx === activeIndex ? 'active' : ''}`}
               style={{
-                backgroundImage: loadedSlides.includes(idx) ? `url(${imgUrl})` : 'none'
+                backgroundImage: loadedSlides.includes(idx) ? `url("${imgUrl}")` : 'none'
               }}
             />
           ))}
