@@ -80,7 +80,11 @@ public class Security {
                     "/api/navbar-menus/**",
                     "/api/webinars/**",
                     "/api/about/**",
+<<<<<<< HEAD
                     "/api/navigation/**",
+=======
+		    "/api/navigation/**",
+>>>>>>> fda03a6f2741df486e7f8643d3ab88e3944a872e
                     "/api/speaker-categories/**",
                     "/api/program-categories/**",
 
