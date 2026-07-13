@@ -80,6 +80,9 @@ public class Security {
                     "/api/navbar-menus/**",
                     "/api/webinars/**",
                     "/api/about/**",
+		    "/api/navigation/**",
+                    "/api/speaker-categories/**",
+                    "/api/program-categories/**",
 
                     "/uploads/**"
                 ).permitAll()
