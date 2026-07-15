@@ -34,7 +34,7 @@ public class PublicHomeController {
     public ResponseEntity<HeroSection> getActiveHero() {
         return heroSectionService.getActiveHero()
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
     /**

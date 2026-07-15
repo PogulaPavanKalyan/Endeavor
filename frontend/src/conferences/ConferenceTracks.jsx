@@ -85,41 +85,32 @@ const ConferenceTracks = () => {
         </div>
       </div>
 
-      <div className="tracks-grid">
+      <div className="tracks-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "8px 40px" }}>
         {filteredTracks.map(track => (
-          <div key={track.id} className="track-card" onClick={() => setSelectedTrack(track)}>
-            {track.isFeatured && <div className="track-card-featured-badge">Featured</div>}
-            
-            <div 
-              className="track-card-banner" 
-              style={{ backgroundImage: track.trackBannerImage ? `url(${track.trackBannerImage})` : 'linear-gradient(135deg, #1e293b, #334155)' }}
-            >
-              {track.trackIcon && (
-                <div className="track-card-icon">
-                  <img src={track.trackIcon} alt={track.name} />
-                </div>
-              )}
-            </div>
-            
-            <div className="track-card-content">
-              <h3 className="track-card-title">{track.name}</h3>
-              <div className="track-card-desc">
-                {track.shortDescription || track.detailedDescription || "Explore this scientific track to learn more about the latest developments and research presentations."}
-              </div>
-              
-              {track.keywords && (
-                <div className="track-card-keywords">
-                  {track.keywords.split(',').slice(0, 3).map((kw, i) => (
-                    <span key={i} className="track-keyword">{kw.trim()}</span>
-                  ))}
-                  {track.keywords.split(',').length > 3 && <span className="track-keyword">+{track.keywords.split(',').length - 3}</span>}
-                </div>
-              )}
-              
-              <div className="track-card-footer">
-                <span className="track-read-more">Read More <span>→</span></span>
-              </div>
-            </div>
+          <div 
+            key={track.id} 
+            onClick={() => setSelectedTrack(track)}
+            style={{
+              display: "block",
+              backgroundColor: "#e2e8f0",
+              padding: "12px 16px",
+              fontSize: "15px",
+              fontWeight: "600",
+              color: "#0f172a",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              marginBottom: "8px"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#cbd5e1";
+              e.currentTarget.style.color = "#2563eb";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#e2e8f0";
+              e.currentTarget.style.color = "#0f172a";
+            }}
+          >
+            {track.name}
           </div>
         ))}
       </div>

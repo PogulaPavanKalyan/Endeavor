@@ -26,6 +26,8 @@ public class SiteStatisticsService {
         if (incoming.getResearchersCount() != null) stats.setResearchersCount(incoming.getResearchersCount());
         if (incoming.getPublicationsCount() != null) stats.setPublicationsCount(incoming.getPublicationsCount());
         if (incoming.getGalleryVisible() != null) stats.setGalleryVisible(incoming.getGalleryVisible());
+        if (incoming.getPastCongressVisible() != null) stats.setPastCongressVisible(incoming.getPastCongressVisible());
+        if (incoming.getWebinarsVisible() != null) stats.setWebinarsVisible(incoming.getWebinarsVisible());
         return siteStatisticsRepository.save(stats);
     }
 }

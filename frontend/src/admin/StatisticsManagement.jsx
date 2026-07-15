@@ -9,6 +9,8 @@ const StatisticsManagement = () => {
     researchersCount: 10000,
     publicationsCount: 500,
     galleryVisible: true,
+    pastCongressVisible: true,
+    webinarsVisible: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -120,6 +122,60 @@ const StatisticsManagement = () => {
                     position: "absolute", content: '""', height: "18px", width: "18px", left: "3px", bottom: "3px",
                     backgroundColor: "white", transition: "0.3s", borderRadius: "50%",
                     transform: (stats.galleryVisible ?? true) ? "translateX(24px)" : "translateX(0)"
+                  }} />
+                </span>
+              </label>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: "#ffffff", borderRadius: "8px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.02)", marginTop: "12px" }}>
+              <div>
+                <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "700", color: "#0f172a" }}>Past Congress Editions Section</h4>
+                <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>Show or hide the Past Congress Editions section on the landing homepage.</p>
+              </div>
+              <label style={{ position: "relative", display: "inline-block", width: "48px", height: "24px", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  name="pastCongressVisible"
+                  checked={stats.pastCongressVisible ?? true}
+                  onChange={handleChange}
+                  style={{ opacity: 0, width: 0, height: 0, margin: 0 }}
+                />
+                <span style={{
+                  position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
+                  backgroundColor: (stats.pastCongressVisible ?? true) ? "#22c55e" : "#cbd5e1",
+                  transition: "0.3s", borderRadius: "24px"
+                }}>
+                  <span style={{
+                    position: "absolute", content: '""', height: "18px", width: "18px", left: "3px", bottom: "3px",
+                    backgroundColor: "white", transition: "0.3s", borderRadius: "50%",
+                    transform: (stats.pastCongressVisible ?? true) ? "translateX(24px)" : "translateX(0)"
+                  }} />
+                </span>
+              </label>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: "#ffffff", borderRadius: "8px", border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.02)", marginTop: "12px" }}>
+              <div>
+                <h4 style={{ margin: 0, fontSize: "14px", fontWeight: "700", color: "#0f172a" }}>Virtual Lectures & Webinars Section</h4>
+                <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>Show or hide the Virtual Lectures & Webinars section on the landing homepage.</p>
+              </div>
+              <label style={{ position: "relative", display: "inline-block", width: "48px", height: "24px", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  name="webinarsVisible"
+                  checked={stats.webinarsVisible ?? true}
+                  onChange={handleChange}
+                  style={{ opacity: 0, width: 0, height: 0, margin: 0 }}
+                />
+                <span style={{
+                  position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
+                  backgroundColor: (stats.webinarsVisible ?? true) ? "#22c55e" : "#cbd5e1",
+                  transition: "0.3s", borderRadius: "24px"
+                }}>
+                  <span style={{
+                    position: "absolute", content: '""', height: "18px", width: "18px", left: "3px", bottom: "3px",
+                    backgroundColor: "white", transition: "0.3s", borderRadius: "50%",
+                    transform: (stats.webinarsVisible ?? true) ? "translateX(24px)" : "translateX(0)"
                   }} />
                 </span>
               </label>

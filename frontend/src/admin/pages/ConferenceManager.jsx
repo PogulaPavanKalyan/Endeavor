@@ -38,7 +38,8 @@ const ConferenceManager = () => {
     themePrimary: '#e74c3c', themeSecondary: '#f39c12', themeAccent: '#c0392b',
     metaTitle: '', metaDescription: '',
     scientificSessions: [], pricingTiers: [],
-    seriesId: '', year: new Date().getFullYear()
+    seriesId: '', year: new Date().getFullYear(),
+    showCommittee: true
   });
 
   // Speakers & Sessions for Step 2 & 3
@@ -146,7 +147,8 @@ const ConferenceManager = () => {
         scientificSessions: conf.scientificSessions || [],
         pricingTiers: conf.pricingTiers || [],
         seriesId: conf.series?.id || '',
-        year: conf.year || new Date().getFullYear()
+        year: conf.year || new Date().getFullYear(),
+        showCommittee: conf.showCommittee !== false
       });
       
       // Fetch fresh details with photos
@@ -169,7 +171,8 @@ const ConferenceManager = () => {
         themePrimary: '#e74c3c', themeSecondary: '#f39c12', themeAccent: '#c0392b',
         metaTitle: '', metaDescription: '',
         scientificSessions: [], pricingTiers: [],
-        seriesId: '', year: new Date().getFullYear()
+        seriesId: '', year: new Date().getFullYear(),
+        showCommittee: true
       });
     }
     setShowModal(true);
@@ -1015,6 +1018,18 @@ const ConferenceManager = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Global Section Visibility</label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={formData.showCommittee !== false} 
+                        onChange={(e) => setFormData({ ...formData, showCommittee: e.target.checked })}
+                      />
+                      Show Organizing Committee Section on Website
+                    </label>
                   </div>
 
                   <div className="admin-form-row">

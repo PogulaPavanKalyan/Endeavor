@@ -68,6 +68,9 @@ public class ConferenceDetails {
     private String country;
     private Boolean isFeatured = false;
     
+    @Column(name = "show_committee")
+    private Boolean showCommittee = true;
+    
     @Column(columnDefinition = "TEXT")
     private String shortDescription;
 
@@ -320,6 +323,14 @@ public class ConferenceDetails {
 
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Boolean getShowCommittee() {
+        return showCommittee;
+    }
+
+    public void setShowCommittee(Boolean showCommittee) {
+        this.showCommittee = showCommittee;
     }
 
     public ConferenceSeries getSeries() {

@@ -7,7 +7,9 @@ const StatisticsManager = () => {
     countriesCount: 0,
     researchersCount: 0,
     publicationsCount: 0,
-    galleryVisible: true
+    galleryVisible: true,
+    pastCongressVisible: true,
+    webinarsVisible: true
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -29,7 +31,9 @@ const StatisticsManager = () => {
           countriesCount: data.countriesCount || 0,
           researchersCount: data.researchersCount || 0,
           publicationsCount: data.publicationsCount || 0,
-          galleryVisible: data.galleryVisible !== false
+          galleryVisible: data.galleryVisible !== false,
+          pastCongressVisible: data.pastCongressVisible !== false,
+          webinarsVisible: data.webinarsVisible !== false
         });
       }
     } catch (err) {
@@ -259,6 +263,133 @@ const StatisticsManager = () => {
                 </span>
               </label>
             </div>
+
+            {/* Past Congress Editions Toggle */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '20px 24px',
+              borderBottom: '1px solid #f1f5f9',
+              gap: '16px'
+            }}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
+                <div style={{
+                  width: '44px', height: '44px',
+                  background: stats.pastCongressVisible
+                    ? 'linear-gradient(135deg, #dcfce7, #bbf7d0)'
+                    : 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
+                  borderRadius: '12px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '22px',
+                  transition: 'background 0.4s ease',
+                  flexShrink: 0
+                }}>🏛️</div>
+                <div>
+                  <div style={{fontWeight: '700', fontSize: '14px', color: '#0f172a'}}>Past Congress Editions Section</div>
+                  <div style={{fontSize: '12px', color: '#64748b', marginTop: '3px'}}>
+                    Review our global academic reach and symposium volumes
+                  </div>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '5px', marginTop: '6px', padding: '3px 10px',
+                    borderRadius: '20px', fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em',
+                    background: stats.pastCongressVisible ? 'rgba(34,197,94,0.12)' : 'rgba(100,116,139,0.12)',
+                    color: stats.pastCongressVisible ? '#16a34a' : '#64748b', transition: 'all 0.3s ease'
+                  }}>
+                    <span style={{
+                      width: '6px', height: '6px', borderRadius: '50%',
+                      background: stats.pastCongressVisible ? '#22c55e' : '#94a3b8', display: 'inline-block'
+                    }} />
+                    {stats.pastCongressVisible ? 'VISIBLE TO PUBLIC' : 'HIDDEN FROM PUBLIC'}
+                  </div>
+                </div>
+              </div>
+              <label style={{position: 'relative', display: 'inline-block', width: '56px', height: '30px', cursor: 'pointer', flexShrink: 0}}>
+                <input
+                  type="checkbox"
+                  name="pastCongressVisible"
+                  checked={stats.pastCongressVisible}
+                  onChange={handleChange}
+                  style={{opacity: 0, width: 0, height: 0, position: 'absolute'}}
+                />
+                <span style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                  background: stats.pastCongressVisible ? 'linear-gradient(135deg, #22c55e, #16a34a)' : '#cbd5e1',
+                  borderRadius: '30px', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                  boxShadow: stats.pastCongressVisible ? '0 2px 8px rgba(34,197,94,0.4)' : 'none'
+                }}>
+                  <span style={{
+                    position: 'absolute', height: '22px', width: '22px', left: '4px', top: '4px',
+                    background: '#ffffff', borderRadius: '50%', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                    transform: stats.pastCongressVisible ? 'translateX(26px)' : 'translateX(0)', boxShadow: '0 1px 4px rgba(0,0,0,0.18)'
+                  }} />
+                </span>
+              </label>
+            </div>
+
+            {/* Webinars Toggle */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '20px 24px',
+              borderBottom: '1px solid #f1f5f9',
+              gap: '16px'
+            }}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '14px'}}>
+                <div style={{
+                  width: '44px', height: '44px',
+                  background: stats.webinarsVisible
+                    ? 'linear-gradient(135deg, #dcfce7, #bbf7d0)'
+                    : 'linear-gradient(135deg, #f1f5f9, #e2e8f0)',
+                  borderRadius: '12px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '22px',
+                  transition: 'background 0.4s ease',
+                  flexShrink: 0
+                }}>💻</div>
+                <div>
+                  <div style={{fontWeight: '700', fontSize: '14px', color: '#0f172a'}}>Virtual Lectures & Webinars Section</div>
+                  <div style={{fontSize: '12px', color: '#64748b', marginTop: '3px'}}>
+                    Join online expert-led research discussions
+                  </div>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '5px', marginTop: '6px', padding: '3px 10px',
+                    borderRadius: '20px', fontSize: '11px', fontWeight: '700', letterSpacing: '0.04em',
+                    background: stats.webinarsVisible ? 'rgba(34,197,94,0.12)' : 'rgba(100,116,139,0.12)',
+                    color: stats.webinarsVisible ? '#16a34a' : '#64748b', transition: 'all 0.3s ease'
+                  }}>
+                    <span style={{
+                      width: '6px', height: '6px', borderRadius: '50%',
+                      background: stats.webinarsVisible ? '#22c55e' : '#94a3b8', display: 'inline-block'
+                    }} />
+                    {stats.webinarsVisible ? 'VISIBLE TO PUBLIC' : 'HIDDEN FROM PUBLIC'}
+                  </div>
+                </div>
+              </div>
+              <label style={{position: 'relative', display: 'inline-block', width: '56px', height: '30px', cursor: 'pointer', flexShrink: 0}}>
+                <input
+                  type="checkbox"
+                  name="webinarsVisible"
+                  checked={stats.webinarsVisible}
+                  onChange={handleChange}
+                  style={{opacity: 0, width: 0, height: 0, position: 'absolute'}}
+                />
+                <span style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                  background: stats.webinarsVisible ? 'linear-gradient(135deg, #22c55e, #16a34a)' : '#cbd5e1',
+                  borderRadius: '30px', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                  boxShadow: stats.webinarsVisible ? '0 2px 8px rgba(34,197,94,0.4)' : 'none'
+                }}>
+                  <span style={{
+                    position: 'absolute', height: '22px', width: '22px', left: '4px', top: '4px',
+                    background: '#ffffff', borderRadius: '50%', transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                    transform: stats.webinarsVisible ? 'translateX(26px)' : 'translateX(0)', boxShadow: '0 1px 4px rgba(0,0,0,0.18)'
+                  }} />
+                </span>
+              </label>
+            </div>
+
 
             {/* Save Button Footer */}
             <div style={{padding: '16px 24px', background: '#f8fafc'}}>

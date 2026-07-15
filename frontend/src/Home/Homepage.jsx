@@ -477,6 +477,8 @@ const Homepage = () => {
   // Admin detection & gallery visibility from database
   const isAdmin = !!localStorage.getItem("token");
   const galleryVisible = stats?.galleryVisible !== false;
+  const pastCongressVisible = stats?.pastCongressVisible !== false;
+  const webinarsVisible = stats?.webinarsVisible !== false;
 
   const [contactSuccess, setContactSuccess] = useState(false);
   const [contactError, setContactError] = useState("");
@@ -861,84 +863,88 @@ const Homepage = () => {
       </section>
 
       {/* 6. PAST CONFERENCES (REDESIGNED & DYNAMIC) */}
-      <section className="section past-conferences-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Success Footprint</span>
-            <h2 className="section-title">Past Congress Editions</h2>
-            <p className="section-desc">
-              Review our global academic reach and previously held symposium volumes.
-            </p>
-          </div>
-          <div className="past-conferences-grid">
-            {pastConferences.map((item) => (
-              <div className="past-conf-card card-premium" key={item.id}>
-                <div className="past-card-media">
-                  <span className="past-year-badge">2025</span>
-                  <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
-                </div>
-                <div className="past-card-body">
-                  <h3>{item.title}</h3>
-                  <div className="past-metadata">
-                    <span>📍 {item.venue}</span>
-                    <span>👥 {item.attendees}</span>
+      {pastCongressVisible && (
+        <section className="section past-conferences-redesign">
+          <div className="container">
+            <div className="section-header">
+              <span className="section-tag">Success Footprint</span>
+              <h2 className="section-title">Past Congress Editions</h2>
+              <p className="section-desc">
+                Review our global academic reach and previously held symposium volumes.
+              </p>
+            </div>
+            <div className="past-conferences-grid">
+              {pastConferences.map((item) => (
+                <div className="past-conf-card card-premium" key={item.id}>
+                  <div className="past-card-media">
+                    <span className="past-year-badge">2025</span>
+                    <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
+                  </div>
+                  <div className="past-card-body">
+                    <h3>{item.title}</h3>
+                    <div className="past-metadata">
+                      <span>📍 {item.venue}</span>
+                      <span>👥 {item.attendees}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 14. WEBINAR SECTION (REDESIGNED & DYNAMIC) */}
-      <section className="section webinars-redesign">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">E-Learning</span>
-            <h2 className="section-title">Virtual Lectures & Webinars</h2>
-            <p className="section-desc">
-              Join online expert-led research discussions and live scientific assemblies.
-            </p>
-          </div>
-          <div className="webinar-filter-bar">
-            {["all", "live", "upcoming"].map((cat) => (
-              <button
-                key={cat}
-                className={`filter-btn ${webinarFilter === cat ? "active" : ""}`}
-                onClick={() => setWebinarFilter(cat)}
-              >
-                {cat.toUpperCase()} WEBINARS
-              </button>
-            ))}
-          </div>
-          <div className="webinars-grid-redesign">
-            {filteredWebinars.map((web) => (
-              <div className={`webinar-card-redesign card-premium ${web.status}`} key={web.id}>
-                <div className="w-media">
-                  <OptimizedImage src={web.image} alt={web.title} fallbackType="conference" />
-                  <span className={`w-status-pill ${web.status}`}>{web.status.toUpperCase()}</span>
-                </div>
-                <div className="w-body">
-                  <h3>{web.title}</h3>
-                  <p className="w-speaker">🎙️ Speaker: {web.speaker}</p>
-                  <p className="w-desc">{web.desc}</p>
-                  <div className="w-footer-meta">
-                    <span>📅 {web.date}</span>
-                    <span>⏰ {web.time}</span>
+      {webinarsVisible && (
+        <section className="section webinars-redesign">
+          <div className="container">
+            <div className="section-header">
+              <span className="section-tag">E-Learning</span>
+              <h2 className="section-title">Virtual Lectures & Webinars</h2>
+              <p className="section-desc">
+                Join online expert-led research discussions and live scientific assemblies.
+              </p>
+            </div>
+            <div className="webinar-filter-bar">
+              {["all", "live", "upcoming"].map((cat) => (
+                <button
+                  key={cat}
+                  className={`filter-btn ${webinarFilter === cat ? "active" : ""}`}
+                  onClick={() => setWebinarFilter(cat)}
+                >
+                  {cat.toUpperCase()} WEBINARS
+                </button>
+              ))}
+            </div>
+            <div className="webinars-grid-redesign">
+              {filteredWebinars.map((web) => (
+                <div className={`webinar-card-redesign card-premium ${web.status}`} key={web.id}>
+                  <div className="w-media">
+                    <OptimizedImage src={web.image} alt={web.title} fallbackType="conference" />
+                    <span className={`w-status-pill ${web.status}`}>{web.status.toUpperCase()}</span>
                   </div>
-                  <div className="w-actions">
-                    {web.status === "live" ? (
-                      <button className="btn-join-broadcast" onClick={() => navigate("/webinars")}>Join Broadcast</button>
-                    ) : (
-                      <button className="btn-reserve-seat" onClick={() => navigate("/webinars")}>Reserve Seat</button>
-                    )}
+                  <div className="w-body">
+                    <h3>{web.title}</h3>
+                    <p className="w-speaker">🎙️ Speaker: {web.speaker}</p>
+                    <p className="w-desc">{web.desc}</p>
+                    <div className="w-footer-meta">
+                      <span>📅 {web.date}</span>
+                      <span>⏰ {web.time}</span>
+                    </div>
+                    <div className="w-actions">
+                      {web.status === "live" ? (
+                        <button className="btn-join-broadcast" onClick={() => navigate("/webinars")}>Join Broadcast</button>
+                      ) : (
+                        <button className="btn-reserve-seat" onClick={() => navigate("/webinars")}>Reserve Seat</button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 3. ABOUT ORGANIZATION — PREMIUM 2026 REDESIGN */}
       <section className="section about-org-redesign">

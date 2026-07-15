@@ -142,14 +142,14 @@ const ConferenceLayout = () => {
             venue: data.venue,
             email: data.contactEmail || "hello@intelevoresearch.org",
             phone: data.contactPhone || "+1 (209) 299-5348",
-            image: data.photo?.filePath
+            image: data.photo?.fileName
               ? `/uploads/conference/${data.photo.fileName}`
               : "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
             images: data.photos && data.photos.length > 0
               ? [...data.photos]
                 .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
                 .map(p => `/uploads/conference/${p.fileName}`)
-              : [data.photo?.filePath
+              : [data.photo?.fileName
                 ? `/uploads/conference/${data.photo.fileName}`
                 : "https://images.unsplash.com/photo-1540575467063-178a50c2df87"],
             theme: {
@@ -163,6 +163,8 @@ const ConferenceLayout = () => {
             pricingTiers: data.pricingTiers || [],
             importantDates: data.importantDates || [],
             startDate: data.startDate,
+            endDate: data.endDate,
+            showCommittee: data.showCommittee,
             sessions: data.scientificSessions && data.scientificSessions.length > 0
               ? data.scientificSessions.map(session => ({ title: session, desc: "Join us for an exciting deep-dive into " + session }))
               : [

@@ -9,6 +9,8 @@ const BASE_UPLOADS = BASE_URL || '';
 export const fetchHero = async () => {
   try {
     const data = await api.get('/api/hero');
+    if (!data) return null; // Gracefully handle 204 No Content
+    
     // Resolve background image URL
     if (data?.backgroundImage) {
       data.backgroundImageUrl = `${BASE_UPLOADS}/uploads/hero/${data.backgroundImage}`;

@@ -25,6 +25,12 @@ public class SiteStatistics {
     @Column(nullable = false)
     private Boolean galleryVisible = true;
 
+    @Column(nullable = false)
+    private Boolean pastCongressVisible = true;
+
+    @Column(nullable = false)
+    private Boolean webinarsVisible = true;
+
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -38,6 +44,12 @@ public class SiteStatistics {
     // Getters and Setters
     public Boolean getGalleryVisible() { return galleryVisible; }
     public void setGalleryVisible(Boolean galleryVisible) { this.galleryVisible = galleryVisible; }
+
+    public Boolean getPastCongressVisible() { return pastCongressVisible; }
+    public void setPastCongressVisible(Boolean pastCongressVisible) { this.pastCongressVisible = pastCongressVisible; }
+
+    public Boolean getWebinarsVisible() { return webinarsVisible; }
+    public void setWebinarsVisible(Boolean webinarsVisible) { this.webinarsVisible = webinarsVisible; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

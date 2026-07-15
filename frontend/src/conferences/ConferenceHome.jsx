@@ -112,7 +112,26 @@ const ConferenceHome = () => {
   const [loading, setLoading] = useState(true);
   const [showAllSpeakers, setShowAllSpeakers] = useState(false);
 
-  const getEventStatus = (dateStr) => {
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    const sections = document.querySelectorAll('.anim-section');
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      sections.forEach(section => observer.unobserve(section));
+      observer.disconnect();
+    };
+  }, [loading]);
+
+const getEventStatus = (dateStr) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const eventDate = new Date(dateStr);
@@ -176,14 +195,14 @@ const ConferenceHome = () => {
     if (url.startsWith('/uploads')) return `${BASE_URL}${url}`;
     return `${BASE_URL}/uploads/conference/${url}`;
   };
-  let rawHeroImages = conference.photos && conference.photos.length > 0
-    ? conference.photos.map(p => p.fileName).filter(Boolean)
+  let rawHeroImages = conference.images && conference.images.length > 0
+    ? conference.images.filter(Boolean)
     : [];
   
   if (rawHeroImages.length === 0) {
-    rawHeroImages = conference.photo?.fileName 
-      ? [conference.photo.fileName] 
-      : (conference.image ? [conference.image] : ["https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1920&q=80"]);
+    rawHeroImages = conference.image 
+      ? [conference.image] 
+      : ["https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1920&q=80"];
   }
 
   const heroImages = rawHeroImages.map(formatImageUrl).filter(Boolean);
@@ -645,7 +664,7 @@ const ConferenceHome = () => {
   return (
     <div className="conf-home-portal">
       {/* Hero Section */}
-      <section className="conf-home-hero">
+      <section className="conf-home-hero anim-section">
         <div className="conf-home-hero-slider">
           {heroImages.map((imgUrl, idx) => (
             <div
@@ -713,7 +732,7 @@ const ConferenceHome = () => {
       </section>
 
       {/* About Section */}
-      <section className="conf-about-section" style={{ padding: "80px 0", backgroundColor: "#ffffff" }}>
+      <section className="conf-about-section anim-section" style={{ padding: "80px 0", backgroundColor: "#ffffff" }}>
         <div className="container conf-about-grid">
           <div className="conf-about-text">
             <h2 style={{ fontSize: "32px", color: "#0f172a", fontWeight: "800", marginBottom: "25px", position: "relative", display: "inline-block" }}>
@@ -775,7 +794,7 @@ const ConferenceHome = () => {
         const rightColumnTracks = tracksList.slice(midPoint);
 
         return (
-          <section className="conf-sessions-section" style={{ padding: "60px 0", backgroundColor: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
+          <section className="conf-sessions-section anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header text-left" style={{ marginBottom: "35px" }}>
                 <h2 style={{ fontSize: "28px", fontWeight: "800", color: "#0f172a", marginBottom: "15px", textTransform: "none" }}>
@@ -787,25 +806,61 @@ const ConferenceHome = () => {
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "20px 40px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {leftColumnTracks.map((track, index) => (
-                    <div key={index} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                      <span style={{ color: "#f97316", fontSize: "20px", display: "inline-block", transform: "translateY(-1px)", userSelect: "none" }}>👉</span>
-                      <span style={{ fontSize: "16.5px", fontWeight: "700", color: "#1e293b", lineHeight: "1.4" }}>
-                        {track}
-                      </span>
-                    </div>
+                    <Link 
+                      key={index}
+                      to={getSubRoutePath ? getSubRoutePath("tracks") : "tracks"} 
+                      style={{
+                        display: "block",
+                        backgroundColor: "#e2e8f0",
+                        padding: "12px 16px",
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        color: "#0f172a",
+                        textDecoration: "none",
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#cbd5e1";
+                        e.currentTarget.style.color = "#2563eb";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#e2e8f0";
+                        e.currentTarget.style.color = "#0f172a";
+                      }}
+                    >
+                      {track}
+                    </Link>
                   ))}
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {rightColumnTracks.map((track, index) => (
-                    <div key={index} style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                      <span style={{ color: "#f97316", fontSize: "20px", display: "inline-block", transform: "translateY(-1px)", userSelect: "none" }}>👉</span>
-                      <span style={{ fontSize: "16.5px", fontWeight: "700", color: "#1e293b", lineHeight: "1.4" }}>
-                        {track}
-                      </span>
-                    </div>
+                    <Link 
+                      key={index}
+                      to={getSubRoutePath ? getSubRoutePath("tracks") : "tracks"} 
+                      style={{
+                        display: "block",
+                        backgroundColor: "#e2e8f0",
+                        padding: "12px 16px",
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        color: "#0f172a",
+                        textDecoration: "none",
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#cbd5e1";
+                        e.currentTarget.style.color = "#2563eb";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#e2e8f0";
+                        e.currentTarget.style.color = "#0f172a";
+                      }}
+                    >
+                      {track}
+                    </Link>
                   ))}
                 </div>
 
@@ -838,7 +893,7 @@ const ConferenceHome = () => {
         const nextDeadline = upcomingDates[0];
 
         return (
-          <section className="conf-important-dates-section" id="important-dates">
+          <section className="conf-important-dates-section anim-section" id="important-dates">
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "45px" }}>
                 <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "15px" }}>
@@ -848,37 +903,6 @@ const ConferenceHome = () => {
                   Stay informed about all important conference milestones and deadlines.
                 </p>
               </div>
-
-              {/* Countdown Component if next deadline exists */}
-              {nextDeadline && (
-                <div className="deadline-countdown-banner">
-                  <div className="countdown-info">
-                    <span className="countdown-label">NEXT DEADLINE:</span>
-                    <span className="countdown-title">{nextDeadline.eventTitle}</span>
-                  </div>
-                  <div className="countdown-timer">
-                    <div className="timer-unit">
-                      <span className="timer-val">{deadlineTimeLeft.days}</span>
-                      <span className="timer-lbl">Days</span>
-                    </div>
-                    <div className="timer-separator">:</div>
-                    <div className="timer-unit">
-                      <span className="timer-val">{deadlineTimeLeft.hours}</span>
-                      <span className="timer-lbl">Hrs</span>
-                    </div>
-                    <div className="timer-separator">:</div>
-                    <div className="timer-unit">
-                      <span className="timer-val">{deadlineTimeLeft.minutes}</span>
-                      <span className="timer-lbl">Mins</span>
-                    </div>
-                    <div className="timer-separator">:</div>
-                    <div className="timer-unit">
-                      <span className="timer-val">{deadlineTimeLeft.seconds}</span>
-                      <span className="timer-lbl">Secs</span>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Timeline List */}
               <div className="dates-timeline-container">
@@ -970,7 +994,63 @@ const ConferenceHome = () => {
       })()}
 
       {/* 1. Keynote & Invited Speakers Section */}
-      <section className="conf-speakers-section" id="keynote-speakers">
+      {/* 2. International Advisory Board Section */}
+      <section className="conf-advisory-section-redesigned anim-section" id="advisory-board">
+        <div className="container">
+          <div className="conf-section-header">
+            <span className="sponsors-tag-pill">Academic Guidance</span>
+            <h2>International Advisory Board</h2>
+            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+              Our distinguished advisory board members provide academic guidance and strategic direction.
+            </p>
+          </div>
+
+          {advisoryBoard && advisoryBoard.filter(m => m.isActive !== false).length > 0 ? (
+            <div className="conf-advisory-grid-redesigned">
+              {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
+                <div key={member.id} className="advisory-card-premium">
+                  <div className="advisory-avatar-wrap-premium">
+                    <img
+                      src={member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                      alt={member.name}
+                      onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                    />
+                  </div>
+                  <div className="advisory-info-premium">
+                    <h3>{member.name}</h3>
+                    <p className="advisory-role-premium">{member.designation}</p>
+                    <p className="advisory-org-premium">{member.organization}, {member.country}</p>
+                    {member.researchExpertise && (
+                      <div className="advisory-expertise-premium">
+                        <strong>Expertise:</strong> {member.researchExpertise}
+                      </div>
+                    )}
+                    {member.bio && (
+                      <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
+                        name: member.name,
+                        designation: member.designation,
+                        org: `${member.organization}, ${member.country}`,
+                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                        bio: member.bio,
+                        research: member.researchExpertise
+                      })}>
+                        Read Biography
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "60px 20px", background: "#ffffff", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Advisory Board to be Announced</h3>
+              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The advisory board members are currently being finalized. Please check back later.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="conf-speakers-section anim-section" id="keynote-speakers">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Presentations</span>
@@ -1044,64 +1124,9 @@ const ConferenceHome = () => {
         </div>
       </section>
 
-      {/* 2. International Advisory Board Section */}
-      <section className="conf-advisory-section-redesigned" id="advisory-board">
-        <div className="container">
-          <div className="conf-section-header">
-            <span className="sponsors-tag-pill">Academic Guidance</span>
-            <h2>International Advisory Board</h2>
-            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Our distinguished advisory board members provide academic guidance and strategic direction.
-            </p>
-          </div>
-
-          {advisoryBoard && advisoryBoard.filter(m => m.isActive !== false).length > 0 ? (
-            <div className="conf-advisory-grid-redesigned">
-              {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
-                <div key={member.id} className="advisory-card-premium">
-                  <div className="advisory-avatar-wrap-premium">
-                    <img
-                      src={member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
-                      alt={member.name}
-                      onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                    />
-                  </div>
-                  <div className="advisory-info-premium">
-                    <h3>{member.name}</h3>
-                    <p className="advisory-role-premium">{member.designation}</p>
-                    <p className="advisory-org-premium">{member.organization}, {member.country}</p>
-                    {member.researchExpertise && (
-                      <div className="advisory-expertise-premium">
-                        <strong>Expertise:</strong> {member.researchExpertise}
-                      </div>
-                    )}
-                    {member.bio && (
-                      <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
-                        name: member.name,
-                        designation: member.designation,
-                        org: `${member.organization}, ${member.country}`,
-                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                        bio: member.bio,
-                        research: member.researchExpertise
-                      })}>
-                        Read Biography
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: "60px 20px", background: "#ffffff", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
-              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Advisory Board to be Announced</h3>
-              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The advisory board members are currently being finalized. Please check back later.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* 3. Organizing Committee Section */}
-      <section className="conf-committee-section-redesigned" id="organizing-committee">
+      {conference.showCommittee !== false && (
+      <section className="conf-committee-section-redesigned anim-section" id="organizing-committee">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Committee</span>
@@ -1159,9 +1184,10 @@ const ConferenceHome = () => {
           )}
         </div>
       </section>
+      )}
 
       {/* 4. Conference Agenda Section */}
-      <section className="conf-agenda-section-redesigned" id="agenda-schedule">
+      <section className="conf-agenda-section-redesigned anim-section" id="agenda-schedule">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Scientific Timetable</span>
@@ -1400,7 +1426,7 @@ const ConferenceHome = () => {
 
       {/* Media Partners & Sponsors Section (Admin added only) */}
       {sponsors && sponsors.length > 0 && (
-        <section className="conf-sponsors-partners-section">
+        <section className="conf-sponsors-partners-section anim-section">
           <div className="container">
             <div className="conf-section-header">
               <span className="sponsors-tag-pill">Partnerships</span>
@@ -1494,7 +1520,7 @@ const ConferenceHome = () => {
         const activeInfoUpdates = infoUpdates && infoUpdates.length > 0 ? infoUpdates : fallbackInfoUpdates;
 
         return (
-          <section className="conf-info-update-section" style={{ padding: "80px 0", backgroundColor: "#f8fafc" }}>
+          <section className="conf-info-update-section anim-section" style={{ padding: "80px 0", backgroundColor: "#f8fafc" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "50px" }}>
                 <span style={{ fontSize: "14px", fontWeight: "700", color: "#94a3b8", letterSpacing: "1.5px", textTransform: "uppercase" }}>Info Update</span>

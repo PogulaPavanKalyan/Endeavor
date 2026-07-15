@@ -9,20 +9,21 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://intelevoresearch.org',
+        target: 'http://localhost:8081',
         changeOrigin: true,
       },
       '/auth': {
-        target: 'https://intelevoresearch.org',
+        target: 'http://localhost:8081',
         changeOrigin: true,
       },
       '/uploads': {
-        target: 'https://intelevoresearch.org',
+        target: 'http://localhost:8081',
         changeOrigin: true,
         bypass: (req, res, proxyOptions) => {
           // Resolve local filesystem path for the upload file
           const localPath = path.join(__dirname, '..', 'backend', req.url.split('?')[0]);
-          if (!fs.existsSync(localPath)) {
+          const alternateLocalPath = path.join(__dirname, '..', req.url.split('?')[0]);
+          if (!fs.existsSync(localPath) && !fs.existsSync(alternateLocalPath)) {
             // File does not exist locally, redirect to the live staging server
             res.writeHead(302, {
               Location: `https://intelevoresearch.org${req.url}`
@@ -30,7 +31,7 @@ export default defineConfig({
             res.end();
             return false;
           }
-          return null; // Proceed with proxying to https://intelevoresearch.org
+          return null; // Proceed with proxying to http://localhost:8081
         }
       }
     }
