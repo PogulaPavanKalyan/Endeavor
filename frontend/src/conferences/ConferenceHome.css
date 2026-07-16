@@ -1189,13 +1189,13 @@
 .timeline-row {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 16px;
+  padding: 24px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
 }
 
 .timeline-row:hover {
@@ -1240,12 +1240,12 @@
 }
 
 .event-emoji {
-  font-size: 16px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 52px;
+  height: 52px;
   background: rgba(249, 115, 22, 0.06);
   color: var(--conf-primary, #f97316);
   border-radius: 50%;
@@ -1270,7 +1270,7 @@
 }
 
 .event-title {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -1282,7 +1282,7 @@
 }
 
 .event-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: #64748b;
   margin: 0;
   line-height: 1.5;
@@ -1297,7 +1297,7 @@
 }
 
 .event-date-display {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   background: #f1f5f9;
@@ -1465,7 +1465,7 @@
 }
 
 .event-title {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -1477,7 +1477,7 @@
 }
 
 .event-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: #64748b;
   margin: 0;
   line-height: 1.5;
@@ -1492,7 +1492,7 @@
 }
 
 .event-date-display {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   background: #f1f5f9;
@@ -1956,10 +1956,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-  
-  .speaker-image-wrapper-premium {
-    height: 220px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1969,10 +1965,6 @@
     gap: 24px;
     max-width: 320px;
     margin: 30px auto 0 auto;
-  }
-  
-  .speaker-image-wrapper-premium {
-    height: 250px;
   }
 }
 
@@ -2305,6 +2297,7 @@
   }
 }
 
+
 /* Scroll Animations for Sections */
 .anim-section {
   opacity: 0;
@@ -2354,4 +2347,3 @@
 
 /* 10. Info Updates: Fade In */
 .conf-info-update-section.anim-section { transition: opacity 1.2s ease-in; }
-

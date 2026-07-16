@@ -697,43 +697,42 @@ const getEventStatus = (dateStr) => {
           </>
         )}
 
-        <div className="conf-home-hero-content">
-          <h1>{conference.title}</h1>
-          <div className="conf-home-hero-meta">
-            <span className="conf-meta-item">
+        <div className="conf-home-hero-content max-md:px-4">
+          <h1 className="max-md:text-4xl max-md:mb-4">{conference.title}</h1>
+          <div className="conf-home-hero-meta max-md:flex max-md:flex-col max-md:gap-2 max-md:p-3 max-md:bg-black/40 max-md:rounded-lg">
+            <span className="conf-meta-item max-md:text-sm">
               <span className="meta-icon">📅</span> {formattedDate}
             </span>
-            <span className="conf-meta-separator"> @ </span>
-            <span className="conf-meta-item">
+            <span className="conf-meta-separator max-md:hidden"> @ </span>
+            <span className="conf-meta-item max-md:text-sm max-md:text-center">
               <span className="meta-icon">📍</span> {venue}
             </span>
           </div>
-
           {/* Countdown circles */}
-          <div className="conf-countdown">
-            <div className="conf-countdown-item">
-              <span className="conf-countdown-number">{formatNum(timeLeft.days)}</span>
-              <span className="conf-countdown-label">Days</span>
+          <div className="conf-countdown max-md:flex max-md:flex-wrap max-md:justify-center max-md:gap-3 max-md:mt-6">
+            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
+              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.days)}</span>
+              <span className="conf-countdown-label max-md:text-[10px]">Days</span>
             </div>
-            <div className="conf-countdown-item">
-              <span className="conf-countdown-number">{formatNum(timeLeft.hours)}</span>
-              <span className="conf-countdown-label">Hours</span>
+            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
+              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.hours)}</span>
+              <span className="conf-countdown-label max-md:text-[10px]">Hours</span>
             </div>
-            <div className="conf-countdown-item">
-              <span className="conf-countdown-number">{formatNum(timeLeft.minutes)}</span>
-              <span className="conf-countdown-label">Mins</span>
+            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
+              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.minutes)}</span>
+              <span className="conf-countdown-label max-md:text-[10px]">Mins</span>
             </div>
-            <div className="conf-countdown-item">
-              <span className="conf-countdown-number">{formatNum(timeLeft.seconds)}</span>
-              <span className="conf-countdown-label">Secs</span>
+            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
+              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.seconds)}</span>
+              <span className="conf-countdown-label max-md:text-[10px]">Secs</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="conf-about-section anim-section" style={{ padding: "80px 0", backgroundColor: "#ffffff" }}>
-        <div className="container conf-about-grid">
+      <section className="conf-about-section anim-section bg-white px-4 md:px-0 py-12 md:py-20 max-md:py-12">
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center max-md:grid-cols-1 max-md:px-4">
           <div className="conf-about-text">
             <h2 style={{ fontSize: "32px", color: "#0f172a", fontWeight: "800", marginBottom: "25px", position: "relative", display: "inline-block" }}>
               About the Congress
@@ -745,27 +744,25 @@ const getEventStatus = (dateStr) => {
             </div>
 
             {/* Custom UI Highlights Grid */}
-            <div className="conf-about-highlights" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginTop: "35px" }}>
-              <div className="conf-highlight-card" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)", transition: "transform 0.3s ease" }}>
-                <div style={{ fontSize: "28px", marginBottom: "12px" }}>🔬</div>
-                <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Scientific tracks</h4>
-                <p style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Deep dive into state-of-the-art presentations and panel reviews.</p>
+            <div className="conf-about-highlights grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-8 max-md:grid-cols-1 max-md:gap-4" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginTop: "35px" }}>
+              <div className="conf-highlight-card p-6 bg-rose-50/50 border-l-4 border-rose-500 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)" }}>
+                <div className="text-3xl mb-3" style={{ fontSize: "28px", marginBottom: "12px" }}>🔬</div>
+                <h4 className="m-0 mb-2 text-[17px] font-bold text-slate-800" style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Scientific tracks</h4>
+                <p className="m-0 text-[13.5px] text-slate-500 leading-relaxed" style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Deep dive into state-of-the-art presentations and panel reviews.</p>
               </div>
 
-              <div className="conf-highlight-card" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)", transition: "transform 0.3s ease" }}>
-                <div style={{ fontSize: "28px", marginBottom: "12px" }}>🌐</div>
-                <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Global Reach</h4>
-                <p style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Connect and collaborate with leading minds from 50+ countries.</p>
+              <div className="conf-highlight-card p-6 bg-rose-50/50 border-l-4 border-rose-500 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)" }}>
+                <div className="text-3xl mb-3" style={{ fontSize: "28px", marginBottom: "12px" }}>🌐</div>
+                <h4 className="m-0 mb-2 text-[17px] font-bold text-slate-800" style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Global Reach</h4>
+                <p className="m-0 text-[13.5px] text-slate-500 leading-relaxed" style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Connect and collaborate with leading minds from 50+ countries.</p>
               </div>
 
-              <div className="conf-highlight-card" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)", transition: "transform 0.3s ease" }}>
-                <div style={{ fontSize: "28px", marginBottom: "12px" }}>🏆</div>
-                <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Opportunities</h4>
-                <p style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Fast-tracked indexed journal publications and oral presentation slots.</p>
+              <div className="conf-highlight-card p-6 bg-rose-50/50 border-l-4 border-rose-500 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300" style={{ padding: "24px", background: "var(--conf-bg-accent, rgba(231, 76, 60, 0.04))", borderLeft: "4px solid var(--conf-primary)", borderRadius: "8px", boxShadow: "0 4px 20px rgba(0,0,0,0.02)" }}>
+                <div className="text-3xl mb-3" style={{ fontSize: "28px", marginBottom: "12px" }}>🏆</div>
+                <h4 className="m-0 mb-2 text-[17px] font-bold text-slate-800" style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: "700", color: "#1e293b" }}>Opportunities</h4>
+                <p className="m-0 text-[13.5px] text-slate-500 leading-relaxed" style={{ margin: 0, fontSize: "13.5px", color: "#64748b", lineHeight: "1.5" }}>Fast-tracked indexed journal publications and oral presentation slots.</p>
               </div>
             </div>
-
-
           </div>
           <div className="conf-about-image" style={{ alignSelf: "start", marginTop: "15px" }}>
             <img
@@ -1009,7 +1006,22 @@ const getEventStatus = (dateStr) => {
             <div className="conf-advisory-grid-redesigned">
               {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
                 <div key={member.id} className="advisory-card-premium">
-                  <div className="advisory-avatar-wrap-premium">
+                  <div 
+                    className="advisory-avatar-wrap-premium"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      if (member.bio) {
+                        setSelectedBioSpeaker({
+                          name: member.name,
+                          designation: member.designation,
+                          org: `${member.organization}, ${member.country}`,
+                          photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                          bio: member.bio,
+                          research: member.researchExpertise
+                        });
+                      }
+                    }}
+                  >
                     <img
                       src={member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
                       alt={member.name}
@@ -1065,7 +1077,21 @@ const getEventStatus = (dateStr) => {
               <div className="conf-speakers-grid-redesigned">
                 {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => (
                   <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
-                    <div className="speaker-image-wrapper-premium">
+                    <div 
+                      className="speaker-image-wrapper-premium"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setSelectedBioSpeaker({
+                        name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                        designation: spk.designation,
+                        org: `${spk.affiliation}, ${spk.country}`,
+                        photoUrl: spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg"),
+                        bio: spk.bio,
+                        linkedin: spk.linkedin,
+                        orcid: spk.orcid,
+                        website: spk.website,
+                        research: spk.researchAreas
+                      })}
+                    >
                       <img
                         src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
                         alt={spk.name}

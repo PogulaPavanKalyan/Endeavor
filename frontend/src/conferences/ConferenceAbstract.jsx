@@ -48,6 +48,7 @@ const ConferenceAbstract = () => {
     <section className="conf-subpage-section">
       <div className="conf-subpage-container conf-form-card">
         <h2 className="conf-page-title">Submit Abstract Proposal</h2>
+
         {success ? (
           <div className="abstract-success-container">
             <p className="abstract-success-title">

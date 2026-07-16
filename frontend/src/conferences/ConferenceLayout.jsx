@@ -18,10 +18,19 @@ const ConferenceLayout = () => {
   const activeConfId = subdomain || routeId || "generic";
 
   useEffect(() => {
-    // Scroll to top on route change
-    window.scrollTo(0, 0);
+    if (location.hash) {
+      setTimeout(() => {
+        const id = location.hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
     setMenuOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     document.body.classList.add("conf-portal-body-active");
@@ -393,7 +402,7 @@ const ConferenceLayout = () => {
           <div className="saas-footer-brand-col">
             <div className="saas-footer-links-row">
               <Link to={getSubRoutePath("register")} className="saas-pill-link">🤝 Sponsorship</Link>
-              <Link to={getSubRoutePath("submit-abstract")} className="saas-pill-link">📄 Guidelines</Link>
+              <Link to={getSubRoutePath("guidelines")} className="saas-pill-link">📄 Guidelines</Link>
               <Link to={getSubRoutePath("contact")} className="saas-pill-link">✉️ Contact</Link>
               <Link to={getSubRoutePath("privacy")} className="saas-pill-link">🛡️ Privacy</Link>
             </div>

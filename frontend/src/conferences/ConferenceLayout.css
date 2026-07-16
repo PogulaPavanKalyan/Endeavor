@@ -51,6 +51,7 @@ body.conf-portal-body-active {
   background-color: rgba(20, 20, 20, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 0;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1000;

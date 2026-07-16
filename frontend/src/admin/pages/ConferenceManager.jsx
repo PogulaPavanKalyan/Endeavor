@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
+import { DEFAULT_GUIDELINES } from '../../utils/constants';
 
 const STATUS_OPTIONS = ['ALL', 'PUBLISHED', 'DRAFT', 'ARCHIVED'];
 
@@ -39,7 +40,7 @@ const ConferenceManager = () => {
     metaTitle: '', metaDescription: '',
     scientificSessions: [], pricingTiers: [],
     seriesId: '', year: new Date().getFullYear(),
-    showCommittee: true
+    showCommittee: true, guidelines: DEFAULT_GUIDELINES
   });
 
   // Speakers & Sessions for Step 2 & 3
@@ -148,7 +149,8 @@ const ConferenceManager = () => {
         pricingTiers: conf.pricingTiers || [],
         seriesId: conf.series?.id || '',
         year: conf.year || new Date().getFullYear(),
-        showCommittee: conf.showCommittee !== false
+        showCommittee: conf.showCommittee !== false,
+        guidelines: conf.guidelines || DEFAULT_GUIDELINES
       });
       
       // Fetch fresh details with photos
@@ -172,7 +174,7 @@ const ConferenceManager = () => {
         metaTitle: '', metaDescription: '',
         scientificSessions: [], pricingTiers: [],
         seriesId: '', year: new Date().getFullYear(),
-        showCommittee: true
+        showCommittee: true, guidelines: DEFAULT_GUIDELINES
       });
     }
     setShowModal(true);
@@ -944,6 +946,13 @@ const ConferenceManager = () => {
                     <label className="admin-form-label">Description</label>
                     <textarea className="admin-form-textarea" placeholder="Conference description..." value={formData.description}
                       onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Submission Guidelines (Markdown/HTML supported)</label>
+                    <textarea className="admin-form-textarea" style={{ minHeight: '150px' }} placeholder="Enter submission guidelines here..." value={formData.guidelines}
+                      onChange={e => setFormData({ ...formData, guidelines: e.target.value })} />
+                    <span className="admin-form-hint">These will appear on the Submit Abstract page.</span>
                   </div>
 
                   <div className="admin-form-group">

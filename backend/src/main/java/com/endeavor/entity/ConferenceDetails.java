@@ -74,6 +74,9 @@ public class ConferenceDetails {
     @Column(columnDefinition = "TEXT")
     private String shortDescription;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String guidelines;
+
     private String aboutImage;
 
 
@@ -307,6 +310,14 @@ public class ConferenceDetails {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public String getGuidelines() {
+        return guidelines;
+    }
+
+    public void setGuidelines(String guidelines) {
+        this.guidelines = guidelines;
     }
 
     public Integer getYear() {

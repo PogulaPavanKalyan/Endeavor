@@ -47,6 +47,8 @@ import ConferenceBrochure from "./conferences/ConferenceBrochure";
 import ConferenceSpeakers from "./conferences/ConferenceSpeakers";
 import ConferenceProgram from "./conferences/ConferenceProgram";
 import ConferenceAbstract from "./conferences/ConferenceAbstract";
+import ConferenceGuidelines from "./conferences/ConferenceGuidelines";
+import { ConferencePrivacy, ConferenceTerms, ConferenceCookies } from "./conferences/ConferencePolicies";
 import ConferenceRegister from "./conferences/ConferenceRegister";
 import ConferenceVenue from "./conferences/ConferenceVenue";
 import ConferenceContact from "./conferences/ConferenceContact";
@@ -73,6 +75,10 @@ function App() {
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
             <Route path="tracks" element={<ConferenceTracks />} />
+            <Route path="guidelines" element={<ConferenceGuidelines />} />
+            <Route path="privacy" element={<ConferencePrivacy />} />
+            <Route path="terms" element={<ConferenceTerms />} />
+            <Route path="cookies" element={<ConferenceCookies />} />
             <Route path="submit-abstract" element={<ConferenceAbstract />} />
             <Route path="register" element={<ConferenceRegister />} />
             <Route path="venue" element={<ConferenceVenue />} />
@@ -99,6 +105,10 @@ function App() {
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
             <Route path="tracks" element={<ConferenceTracks />} />
+            <Route path="guidelines" element={<ConferenceGuidelines />} />
+            <Route path="privacy" element={<ConferencePrivacy />} />
+            <Route path="terms" element={<ConferenceTerms />} />
+            <Route path="cookies" element={<ConferenceCookies />} />
             <Route path="submit-abstract" element={<ConferenceAbstract />} />
             <Route path="register" element={<ConferenceRegister />} />
             <Route path="venue" element={<ConferenceVenue />} />
