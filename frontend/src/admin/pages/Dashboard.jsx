@@ -54,14 +54,16 @@ const Dashboard = () => {
 
       {/* Metric Cards */}
       <div className="admin-metrics-grid">
-        <div className="metric-card" onClick={() => navigate('/admin/conferences')}>
-          <div className="metric-icon metric-icon-primary">🏢</div>
-          <div className="metric-content">
-            <div className="metric-label">Total Conferences</div>
-            <div className="metric-value">{totalConfs}</div>
-            <div className="metric-trend metric-trend-up">↑ {publishedConfs} active</div>
+        {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+          <div className="metric-card" onClick={() => navigate('/admin/conferences')}>
+            <div className="metric-icon metric-icon-primary">🏢</div>
+            <div className="metric-content">
+              <div className="metric-label">Total Conferences</div>
+              <div className="metric-value">{totalConfs}</div>
+              <div className="metric-trend metric-trend-up">↑ {publishedConfs} active</div>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="metric-card" onClick={() => navigate('/admin/speakers')}>
           <div className="metric-icon metric-icon-success">🎙️</div>
@@ -87,13 +89,15 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="metric-icon metric-icon-primary">📅</div>
-          <div className="metric-content">
-            <div className="metric-label">Upcoming</div>
-            <div className="metric-value">{upcomingConfs}</div>
+        {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+          <div className="metric-card">
+            <div className="metric-icon metric-icon-primary">📅</div>
+            <div className="metric-content">
+              <div className="metric-label">Upcoming</div>
+              <div className="metric-value">{upcomingConfs}</div>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="metric-card" onClick={() => navigate('/admin/contacts')}>
           <div className="metric-icon metric-icon-danger">✉️</div>
@@ -124,9 +128,10 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Diagnostics Card */}
-          <div className="admin-card">
-            <div className="dashboard-section-title">🔍 System Diagnostics & Health</div>
+          {/* Diagnostics Card - Super Admin Only */}
+          {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+            <div className="admin-card">
+              <div className="dashboard-section-title">🔍 System Diagnostics & Health</div>
             {loadingDiag ? (
               <div style={{ padding: '20px', textAlign: 'center', color: 'var(--admin-text-muted)' }}>Loading diagnostics...</div>
             ) : diagnostics ? (
@@ -261,6 +266,7 @@ const Dashboard = () => {
               <div style={{ padding: '20px', textAlign: 'center', color: 'var(--admin-text-muted)' }}>No diagnostics data available.</div>
             )}
           </div>
+          )}
         </div>
 
         {/* Right Column: Quick Actions + Upcoming Conferences */}
@@ -268,9 +274,11 @@ const Dashboard = () => {
           <div className="admin-card">
             <div className="dashboard-section-title">⚡ Quick Actions</div>
             <div className="quick-actions-grid">
-              <button className="quick-action-btn" onClick={() => navigate('/admin/conferences')}>
-                <span>🏢</span><span>New Conference</span>
-              </button>
+              {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+                <button className="quick-action-btn" onClick={() => navigate('/admin/conferences')}>
+                  <span>🏢</span><span>New Conference</span>
+                </button>
+              )}
               <button className="quick-action-btn" onClick={() => navigate('/admin/speakers')}>
                 <span>🎙️</span><span>Add Speaker</span>
               </button>
@@ -283,6 +291,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
           <div className="admin-card">
             <div className="dashboard-section-title">📅 Upcoming Conferences</div>
             {conferences.filter(c => c.startDate && new Date(c.startDate) > new Date()).length === 0 ? (
@@ -326,6 +335,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </div>

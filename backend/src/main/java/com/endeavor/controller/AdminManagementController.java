@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.endeavor.entity.Users;
 import com.endeavor.entity.Role;
@@ -30,6 +31,15 @@ public class AdminManagementController {
     @Autowired
     private AdminActivityLogService activityLogService;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/fix-db")
+    public ResponseEntity<?> fixDb() {
+        jdbcTemplate.execute("ALTER TABLE users MODIFY COLUMN role VARCHAR(255);");
+        return ResponseEntity.ok("Database fixed");
+    }
+
     // POST /api/admin/create-admin
     @PostMapping("/create-admin")
     public ResponseEntity<?> createAdmin(@RequestBody Users adminDetails, Principal principal, HttpServletRequest request) {
@@ -46,6 +56,10 @@ public class AdminManagementController {
         Users newAdmin = new Users();
         newAdmin.setUsername(adminDetails.getUsername());
         newAdmin.setPassword(passwordEncoder.encode(adminDetails.getPassword()));
+        newAdmin.setName(adminDetails.getName());
+        newAdmin.setEmail(adminDetails.getEmail());
+        newAdmin.setConferenceId(adminDetails.getConferenceId());
+        newAdmin.setForcePasswordChange(true); // Force password change on first login
 
         // Default role is ADMIN if none specified
         Role role = adminDetails.getRole();
@@ -101,6 +115,12 @@ public class AdminManagementController {
         if (adminDetails.getRole() != null) {
             existingUser.setRole(adminDetails.getRole());
         }
+
+        if (adminDetails.getName() != null) existingUser.setName(adminDetails.getName());
+        if (adminDetails.getEmail() != null) existingUser.setEmail(adminDetails.getEmail());
+        if (adminDetails.getConferenceId() != null) existingUser.setConferenceId(adminDetails.getConferenceId());
+        // forcePasswordChange might be toggled by Super Admin to force reset
+        if (adminDetails.isForcePasswordChange()) existingUser.setForcePasswordChange(true);
 
         Users updated = userRepo.save(existingUser);
 

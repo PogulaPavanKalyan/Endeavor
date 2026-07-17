@@ -19,6 +19,11 @@ public class Users {
     private String username;
     private String password;
 
+    private String name;
+    private String email;
+    private Long conferenceId; // For CONFERENCE_ADMIN
+    private boolean forcePasswordChange;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -61,5 +66,37 @@ public class Users {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Long getConferenceId() {
+        return conferenceId;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    public boolean isForcePasswordChange() {
+        return forcePasswordChange;
+    }
+
+    public void setForcePasswordChange(boolean forcePasswordChange) {
+        this.forcePasswordChange = forcePasswordChange;
     }
 }

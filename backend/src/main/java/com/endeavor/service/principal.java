@@ -36,9 +36,15 @@ public class principal implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		
 		return user.getUsername();
 	}
 
+	public Long getConferenceId() {
+		return user.getConferenceId();
+	}
+
+	public String getRoleName() {
+		return user.getRole() != null ? user.getRole().name() : "USER";
+	}
 	
 }

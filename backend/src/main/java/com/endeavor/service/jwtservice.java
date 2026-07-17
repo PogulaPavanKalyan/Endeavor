@@ -46,6 +46,9 @@ public class jwtservice {
 	public String generateToken(String username) {
 		Users u=userRepo.findByUsername(username);
 		Map<String, Object>claims=new HashMap<String, Object>();
+		if (u != null && u.getConferenceId() != null) {
+			claims.put("conferenceId", u.getConferenceId());
+		}
 		
 		return Jwts.builder()
 				.claims()
@@ -68,6 +71,17 @@ public class jwtservice {
 	public String extractUsername(String token) {
 		
 		return extractClaims(token,Claims::getSubject);
+	}
+
+	public Long extractConferenceId(String token) {
+		try {
+			Claims claims = extractClaims(token);
+			Object confId = claims.get("conferenceId");
+			if (confId != null) {
+				return Long.valueOf(confId.toString());
+			}
+		} catch (Exception e) {}
+		return null;
 	}
 	
 	

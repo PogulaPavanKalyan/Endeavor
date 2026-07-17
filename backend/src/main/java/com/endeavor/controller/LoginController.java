@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.endeavor.dto.LoginDTO;
 import com.endeavor.entity.Users;
 import com.endeavor.service.Service;
+import com.endeavor.repo.UserRepo;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,12 +23,21 @@ public class LoginController {
     @Autowired
     private Service service;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDto) {
         String token = service.verify(loginDto);
         if (token != null) {
-            Map<String, String> response = new HashMap<>();
+            Users user = userRepo.findByUsername(loginDto.getUsername());
+            Map<String, Object> response = new HashMap<>();
             response.put("token", token);
+            if (user != null) {
+                response.put("role", user.getRole() != null ? user.getRole().name() : "USER");
+                response.put("conferenceId", user.getConferenceId());
+                response.put("forcePasswordChange", user.isForcePasswordChange());
+            }
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");

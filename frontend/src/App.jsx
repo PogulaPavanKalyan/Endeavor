@@ -12,10 +12,12 @@ import Register from "./Home/Register";
 import WebinarRegister from "./Home/WebinarRegister";
 import AbstractSubmission from "./Home/AbstractSubmission";
 import AdminLogin from "./admin/AdminLogin";
+import ConferenceAdminLogin from "./admin/ConferenceAdminLogin";
 
 // Admin Re-architecture
 import { AdminProvider } from "./admin/AdminContext";
 import AdminLayout from "./admin/AdminLayout";
+import ConferenceAdminLayout from "./admin/ConferenceAdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import ConferenceManager from "./admin/pages/ConferenceManager";
 import SpeakerManager from "./admin/pages/SpeakerManager";
@@ -40,6 +42,7 @@ import LogsManager from "./admin/pages/LogsManager";
 import WebinarManager from "./admin/pages/WebinarManager";
 import ConferenceSectionManager from "./admin/pages/ConferenceSectionManager";
 import ProgramManager from "./admin/pages/ProgramManager";
+import AdminUsersManager from "./admin/pages/AdminUsersManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -86,6 +89,31 @@ function App() {
             <Route path="suggest-speaker" element={<ConferenceSuggestSpeaker />} />
             <Route path=":slug" element={<DynamicConferencePage />} />
           </Route>
+          {/* Admin Routes on Subdomain */}
+          <Route path="/admin/login" element={<ConferenceAdminLogin />} />
+          <Route path="/admin" element={<AdminProvider><ConferenceAdminLayout /></AdminProvider>}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="speakers" element={<SpeakerManager />} />
+            <Route path="advisory-board" element={<AdvisoryBoardManager />} />
+            <Route path="agenda" element={<AgendaManager />} />
+            <Route path="tracks" element={<TrackManager />} />
+            <Route path="sessions" element={<SessionManager />} />
+            <Route path="committee" element={<CommitteeManager />} />
+            <Route path="sections" element={<ConferenceSectionManager />} />
+            <Route path="venue" element={<VenueManager />} />
+            <Route path="navbar" element={<NavigationManager />} />
+            <Route path="gallery" element={<GalleryManager />} />
+            <Route path="registrations" element={<RegistrationManager />} />
+            <Route path="abstracts" element={<AbstractManager />} />
+            <Route path="contacts" element={<ContactManager />} />
+            <Route path="brochures" element={<BrochureManager />} />
+            <Route path="sponsors" element={<SponsorManager />} />
+            <Route path="webinars" element={<WebinarManager />} />
+            <Route path="program" element={<ProgramManager />} />
+            <Route path="users" element={<AdminUsersManager />} />
+          </Route>
+
           {/* Subdomain 404 route */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -156,6 +184,7 @@ function App() {
             <Route path="logs" element={<LogsManager />} />
             <Route path="webinars" element={<WebinarManager />} />
             <Route path="program" element={<ProgramManager />} />
+            <Route path="users" element={<AdminUsersManager />} />
           </Route>
 
           {/* Main Website 404 route */}

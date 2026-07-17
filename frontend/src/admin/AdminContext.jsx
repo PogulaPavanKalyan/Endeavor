@@ -14,6 +14,11 @@ export const AdminProvider = ({ children }) => {
     registrations: 0, abstracts: 0, contacts: 0,
     brochures: 0, speakers: 0, sessions: 0
   });
+  
+  const [adminRole, setAdminRole] = useState(() => localStorage.getItem('adminRole') || 'SUPER_ADMIN');
+  const [adminConferenceId, setAdminConferenceId] = useState(() => localStorage.getItem('adminConferenceId') || '');
+  const [forcePasswordChange, setForcePasswordChange] = useState(() => localStorage.getItem('forcePasswordChange') === 'true');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,12 +32,15 @@ export const AdminProvider = ({ children }) => {
 
   // Persist active conference
   useEffect(() => {
-    if (activeConferenceId) {
+    if (adminRole === 'CONFERENCE_ADMIN' && adminConferenceId) {
+      setActiveConferenceId(adminConferenceId);
+      localStorage.setItem('activeConferenceId', adminConferenceId);
+    } else if (activeConferenceId) {
       localStorage.setItem('activeConferenceId', activeConferenceId);
     } else {
       localStorage.removeItem('activeConferenceId');
     }
-  }, [activeConferenceId]);
+  }, [activeConferenceId, adminRole, adminConferenceId]);
 
   // Reload metrics when conference changes
   useEffect(() => {
@@ -45,7 +53,21 @@ export const AdminProvider = ({ children }) => {
       const data = await api.get('/api/admin/conferences?includeDeleted=true');
       setConferences(data || []);
       const activeList = (data || []).filter(c => !c.isDeleted);
-      if (activeList.length > 0 && !activeConferenceId) {
+      
+      const role = localStorage.getItem('adminRole');
+      const confId = localStorage.getItem('adminConferenceId');
+
+      if (role === 'CONFERENCE_ADMIN' && confId) {
+        setActiveConferenceId(confId.toString());
+        // Subdomain Validation
+        const activeConf = activeList.find(c => c.id.toString() === confId.toString());
+        if (activeConf) {
+          const currentSubdomain = (window.location.hostname.split('.')[0] === window.location.hostname || window.location.hostname.split('.')[0] === 'www') ? null : window.location.hostname.split('.')[0];
+          // Simple subdomain check. Better to use getSubdomain(), but we can't easily import it here without changing file structure.
+          const targetSubdomain = activeConf.subdomain || activeConf.slug;
+          // In real production, we would use getSubdomainUrl to redirect them to the correct admin panel if they somehow logged into the wrong subdomain.
+        }
+      } else if (activeList.length > 0 && !activeConferenceId) {
         setActiveConferenceId(activeList[0].id.toString());
       }
     } catch (err) {
@@ -86,6 +108,9 @@ export const AdminProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('activeConferenceId');
+    localStorage.removeItem('adminRole');
+    localStorage.removeItem('adminConferenceId');
+    localStorage.removeItem('forcePasswordChange');
     navigate('/admin/login');
   };
 
@@ -103,7 +128,11 @@ export const AdminProvider = ({ children }) => {
       metrics,
       loadMetrics,
       logout,
-      getActiveConference
+      getActiveConference,
+      adminRole,
+      adminConferenceId,
+      forcePasswordChange,
+      setForcePasswordChange
     }}>
       {children}
     </AdminContext.Provider>

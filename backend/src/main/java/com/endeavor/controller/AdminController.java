@@ -871,8 +871,16 @@ public class AdminController {
 
     @GetMapping("/conferences")
     public ResponseEntity<List<ConferenceDetails>> getConferencesAdmin(
-            @RequestParam(required = false, defaultValue = "false") boolean includeDeleted) {
-        return ResponseEntity.ok(conferenceDetailsService.getAllConferencesAdmin(includeDeleted));
+            @RequestParam(required = false, defaultValue = "false") boolean includeDeleted,
+            @RequestParam(required = false) Long conferenceId) {
+        
+        List<ConferenceDetails> list = conferenceDetailsService.getAllConferencesAdmin(includeDeleted);
+        Long tenantId = com.endeavor.service.SecurityUtils.getTenantConferenceId(conferenceId);
+        
+        if (tenantId != null) {
+            list = list.stream().filter(c -> c.getId().equals(tenantId)).toList();
+        }
+        return ResponseEntity.ok(list);
     }
 
     @PutMapping("/conference-details/{id}/restore")

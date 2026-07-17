@@ -1,0 +1,149 @@
+.conf-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.conf-login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 60%);
+  animation: rotate 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.conf-login-container {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.conf-login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.conf-login-header h2 {
+  font-size: 1.75rem;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.conf-login-header p {
+  color: #4a5568;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.conf-login-error {
+  background: #fff5f5;
+  color: #c53030;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  border: 1px solid #fed7d7;
+  text-align: center;
+  font-weight: 500;
+}
+
+.conf-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.conf-form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.conf-form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  font-size: 1rem;
+  color: #1a202c;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.conf-form-group input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.conf-btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(43, 108, 176, 0.2);
+}
+
+.conf-btn-submit:hover:not(:disabled) {
+  background: #2c5282;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(43, 108, 176, 0.3);
+}
+
+.conf-btn-submit:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.conf-login-footer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.conf-login-footer a {
+  color: #4299e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.conf-login-footer a:hover {
+  color: #2b6cb0;
+  text-decoration: underline;
+}

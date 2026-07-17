@@ -18,12 +18,13 @@ const getHeaders = (isMultipart = false) => {
   return headers;
 };
 
-const handleResponse = async (response) => {
+const handleResponse = async (response, url) => {
   if (response.status === 401) {
+    console.error('API 401 Unauthorized on URL:', url);
     // If token expired or invalid, clear storage and redirect if it's admin route
     localStorage.removeItem('token');
     if (window.location.pathname.startsWith('/admin')) {
-      window.location.href = '/admin/login';
+      window.location.href = '/admin/login' + window.location.search;
     }
     const errorText = await response.text();
     throw new Error(errorText || 'Unauthorized');
@@ -57,7 +58,7 @@ export const api = {
       method: 'GET',
       headers: getHeaders(),
     });
-    return handleResponse(response);
+    return handleResponse(response, url);
   },
 
   post: async (url, data) => {
@@ -66,7 +67,7 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    return handleResponse(response);
+    return handleResponse(response, url);
   },
 
   postMultipart: async (url, formData) => {
@@ -75,7 +76,7 @@ export const api = {
       headers: getHeaders(true),
       body: formData,
     });
-    return handleResponse(response);
+    return handleResponse(response, url);
   },
 
   put: async (url, data) => {
@@ -84,7 +85,7 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    return handleResponse(response);
+    return handleResponse(response, url);
   },
 
   delete: async (url) => {
@@ -92,7 +93,7 @@ export const api = {
       method: 'DELETE',
       headers: getHeaders(),
     });
-    return handleResponse(response);
+    return handleResponse(response, url);
   },
 };
 

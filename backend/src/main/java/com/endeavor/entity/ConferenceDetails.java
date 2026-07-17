@@ -53,6 +53,9 @@ public class ConferenceDetails {
     @Column(unique = true, nullable = false)
     private String slug;
 
+    @Column(unique = true)
+    private String subdomain;
+
     private String status = "PUBLISHED"; // DRAFT, PUBLISHED, ARCHIVED
     private String themePrimary = "#e74c3c";
     private String themePrimaryHover = "#c0392b";
@@ -214,6 +217,14 @@ public class ConferenceDetails {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public String getSubdomain() {
+        return subdomain;
+    }
+
+    public void setSubdomain(String subdomain) {
+        this.subdomain = subdomain;
     }
 
     public String getStatus() {

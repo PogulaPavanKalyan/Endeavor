@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 import { getSubdomain } from "../utils/subdomain";
-import "./AdminLogin.css";
+import "./ConferenceAdminLogin.css";
 
-const AdminLogin = () => {
+const ConferenceAdminLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,19 +47,17 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-overlay"></div>
-      <div className="login-card">
-        <div className="login-header">
-          <img src="/logo.png" alt="Intelevo Research" className="login-logo" />
-          <h2>Admin Console</h2>
-          <p>Sign in to configure speakers, schedules, and view submissions.</p>
+    <div className="conf-login-page">
+      <div className="conf-login-container">
+        <div className="conf-login-header">
+          <h2>Conference Admin</h2>
+          <p>Sign in to manage your specific conference workspace.</p>
         </div>
 
-        {error && <div className="login-error-alert">{error}</div>}
+        {error && <div className="conf-login-error">{error}</div>}
 
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="login-field-group">
+        <form onSubmit={handleLogin} className="conf-form">
+          <div className="conf-form-group">
             <label>Username</label>
             <input
               type="text"
@@ -70,7 +68,7 @@ const AdminLogin = () => {
             />
           </div>
 
-          <div className="login-field-group">
+          <div className="conf-form-group">
             <label>Password</label>
             <input
               type="password"
@@ -81,12 +79,12 @@ const AdminLogin = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className="btn-login-submit">
-            {loading ? "Authenticating..." : "Access Dashboard"}
+          <button type="submit" disabled={loading} className="conf-btn-submit">
+            {loading ? "Authenticating..." : "Access Workspace"}
           </button>
         </form>
 
-        <div className="login-footer">
+        <div className="conf-login-footer">
           <a href="/">&larr; Return to Homepage</a>
         </div>
       </div>
@@ -94,4 +92,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default ConferenceAdminLogin;
