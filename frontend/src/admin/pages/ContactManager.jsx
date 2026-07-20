@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const ContactManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,7 +33,7 @@ const ContactManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this message?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this message?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

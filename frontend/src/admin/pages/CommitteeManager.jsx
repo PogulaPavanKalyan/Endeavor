@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const CommitteeManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -148,7 +151,7 @@ const CommitteeManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this member?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this member?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/committee/${id}`);
@@ -163,7 +166,7 @@ const CommitteeManager = () => {
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!window.confirm(`Are you sure you want to delete all ${selectedIds.length} selected members?`)) return;
+    if (!(await confirmDialog(`Are you sure you want to delete all ${selectedIds.length} selected members?`))) return;
     setLoading(true);
     setError("");
     try {

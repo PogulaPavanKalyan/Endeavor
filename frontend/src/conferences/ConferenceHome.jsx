@@ -662,9 +662,9 @@ const getEventStatus = (dateStr) => {
   };
 
   return (
-    <div className="conf-home-portal">
+    <div className="conf-home-portal max-w-[100vw] overflow-x-hidden">
       {/* Hero Section */}
-      <section className="conf-home-hero anim-section">
+      <section className="conf-home-hero anim-section max-md:min-h-[100svh]">
         <div className="conf-home-hero-slider">
           {heroImages.map((imgUrl, idx) => (
             <div
@@ -802,7 +802,7 @@ const getEventStatus = (dateStr) => {
                 </p>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "20px 40px" }}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-10">
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {leftColumnTracks.map((track, index) => (
                     <Link 
@@ -902,7 +902,7 @@ const getEventStatus = (dateStr) => {
               </div>
 
               {/* Timeline List */}
-              <div className="dates-timeline-container">
+              <div className="dates-timeline-container max-md:flex max-md:flex-col max-md:gap-4">
                 {activeDates.map((item, idx) => {
                   const status = getEventStatus(item.eventDate);
                   const formattedDate = new Date(item.eventDate).toLocaleDateString("en-US", {
@@ -914,7 +914,7 @@ const getEventStatus = (dateStr) => {
                   return (
                     <div
                       key={item.id || idx}
-                      className={`timeline-row ${status} ${item.isHighlighted ? 'highlighted' : ''}`}
+                      className={`timeline-row ${status} ${item.isHighlighted ? 'highlighted' : ''} max-md:flex-col max-md:items-start max-md:gap-3`}
                     >
                       <div className="timeline-col-event">
                         <span className="event-emoji">{getEventEmoji(item.eventTitle)}</span>
@@ -925,7 +925,7 @@ const getEventStatus = (dateStr) => {
                           )}
                         </div>
                       </div>
-                      <div className="timeline-col-date-badge">
+                      <div className="timeline-col-date-badge max-md:w-full max-md:justify-between max-md:mt-2 max-md:items-center">
                         <div className="event-date-display">{formattedDate}</div>
                         <div className="status-badge-container">
                           {status === 'completed' && <span className="badge badge-completed">Completed</span>}
@@ -1003,7 +1003,7 @@ const getEventStatus = (dateStr) => {
           </div>
 
           {advisoryBoard && advisoryBoard.filter(m => m.isActive !== false).length > 0 ? (
-            <div className="conf-advisory-grid-redesigned">
+            <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
               {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
                 <div key={member.id} className="advisory-card-premium">
                   <div 
@@ -1074,7 +1074,7 @@ const getEventStatus = (dateStr) => {
 
           {speakersList && speakersList.filter(s => s.isActive !== false).length > 0 ? (
             <>
-              <div className="conf-speakers-grid-redesigned">
+              <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
                 {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => (
                   <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
                     <div 
@@ -1112,7 +1112,7 @@ const getEventStatus = (dateStr) => {
                       )}
 
 
-                      <button type="button" className="btn-read-bio-premium" onClick={() => setSelectedBioSpeaker({
+                      <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
                         name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
                         designation: spk.designation,
                         org: `${spk.affiliation}, ${spk.country}`,
@@ -1133,8 +1133,8 @@ const getEventStatus = (dateStr) => {
                 <div style={{ textAlign: "center", marginTop: "40px" }}>
                   <button
                     onClick={() => setShowAllSpeakers(!showAllSpeakers)}
-                    className="btn-print-program-premium"
-                    style={{ padding: "12px 30px", fontSize: "14px" }}
+                    className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
+                    style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
                   >
                     {showAllSpeakers ? "View Less" : "View All Speakers"}
                   </button>
@@ -1163,7 +1163,7 @@ const getEventStatus = (dateStr) => {
           </div>
 
           {committee && committee.filter(c => c.isActive !== false).length > 0 ? (
-            <div className="conf-advisory-grid-redesigned">
+            <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
               {(() => {
                 const roleOrder = [
                   "Chair",
@@ -1241,7 +1241,7 @@ const getEventStatus = (dateStr) => {
 
           {agendaDays && agendaDays.length > 0 ? (
             <React.Fragment>
-              <div className="classic-agenda-tabs">
+              <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide">
                 {agendaDays.map((d) => (
                   <button
                     type="button"
@@ -1267,9 +1267,9 @@ const getEventStatus = (dateStr) => {
                 });
 
                 return (
-                  <div className="classic-agenda-layout">
+                  <div className="classic-agenda-layout max-md:flex max-md:flex-col">
                     {/* Left Timeline Anchor */}
-                    <div className="classic-timeline-sidebar no-print">
+                    <div className="classic-timeline-sidebar no-print max-md:w-full max-md:flex max-md:flex-row max-md:items-center max-md:justify-between max-md:mb-6 max-md:border-none">
                       <div className="classic-timeline-day">
                         DAY {activeD?.dayNumber} AGENDA<br />
                         <span style={{ fontWeight: 'normal', fontSize: '13px', color: '#64748b' }}>
@@ -1307,8 +1307,8 @@ const getEventStatus = (dateStr) => {
                               <div className="classic-hall-header">Day {activeD?.dayNumber} - {getDayDateString(activeD?.dayNumber)}</div>
                               <div className="classic-hall-header">{hall}</div>
 
-                              <table className="classic-agenda-table">
-                                <tbody>
+                              <table className="classic-agenda-table max-md:block">
+                                <tbody className="max-md:block">
                                   {hallSessions.map(slot => {
                                     const isMerged = !slot.speakerName || slot.sessionType?.toLowerCase().includes('break') || slot.sessionType?.toLowerCase().includes('registration') || slot.sessionType?.toLowerCase().includes('opening');
 
@@ -1316,7 +1316,7 @@ const getEventStatus = (dateStr) => {
                                       const isPurple = slot.sessionType?.toLowerCase().includes('break') || slot.sessionType?.toLowerCase().includes('keynote');
                                       return (
                                         <tr key={slot.id} className="classic-merged-row">
-                                          <td colSpan="3" className={`classic-merged-cell ${isPurple ? 'text-purple' : 'text-green'}`}>
+                                          <td colSpan="3" className={`classic-merged-cell ${isPurple ? 'text-purple' : 'text-green'} max-md:block max-md:text-center max-md:p-4 max-md:border max-md:border-gray-100 max-md:rounded-lg max-md:mb-4`}>
                                             {slot.sessionTitle} {slot.startTime ? `(${slot.startTime}-${slot.endTime})` : ''}
                                           </td>
                                         </tr>
@@ -1324,17 +1324,17 @@ const getEventStatus = (dateStr) => {
                                     }
 
                                     return (
-                                      <tr key={slot.id} className="classic-data-row" onClick={() => setSelectedAgendaDetail(slot)}>
-                                        <td className="classic-presenter-cell">
+                                      <tr key={slot.id} className="classic-data-row max-md:block max-md:mb-4 max-md:border max-md:border-gray-200 max-md:rounded-lg max-md:bg-white max-md:shadow-sm" onClick={() => setSelectedAgendaDetail(slot)}>
+                                        <td className="classic-presenter-cell max-md:block max-md:p-4">
                                           <div className="classic-presenter-name">{slot.speakerName}</div>
                                           <div className="classic-presenter-org">
                                             {slot.organization}{slot.country ? `, ${slot.country}` : ""}
                                           </div>
                                         </td>
-                                        <td className="classic-time-cell">
+                                        <td className="classic-time-cell max-md:block max-md:text-left max-md:px-4 max-md:font-bold">
                                           {slot.startTime} - {slot.endTime}
                                         </td>
-                                        <td className="classic-title-cell">
+                                        <td className="classic-title-cell max-md:block max-md:text-left max-md:p-4">
                                           {slot.sessionTitle}
                                         </td>
                                       </tr>
@@ -1485,7 +1485,7 @@ const getEventStatus = (dateStr) => {
                         <div className="tier-badge-header">
                           <span className="tier-badge-label">{label} Partners</span>
                         </div>
-                        <div className="sponsor-logos-grid">
+                        <div className="sponsor-logos-grid max-md:grid max-md:grid-cols-2 max-[480px]:grid-cols-1 max-md:gap-4">
                           {list.map(sp => {
                             const logoUrl = sp.image?.fileName
                               ? `${BASE_URL}/uploads/sponsors/${sp.image.fileName}`

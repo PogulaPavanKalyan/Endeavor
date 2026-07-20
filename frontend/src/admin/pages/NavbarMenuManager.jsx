@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 import RichTextEditor from '../components/RichTextEditor';
 import './NavbarMenuManager.css';
 
 const NavbarMenuManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -150,7 +153,7 @@ const NavbarMenuManager = () => {
   };
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Are you sure you want to delete the submenu "${title}"?`)) return;
+    if (!(await confirmDialog(`Are you sure you want to delete the submenu "${title}"?`))) return;
     try {
       await api.delete(`/api/admin/navbar-menus/${id}`);
       setSuccess(`Submenu "${title}" deleted successfully!`);
@@ -205,7 +208,7 @@ const NavbarMenuManager = () => {
 
   const handleImageUpload = async (file, type) => {
     if (!currentId) {
-      alert("Please save the page first, then edit it to upload images.");
+      await alertDialog("Please save the page first, then edit it to upload images.");
       return;
     }
     const formData = new FormData();

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const SponsorManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -87,7 +90,7 @@ const SponsorManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this sponsor?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this sponsor?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 import { DEFAULT_GUIDELINES } from '../../utils/constants';
@@ -9,6 +10,8 @@ const slugify = (text) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 100);
 
 const ConferenceManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { conferences, fetchConferences, setActiveConferenceId } = useAdmin();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -232,7 +235,7 @@ const ConferenceManager = () => {
   };
 
   const handleDeleteImportantDate = async (dateId) => {
-    if (!window.confirm('Are you sure you want to delete this important date?')) return;
+    if (!(await confirmDialog('Are you sure you want to delete this important date?'))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/important-dates/${dateId}`);
@@ -359,7 +362,7 @@ const ConferenceManager = () => {
 
   const handleDeletePhoto = async (photoId) => {
     if (!editingConf) return;
-    if (!window.confirm('Are you sure you want to delete this background image?')) return;
+    if (!(await confirmDialog('Are you sure you want to delete this background image?'))) return;
     setLoading(true);
     setError('');
     try {
@@ -416,7 +419,7 @@ const ConferenceManager = () => {
   };
 
   const handleDeleteSpeaker = async (id) => {
-    if (!window.confirm('Delete this speaker?')) return;
+    if (!(await confirmDialog('Delete this speaker?'))) return;
     try {
       await api.delete(`/api/admin/speakers/${id}`);
       await fetchSpeakersForConf(editingConf.id);
@@ -438,7 +441,7 @@ const ConferenceManager = () => {
   };
 
   const handleDeleteSession = async (id) => {
-    if (!window.confirm('Delete this session?')) return;
+    if (!(await confirmDialog('Delete this session?'))) return;
     try {
       await api.delete(`/api/admin/sessions/${id}`);
       await fetchSessionsForConf(editingConf.id);
@@ -484,7 +487,7 @@ const ConferenceManager = () => {
 
   // ── Delete/Restore/Force conference ──
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to archive this conference? It can be restored later.')) return;
+    if (!(await confirmDialog('Are you sure you want to archive this conference? It can be restored later.'))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/conference-details/${id}`);
@@ -495,7 +498,7 @@ const ConferenceManager = () => {
   };
 
   const handleRestore = async (id) => {
-    if (!window.confirm('Restore this conference from archives?')) return;
+    if (!(await confirmDialog('Restore this conference from archives?'))) return;
     setLoading(true);
     try {
       await api.put(`/api/admin/conference-details/${id}/restore`);
@@ -506,7 +509,7 @@ const ConferenceManager = () => {
   };
 
   const handleForceDelete = async (id) => {
-    if (!window.confirm('Are you absolutely sure? This will PERMANENTLY delete the conference and all associated data. This action is irreversible.')) return;
+    if (!(await confirmDialog('Are you absolutely sure? This will PERMANENTLY delete the conference and all associated data. This action is irreversible.'))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/conference-details/${id}/force`);

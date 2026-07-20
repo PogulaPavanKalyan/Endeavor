@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 import './ConferenceSectionManager.css';
 
 const ConferenceSectionManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   
   // Lists
@@ -175,7 +178,7 @@ const ConferenceSectionManager = () => {
   };
 
   const handleDeleteSec = async (sec) => {
-    if (!window.confirm(`WARNING: Deleting section "${sec.sectionName}" will permanently delete ALL entries in it. Continue?`)) return;
+    if (!(await confirmDialog(`WARNING: Deleting section "${sec.sectionName}" will permanently delete ALL entries in it. Continue?`))) return;
     try {
       await api.delete(`/api/admin/conference-sections/${sec.id}`);
       setSuccess(`Section "${sec.sectionName}" deleted.`);
@@ -260,7 +263,7 @@ const ConferenceSectionManager = () => {
   };
 
   const handleDeleteItem = async (item) => {
-    if (!window.confirm(`Are you sure you want to delete the entry "${item.name}"?`)) return;
+    if (!(await confirmDialog(`Are you sure you want to delete the entry "${item.name}"?`))) return;
     try {
       await api.delete(`/api/admin/conference-sections/items/${item.id}`);
       setSuccess(`Entry "${item.name}" deleted.`);
@@ -305,7 +308,7 @@ const ConferenceSectionManager = () => {
 
   const handleImageUpload = async (file) => {
     if (!currentItemId) {
-      alert("Please save the entry details first, then edit it to upload a profile photo/logo.");
+      await alertDialog("Please save the entry details first, then edit it to upload a profile photo/logo.");
       return;
     }
     const formData = new FormData();

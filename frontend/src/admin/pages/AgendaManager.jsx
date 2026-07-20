@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const AgendaManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [days, setDays] = useState([]);
   const [activeDayId, setActiveDayId] = useState(null);
@@ -142,7 +145,7 @@ const AgendaManager = () => {
   };
 
   const handleDeleteDay = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this day and all its sessions?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this day and all its sessions?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/agenda/days/${id}`);
@@ -228,7 +231,7 @@ const AgendaManager = () => {
   };
 
   const handleDeleteSession = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this session?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this session?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/agenda/sessions/${id}`);

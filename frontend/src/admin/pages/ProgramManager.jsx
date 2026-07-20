@@ -1,8 +1,11 @@
+import { useAdminDialog } from '../components/AdminDialogContext';
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const ProgramManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [activeTab, setActiveTab] = useState('categories'); // 'categories' or 'items'
 
@@ -93,7 +96,7 @@ const ProgramManager = () => {
   };
 
   const handleDeleteCategory = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this category?"))) return;
     try {
       await api.delete(`/api/admin/program-categories/${id}`);
       setSuccessMsg("Category deleted successfully!");
@@ -171,7 +174,7 @@ const ProgramManager = () => {
   };
 
   const handleDeleteItem = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
+    if (!(await confirmDialog("Are you sure?"))) return;
     try {
       await api.delete(`/api/admin/program-items/${id}`);
       setSuccessMsg("Item deleted!");

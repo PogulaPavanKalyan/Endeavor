@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 
 const WebinarManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [webinars, setWebinars] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -158,7 +161,7 @@ const WebinarManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete/archive this webinar? It will be soft-deleted and moved to Archived status.")) return;
+    if (!(await confirmDialog("Are you sure you want to delete/archive this webinar? It will be soft-deleted and moved to Archived status."))) return;
     setLoading(true);
     setError("");
     setSuccess("");

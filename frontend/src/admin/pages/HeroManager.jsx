@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const HeroManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [heroes, setHeroes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -112,7 +115,7 @@ const HeroManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this hero banner?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this hero banner?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

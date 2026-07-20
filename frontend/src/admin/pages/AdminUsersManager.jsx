@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 import { useAdmin } from '../AdminContext';
 
 const AdminUsersManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { conferences, adminRole } = useAdmin();
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -105,10 +108,10 @@ const AdminUsersManager = () => {
 
   const handleDelete = async (id, username) => {
     if (username.toLowerCase() === 'pavan') {
-      alert("Cannot delete the master Super Admin account.");
+      await alertDialog("Cannot delete the master Super Admin account.");
       return;
     }
-    if (!window.confirm(`Are you sure you want to delete administrator "${username}"?`)) return;
+    if (!(await confirmDialog(`Are you sure you want to delete administrator "${username}"?`))) return;
     
     setLoading(true);
     try {

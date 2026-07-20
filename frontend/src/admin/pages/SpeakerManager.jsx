@@ -1,8 +1,11 @@
+import { useAdminDialog } from '../components/AdminDialogContext';
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const SpeakerManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [activeTab, setActiveTab] = useState('speakers'); // 'speakers' or 'categories'
 
@@ -93,7 +96,7 @@ const SpeakerManager = () => {
   };
 
   const handleDeleteCategory = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this category?"))) return;
     try {
       await api.delete(`/api/admin/speaker-categories/${id}`);
       setSuccessMsg("Category deleted successfully!");
@@ -181,7 +184,7 @@ const SpeakerManager = () => {
   };
 
   const handleDeleteSpeaker = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
+    if (!(await confirmDialog("Are you sure?"))) return;
     try {
       await api.delete(`/api/admin/speakers/${id}`);
       setSuccessMsg("Speaker deleted!");

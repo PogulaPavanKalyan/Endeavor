@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useAdminDialog } from './components/AdminDialogContext';
 import { api } from "../utils/api";
 import "./AdminHome.css";
 
 const EMPTY_FORM = { icon: "🔬", title: "", description: "", displayOrder: 0, active: true };
 
 const TrustBadgeManagement = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -66,7 +69,7 @@ const TrustBadgeManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this trust badge?")) return;
+    if (!(await confirmDialog("Delete this trust badge?"))) return;
     try {
       await api.delete(`/api/admin/trust-badges/${id}`);
       showToast("Badge deleted");

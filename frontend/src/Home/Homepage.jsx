@@ -6,6 +6,8 @@ import { api, BASE_URL } from "../utils/api";
 import BrochureModal from "../components/BrochureModal";
 import { getSubdomainUrl } from "../utils/subdomain.jsx";
 import { fetchHero, fetchStatistics, fetchTrustBadges } from "../services/heroService";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import "./Homepage.css";
 
 /* ─── Optimized Image with Fallback and Skeleton ────────────────────────── */
@@ -495,6 +497,10 @@ const Homepage = () => {
   // Scroll ref for upcoming conferences strip
   const confRef = useRef(null);
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   const galleryRef = useRef(null);
   const scrollGallery = (direction) => {
     if (galleryRef.current) {
@@ -519,6 +525,7 @@ const Homepage = () => {
         if (res.gallery) setGalleryPhotos(res.gallery);
         if (res.news) setNewsArticles(res.news);
         if (res.callForAbstracts) setCallForAbstracts(res.callForAbstracts);
+        setTimeout(() => AOS.refresh(), 100);
       }
     }).catch(err => console.error("Failed to fetch homepage dynamic content:", err));
   }, []);
@@ -654,6 +661,7 @@ const Homepage = () => {
       setStats(statsRes);
       setBadges(badgesRes.length > 0 ? badgesRes : FALLBACK_BADGES);
       setHeroLoading(false);
+      setTimeout(() => AOS.refresh(), 100); // refresh animations after hero loads
     };
     load();
   }, []);
@@ -747,7 +755,7 @@ const Homepage = () => {
   const currentTabContent = activeAboutTabs[aboutActiveTab] || activeAboutTabs[Object.keys(activeAboutTabs)[0]];
 
   return (
-    <div className="homepage-redesign-wrapper">
+    <div className="homepage-redesign-wrapper max-w-[100vw] overflow-x-hidden">
       {/* 1. NAVBAR (UNTOUCHED) */}
       <Header />
 
@@ -758,22 +766,22 @@ const Homepage = () => {
           <div className="hero-light-glow blue-glow" />
           <div className="hero-light-glow pink-glow" />
 
-          <div className="hero-inner container">
+          <div className="hero-inner container max-xl:gap-8 max-md:flex-col max-md:items-center max-md:justify-center max-md:min-h-[100svh] max-md:pt-16 max-md:pb-12 max-[480px]:px-4">
             {/* Left Column: Text Content */}
-            <div className="hero-left animate-fade-in-left">
-              <div className="hero-content-wrapper">
+            <div className="hero-left animate-fade-in-left max-md:w-full max-md:text-center max-md:items-center max-lg:flex-1">
+              <div className="hero-content-wrapper max-md:items-center">
                 {/* Top Badge */}
                 <span className="hero-badge-redesign">
                   🌐 Global Scientific Conferences 2026
                 </span>
 
                 {/* Headline */}
-                <h1 className="hero-title">
+                <h1 className="hero-title max-xl:text-5xl max-lg:text-4xl max-md:text-4xl max-[480px]:text-3xl max-[375px]:text-2xl max-md:leading-tight">
                   {heroData?.title || "Advancing Global Research Through Innovation"}
                 </h1>
 
                 {/* Description */}
-                <p className="hero-desc">
+                <p className="hero-desc max-xl:text-base max-md:text-base max-[480px]:text-sm max-md:px-4">
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
                 </p>
 
@@ -784,8 +792,8 @@ const Homepage = () => {
             </div>
 
             {/* Right Column: 3-Image Collage */}
-            <div className="hero-right animate-fade-in-right">
-              <div className="hero-collage-wrap">
+            <div className="hero-right animate-fade-in-right max-md:w-full max-md:mt-12 max-lg:flex-1 max-[480px]:mt-8">
+              <div className="hero-collage-wrap max-md:w-[90%] max-md:mx-auto">
                 <div className="collage-container">
                   {/* Main image */}
                   <div className="collage-card card-main">
@@ -824,7 +832,7 @@ const Homepage = () => {
       )}
 
       {/* 5. UPCOMING CONFERENCES (REDESIGNED & DYNAMIC) */}
-      <section className="section upcoming-conferences-redesign">
+      <section className="section upcoming-conferences-redesign" data-aos="fade-up">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Conferences</span>
@@ -833,9 +841,9 @@ const Homepage = () => {
               Participate as a presenter or delegate at our upcoming summits.
             </p>
           </div>
-          <div className="upcoming-strip-wrap" ref={confRef}>
+          <div className="upcoming-strip-wrap max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-6 max-md:-mx-4 max-md:px-4 scrollbar-hide flex" ref={confRef}>
             {conferences.map((item) => (
-              <div className="upcoming-conf-card card-premium" key={item.id}>
+              <div className="upcoming-conf-card card-premium max-md:snap-center max-md:min-w-[85vw] max-[480px]:min-w-[92vw] flex-shrink-0" key={item.id}>
                 <div className="card-media">
                   <span className="status-badge-active">Open Registration</span>
                   <OptimizedImage src={item.image} alt={item.title} fallbackType="conference" />
@@ -864,7 +872,7 @@ const Homepage = () => {
 
       {/* 6. PAST CONFERENCES (REDESIGNED & DYNAMIC) */}
       {pastCongressVisible && (
-        <section className="section past-conferences-redesign">
+        <section className="section past-conferences-redesign" data-aos="fade-up">
           <div className="container">
             <div className="section-header">
               <span className="section-tag">Success Footprint</span>
@@ -873,7 +881,7 @@ const Homepage = () => {
                 Review our global academic reach and previously held symposium volumes.
               </p>
             </div>
-            <div className="past-conferences-grid">
+            <div className="past-conferences-grid max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-6">
               {pastConferences.map((item) => (
                 <div className="past-conf-card card-premium" key={item.id}>
                   <div className="past-card-media">
@@ -896,7 +904,7 @@ const Homepage = () => {
 
       {/* 14. WEBINAR SECTION (REDESIGNED & DYNAMIC) */}
       {webinarsVisible && (
-        <section className="section webinars-redesign">
+        <section className="section webinars-redesign" data-aos="fade-up">
           <div className="container">
             <div className="section-header">
               <span className="section-tag">E-Learning</span>
@@ -916,7 +924,7 @@ const Homepage = () => {
                 </button>
               ))}
             </div>
-            <div className="webinars-grid-redesign">
+            <div className="webinars-grid-redesign max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-6">
               {filteredWebinars.map((web) => (
                 <div className={`webinar-card-redesign card-premium ${web.status}`} key={web.id}>
                   <div className="w-media">
@@ -947,14 +955,14 @@ const Homepage = () => {
       )}
 
       {/* 3. ABOUT ORGANIZATION — PREMIUM 2026 REDESIGN */}
-      <section className="section about-org-redesign">
+      <section className="section about-org-redesign" data-aos="fade-up">
         <div className="container">
 
           {/* ── Top Row: Two-column layout ── */}
-          <div className="about-two-col">
+          <div className="about-two-col max-md:flex max-md:flex-col max-md:gap-12 max-lg:gap-8">
 
             {/* Left Column: Content */}
-            <div className="about-left-col">
+            <div className="about-left-col max-md:w-full max-md:text-center max-md:flex max-md:flex-col max-md:items-center">
               <span className="section-tag">{aboutData?.tag || "About Organization"}</span>
               <h2 className="about-main-heading">
                 {aboutData?.title || "Empowering Global Scientific Discovery"}
@@ -964,7 +972,7 @@ const Homepage = () => {
               </p>
 
               {/* 4 Service Highlight Cards – 2×2 grid */}
-              <div className="about-service-grid">
+              <div className="about-service-grid max-md:grid max-md:grid-cols-1 max-sm:gap-4 max-md:w-full max-md:text-left">
                 {(aboutData?.pillars || FALLBACK_ABOUT.pillars).slice(0, 4).map((pillar, i) => (
                   <div className="about-svc-card" key={i}>
                     <span className="about-svc-icon">{pillar.icon}</span>
@@ -986,7 +994,7 @@ const Homepage = () => {
                 )}
               </div>
 
-              <Link to="/about" className="btn-about-learn">
+              <Link to="/about" className="btn-about-learn max-md:w-full max-md:text-center max-md:justify-center min-h-[48px] flex items-center">
                 Discover Our Mission →
               </Link>
             </div>
@@ -1037,7 +1045,7 @@ const Homepage = () => {
       </section>
       {/* 19. GALLERY (REDESIGNED & DYNAMIC) */}
       {galleryVisible && (
-        <section className="section gallery-redesign" style={{ position: "relative" }}>
+        <section className="section gallery-redesign" style={{ position: "relative" }} data-aos="fade-up">
           <div>
             <div className="container">
               <div className="section-header">
@@ -1062,9 +1070,9 @@ const Homepage = () => {
                 <button className="gallery-nav-btn prev" onClick={() => scrollGallery("left")} aria-label="Previous Image">
                   ‹
                 </button>
-                <div className="gallery-grid-redesign-expanded" ref={galleryRef}>
+                <div className="gallery-grid-redesign-expanded max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-6 max-md:-mx-4 max-md:px-4 scrollbar-hide flex" ref={galleryRef}>
                   {filteredGallery.map((photo, i) => (
-                    <div className="gallery-img-holder-expanded card-premium" key={i}>
+                    <div className="gallery-img-holder-expanded card-premium max-md:snap-center max-md:min-w-[85vw] max-[480px]:min-w-[92vw] flex-shrink-0" key={i}>
                       <OptimizedImage src={photo.url} alt={`Congress moment ${photo.tag} ${i + 1}`} fallbackType="conference" />
                       <span className="gallery-tag-label">{photo.tag.toUpperCase()}</span>
                     </div>

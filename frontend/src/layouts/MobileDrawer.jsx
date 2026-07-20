@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import "./MobileDrawer.css";
 
@@ -47,11 +47,11 @@ const NAV_ITEMS = [
 ];
 
 /* ─── Social SVGs ─────────────────────────────────────────────── */
-const SvgFacebook = () => <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>;
-const SvgLinkedIn = () => <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>;
-const SvgX = () => <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>;
-const SvgYouTube = () => <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" style={{fill:'var(--drawer-bg-start)'}}/></svg>;
-const SvgEmail = () => <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6" style={{fill:'none', stroke:'var(--drawer-bg-start)', strokeWidth:'1.8'}}/></svg>;
+const SvgFacebook = () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>;
+const SvgLinkedIn = () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>;
+const SvgX = () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>;
+const SvgYouTube = () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" style={{fill:'var(--nav-accent)'}}/></svg>;
+const SvgEmail = () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6" style={{fill:'none', stroke:'currentColor', strokeWidth:'1.8'}}/></svg>;
 
 /* ─── AccordionItem (smooth height) ─────────────────────────── */
 const AccordionItem = ({ isOpen, children }) => {
@@ -119,29 +119,35 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
         aria-hidden={!open}
         role="dialog"
       >
-        {/* ── Header ── */}
-        <div className="drawer-header">
-          <Link to="/" className="drawer-brand" onClick={handleNavClick} tabIndex={open ? 0 : -1}>
-            <img src="/logo.png" alt="Intelevo Research" className="drawer-logo" />
-            <div className="drawer-brand-text">
-              <span className="drawer-brand-name">Intelevo Research</span>
-              <span className="drawer-brand-tagline">Advancing Research Through Global Conferences</span>
-            </div>
-          </Link>
-          <button
-            className="drawer-close-btn"
-            onClick={onClose}
-            aria-label="Close navigation menu"
-            tabIndex={open ? 0 : -1}
-          >
-            ✕
-          </button>
+        {/* ── Premium Header ── */}
+        <div className="drawer-header-premium">
+          <div className="drawer-header-top">
+            <Link to="/" onClick={handleNavClick} tabIndex={open ? 0 : -1}>
+              <img src="/logo.png" alt="Intelevo Research" className="drawer-logo-premium" />
+            </Link>
+            <button
+              className="drawer-close-btn-premium"
+              onClick={onClose}
+              aria-label="Close navigation menu"
+              tabIndex={open ? 0 : -1}
+            >
+              ✕
+            </button>
+          </div>
+          <div className="drawer-brand-details">
+             <h2 className="drawer-conf-name">Intelevo Research</h2>
+             <p className="drawer-conf-theme">Advancing Research Through Global Conferences</p>
+             <div className="drawer-conf-meta">
+               <span className="drawer-conf-year">2027</span>
+               <span className="drawer-conf-dot">•</span>
+               <span className="drawer-conf-location">Hyderabad, India</span>
+             </div>
+             <div className="drawer-conf-badge">Upcoming</div>
+          </div>
         </div>
 
         {/* ── Nav Body ── */}
         <div className="drawer-nav-body">
-          <div className="drawer-nav-section-label">Navigation</div>
-
           {NAV_ITEMS.map((item) => {
             const hasChildren = !!item.children;
             const active = isActive ? isActive(item.path) === "active" : false;
@@ -204,35 +210,16 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
               </Link>
             );
           })}
-
-          {/* Divider + Contact */}
+          
           <div className="drawer-divider" />
-          <div className="drawer-contact-strip">
-            <div className="drawer-contact-item">
-              <span className="drawer-contact-icon">📍</span>
-              <span>Hyderabad, India</span>
-            </div>
-            <div className="drawer-contact-item">
-              <span className="drawer-contact-icon">✉</span>
-              <a href="mailto:info@intelevoresearch.org" tabIndex={open ? 0 : -1}>
-                info@intelevoresearch.org
-              </a>
-            </div>
-            <div className="drawer-contact-item">
-              <span className="drawer-contact-icon">🌐</span>
-              <a href="https://www.intelevoresearch.org" target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1}>
-                www.intelevoresearch.org
-              </a>
-            </div>
-          </div>
         </div>
 
-        {/* ── Footer ── */}
+        {/* ── Premium Footer ── */}
         <div className="drawer-footer">
           <div className="drawer-footer-btns">
             <Link
               to="/submit-abstract"
-              className="drawer-btn-primary"
+              className="drawer-btn-premium-primary"
               onClick={handleNavClick}
               tabIndex={open ? 0 : -1}
             >
@@ -240,7 +227,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
             </Link>
             <Link
               to="/register"
-              className="drawer-btn-secondary"
+              className="drawer-btn-premium-glass"
               onClick={handleNavClick}
               tabIndex={open ? 0 : -1}
             >
@@ -250,19 +237,19 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
 
           {/* Social Icons */}
           <div className="drawer-social-row">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn fb" aria-label="Facebook" tabIndex={open ? 0 : -1}>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn-premium" aria-label="Facebook" tabIndex={open ? 0 : -1}>
               <SvgFacebook />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn li" aria-label="LinkedIn" tabIndex={open ? 0 : -1}>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn-premium" aria-label="LinkedIn" tabIndex={open ? 0 : -1}>
               <SvgLinkedIn />
             </a>
-            <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn tw" aria-label="X (Twitter)" tabIndex={open ? 0 : -1}>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn-premium" aria-label="X (Twitter)" tabIndex={open ? 0 : -1}>
               <SvgX />
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn yt" aria-label="YouTube" tabIndex={open ? 0 : -1}>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn-premium" aria-label="YouTube" tabIndex={open ? 0 : -1}>
               <SvgYouTube />
             </a>
-            <a href="mailto:info@intelevoresearch.org" className="drawer-social-btn em" aria-label="Email" tabIndex={open ? 0 : -1}>
+            <a href="mailto:info@intelevoresearch.org" className="drawer-social-btn-premium" aria-label="Email" tabIndex={open ? 0 : -1}>
               <SvgEmail />
             </a>
           </div>
@@ -273,4 +260,3 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
 };
 
 export default MobileDrawer;
-

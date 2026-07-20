@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAdmin } from './AdminContext';
+import { AdminDialogProvider } from './components/AdminDialogContext';
 import './ConferenceAdminLayout.css';
 
 const ConferenceAdminLayout = () => {
@@ -51,7 +52,8 @@ const ConferenceAdminLayout = () => {
   const activeConf = conferences.find(c => c.id?.toString() === activeConferenceId);
 
   return (
-    <div className="conference-admin-layout" data-theme="light">
+    <AdminDialogProvider>
+      <div className="conference-admin-layout" data-theme="light">
       {/* Top Header */}
       <header className="conference-admin-header">
         <div className="conference-admin-brand">
@@ -156,6 +158,7 @@ const ConferenceAdminLayout = () => {
         </div>
       )}
     </div>
+    </AdminDialogProvider>
   );
 };
 

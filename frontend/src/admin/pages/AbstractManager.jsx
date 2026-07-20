@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const AbstractManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +47,7 @@ const AbstractManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this submission?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this submission?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

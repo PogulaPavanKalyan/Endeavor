@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 
 const TrustBadgeManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -70,7 +73,7 @@ const TrustBadgeManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this trust badge?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this trust badge?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

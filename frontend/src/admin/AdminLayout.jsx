@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAdmin } from './AdminContext';
+import { AdminDialogProvider } from './components/AdminDialogContext';
 import './AdminLayout.css';
 
 const AdminLayout = () => {
@@ -57,7 +58,8 @@ const AdminLayout = () => {
   const activeConf = conferences.find(c => c.id?.toString() === activeConferenceId);
 
   return (
-    <div className="admin-layout-container">
+    <AdminDialogProvider>
+      <div className="admin-layout-container">
       {/* Mobile Overlay */}
       {sidebarOpen && <div style={{
         position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
@@ -252,6 +254,7 @@ const AdminLayout = () => {
         </div>
       )}
     </div>
+    </AdminDialogProvider>
   );
 };
 

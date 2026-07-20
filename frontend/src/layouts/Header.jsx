@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 import MobileDrawer from "./MobileDrawer";
@@ -71,7 +71,7 @@ const Header = () => {
       <header className={`header ${visible ? "show" : ""} ${isSticky ? "sticky-active" : ""} ${menuOpen ? "menu-active" : ""}`}>
 
         {/* TOP TIER (White Header) */}
-        <div className="top-header">
+        <div className="top-header max-md:py-2 max-md:px-4">
           <div className="top-header-container">
             {/* Logo */}
             <div className="logo">
@@ -83,15 +83,15 @@ const Header = () => {
             {/* Action Group (Subscribe + Hamburger) */}
             <div className="top-actions-group">
               {/* Subscribe CTA */}
-              <div className="top-actions">
-                <button className="btn-subscribe" onClick={() => setIsSubscribeOpen(true)}>
+              <div className="top-actions max-[480px]:hidden">
+                <button className="btn-subscribe min-h-[48px] flex items-center justify-center px-4" onClick={() => setIsSubscribeOpen(true)}>
                   <span>Subscribe</span>
                 </button>
               </div>
 
               {/* Hamburger Toggle */}
               <button
-                className={`hamburger ${menuOpen ? "open" : ""}`}
+                className={`hamburger ${menuOpen ? "open" : ""} min-h-[48px] min-w-[48px] flex items-center justify-center ml-2`}
                 onClick={toggleMenu}
                 aria-label="Toggle Navigation"
               >

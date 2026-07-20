@@ -62,7 +62,7 @@ const Footer = () => {
 
       {/* ── SECTION 3: MAIN FOOTER LINK COLUMNS ──────────────────────────── */}
       <div className="footer-main-links">
-        <div className="footer-grid-container">
+        <div className="footer-grid-container max-md:grid max-md:grid-cols-1 max-md:gap-8 max-md:px-4">
 
           {/* Column 1 – Brand */}
           <div className="footer-col-brand">
@@ -95,20 +95,20 @@ const Footer = () => {
             </ul>
 
             {/* Social icons */}
-            <div className="social-links-grid">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="Facebook">
+            <div className="social-links-grid max-md:flex max-md:flex-wrap max-md:gap-4">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon min-h-[48px] min-w-[48px] flex items-center justify-center" aria-label="Facebook">
                 <svg fill="currentColor" viewBox="0 0 24 24" height="1.2em" width="1.2em"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z" /></svg>
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="LinkedIn">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon min-h-[48px] min-w-[48px] flex items-center justify-center" aria-label="LinkedIn">
                 <svg fill="currentColor" viewBox="0 0 24 24" height="1.2em" width="1.2em"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.8v8.37h2.8v-4.67c0-.25.06-.5.15-.69a1.16 1.16 0 0 1 1.06-.77c.76 0 1.31.58 1.31 1.5v4.63h2.8M6.5 8.37a1.37 1.37 0 1 0 0-2.75 1.37 1.37 0 0 0 0 2.75M8 18.5V10.13H5.2v8.37H8z" /></svg>
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="X / Twitter">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-icon min-h-[48px] min-w-[48px] flex items-center justify-center" aria-label="X / Twitter">
                 <svg fill="currentColor" viewBox="0 0 24 24" height="1.2em" width="1.2em"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon min-h-[48px] min-w-[48px] flex items-center justify-center" aria-label="Instagram">
                 <svg fill="currentColor" viewBox="0 0 24 24" height="1.2em" width="1.2em"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m8.4 4.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z" /></svg>
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="YouTube">
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon min-h-[48px] min-w-[48px] flex items-center justify-center" aria-label="YouTube">
                 <svg fill="currentColor" viewBox="0 0 24 24" height="1.2em" width="1.2em"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
               </a>
             </div>
@@ -218,21 +218,21 @@ const Footer = () => {
 
       {/* ── SECTION 5: BOTTOM COPYRIGHT BAR (dark) ───────────────────────── */}
       <div className="footer-bottom-bar">
-        <div className="bottom-bar-container">
-          <div className="bottom-copyright">
+        <div className="bottom-bar-container max-md:flex-col max-md:text-center max-md:gap-4 max-md:px-4 max-md:py-6">
+          <div className="bottom-copyright max-md:mb-2">
             <p>© {new Date().getFullYear()} Intelevo Research Private Limited. All Rights Reserved.</p>
           </div>
 
-          <div className="bottom-legal-links">
-            <Link to="/privacy">Privacy Policy</Link>
-            <span className="separator">•</span>
-            <Link to="/terms">Terms &amp; Conditions</Link>
-            <span className="separator">•</span>
-            <Link to="/refund">Refund Policy</Link>
-            <span className="separator">•</span>
-            <Link to="/cookies">Cookies Policy</Link>
-            <span className="separator">•</span>
-            <Link to="/accessibility">Accessibility</Link>
+          <div className="bottom-legal-links max-md:flex max-md:flex-wrap max-md:justify-center max-md:gap-y-3">
+            <Link to="/privacy" className="min-h-[48px] flex items-center px-2">Privacy Policy</Link>
+            <span className="separator max-md:hidden">•</span>
+            <Link to="/terms" className="min-h-[48px] flex items-center px-2">Terms &amp; Conditions</Link>
+            <span className="separator max-md:hidden">•</span>
+            <Link to="/refund" className="min-h-[48px] flex items-center px-2">Refund Policy</Link>
+            <span className="separator max-md:hidden">•</span>
+            <Link to="/cookies" className="min-h-[48px] flex items-center px-2">Cookies Policy</Link>
+            <span className="separator max-md:hidden">•</span>
+            <Link to="/accessibility" className="min-h-[48px] flex items-center px-2">Accessibility</Link>
           </div>
 
           <div className="bottom-brand-msg">

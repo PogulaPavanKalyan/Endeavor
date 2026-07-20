@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const TrackManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -143,7 +146,7 @@ const TrackManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this track?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this track?"))) return;
     setLoading(true);
     setError("");
     try {

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 import { useAdmin } from '../AdminContext';
 import './NavigationManager.css';
 
 const NavigationManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId: activeConfId } = useAdmin();
   const [navItems, setNavItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,9 +54,9 @@ const NavigationManager = () => {
     try {
       await api.post(`/api/navigation/auto-generate?conferenceId=${activeConfId}`);
       await fetchNavigation();
-      alert("Default navigation generated successfully!");
+      await alertDialog("Default navigation generated successfully!");
     } catch (err) {
-      alert("Failed to auto-generate navigation.");
+      await alertDialog("Failed to auto-generate navigation.");
       console.error(err);
     }
   };
@@ -107,18 +110,18 @@ const NavigationManager = () => {
       handleCloseModal();
       fetchNavigation();
     } catch (err) {
-      alert("Failed to save menu item");
+      await alertDialog("Failed to save menu item");
       console.error(err);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this menu item?")) {
+    if ((await confirmDialog("Are you sure you want to delete this menu item?"))) {
       try {
         await api.delete(`/api/navigation/${id}`);
         fetchNavigation();
       } catch (err) {
-        alert("Failed to delete");
+        await alertDialog("Failed to delete");
       }
     }
   };
@@ -145,7 +148,7 @@ const NavigationManager = () => {
     try {
       await api.post('/api/navigation/reorder', newItems);
     } catch (err) {
-      alert("Failed to reorder");
+      await alertDialog("Failed to reorder");
       fetchNavigation(); // revert
     }
   };

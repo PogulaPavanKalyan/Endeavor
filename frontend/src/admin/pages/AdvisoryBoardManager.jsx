@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const AdvisoryBoardManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -136,7 +139,7 @@ const AdvisoryBoardManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this advisory board member?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this advisory board member?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/advisory-board/${id}`);
@@ -151,7 +154,7 @@ const AdvisoryBoardManager = () => {
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!window.confirm(`Are you sure you want to delete all ${selectedIds.length} selected advisory board members?`)) return;
+    if (!(await confirmDialog(`Are you sure you want to delete all ${selectedIds.length} selected advisory board members?`))) return;
     setLoading(true);
     setError("");
     try {

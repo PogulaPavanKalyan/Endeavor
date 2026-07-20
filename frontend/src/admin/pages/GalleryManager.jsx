@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const GalleryManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -79,7 +82,7 @@ const GalleryManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this gallery image?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this gallery image?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

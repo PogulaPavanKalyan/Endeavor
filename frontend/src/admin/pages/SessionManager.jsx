@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const SessionManager = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const { activeConferenceId } = useAdmin();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -93,7 +96,7 @@ const SessionManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this session?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this session?"))) return;
     setLoading(true);
     setError("");
     setSuccess("");

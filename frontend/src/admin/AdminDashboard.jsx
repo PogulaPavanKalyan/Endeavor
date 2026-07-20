@@ -1,3 +1,4 @@
+import { useAdminDialog } from './components/AdminDialogContext';
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
@@ -7,6 +8,8 @@ import StatisticsManagement from "./StatisticsManagement";
 import TrustBadgeManagement from "./TrustBadgeManagement";
 
 const AdminDashboard = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -272,7 +275,7 @@ const AdminDashboard = () => {
   };
 
   const deleteSpeaker = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this speaker?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this speaker?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/speakers/${id}`);
@@ -323,7 +326,7 @@ const AdminDashboard = () => {
   };
 
   const deleteSession = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this session?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this session?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/sessions/${id}`);
@@ -381,7 +384,7 @@ const AdminDashboard = () => {
   };
 
   const deleteSponsor = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this sponsor?")) return;
+    if (!(await confirmDialog("Are you sure you want to delete this sponsor?"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/sponsors/${id}`);

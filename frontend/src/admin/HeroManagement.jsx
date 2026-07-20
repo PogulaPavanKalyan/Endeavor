@@ -1,3 +1,4 @@
+import { useAdminDialog } from './components/AdminDialogContext';
 import React, { useState, useEffect } from "react";
 import { api, BASE_URL } from "../utils/api";
 import "./AdminHome.css";
@@ -14,6 +15,8 @@ const EMPTY_FORM = {
 };
 
 const HeroManagement = () => {
+  const { confirmDialog, alertDialog } = useAdminDialog();
+
   const [heroes, setHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -121,7 +124,7 @@ const HeroManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this hero banner?")) return;
+    if (!(await confirmDialog("Delete this hero banner?"))) return;
     try {
       await api.delete(`/api/admin/hero/${id}`);
       showToast("Deleted successfully");
