@@ -103,15 +103,11 @@
 .conference-admin-subnav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.75rem;
   padding: 0.75rem 2.5rem;
   background: var(--conf-surface);
   border-bottom: 1px solid var(--conf-border);
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-}
-.conference-admin-subnav::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
 }
 
 .conference-admin-subnav a {

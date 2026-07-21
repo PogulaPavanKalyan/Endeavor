@@ -111,6 +111,9 @@ const ConferenceHome = () => {
   const [selectedAgendaDetail, setSelectedAgendaDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAllSpeakers, setShowAllSpeakers] = useState(false);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryFilter, setGalleryFilter] = useState("ALL");
+  const [lightboxImg, setLightboxImg] = useState(null);
 
   
   useEffect(() => {
@@ -421,7 +424,8 @@ const getEventStatus = (dateStr) => {
           speakersData,
           boardData,
           committeeData,
-          agendaData
+          agendaData,
+          galleryData
         ] = await Promise.all([
           api.get(`/api/sessions?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/conference-sections?conferenceId=${conference.id}`).catch(() => []),
@@ -431,7 +435,8 @@ const getEventStatus = (dateStr) => {
           api.get(`/api/speakers?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/advisory-board?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/committee?conferenceId=${conference.id}`).catch(() => []),
-          api.get(`/api/agenda/days?conferenceId=${conference.id}`).catch(() => [])
+          api.get(`/api/agenda/days?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/gallery?conferenceId=${conference.id}`).catch(() => [])
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
@@ -467,6 +472,9 @@ const getEventStatus = (dateStr) => {
           if (sortedDays.length > 0) {
             setActiveAgendaDayId(sortedDays[0].id);
           }
+        }
+        if (Array.isArray(galleryData)) {
+          setGalleryImages(galleryData);
         }
       } catch (err) {
         console.error("Failed to load home page dynamic details:", err);
@@ -891,7 +899,7 @@ const getEventStatus = (dateStr) => {
 
         return (
           <section className="conf-important-dates-section anim-section" id="important-dates">
-            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+            <div className="container" style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "45px" }}>
                 <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "15px" }}>
                   Important Dates
@@ -902,11 +910,11 @@ const getEventStatus = (dateStr) => {
               </div>
 
               {/* Timeline List */}
-              <div className="dates-timeline-container max-md:flex max-md:flex-col max-md:gap-4">
+              <div className="flex flex-col gap-2 w-full max-w-4xl mx-auto">
                 {activeDates.map((item, idx) => {
                   const status = getEventStatus(item.eventDate);
                   const formattedDate = new Date(item.eventDate).toLocaleDateString("en-US", {
-                    month: "long",
+                    month: "short",
                     day: "numeric",
                     year: "numeric"
                   });
@@ -914,58 +922,71 @@ const getEventStatus = (dateStr) => {
                   return (
                     <div
                       key={item.id || idx}
-                      className={`timeline-row ${status} ${item.isHighlighted ? 'highlighted' : ''} max-md:flex-col max-md:items-start max-md:gap-3`}
+                      className={`timeline-row ${status} ${item.isHighlighted ? 'highlighted' : ''} !flex !flex-col !w-full !rounded-[10px] !bg-white !border !border-slate-200 hover:!border-slate-300 shadow-sm transition-all duration-200`}
                     >
-                      <div className="timeline-col-event">
-                        <span className="event-emoji">{getEventEmoji(item.eventTitle)}</span>
-                        <div className="event-details">
-                          <h4 className="event-title">{item.eventTitle}</h4>
-                          {item.eventDescription && (
-                            <p className="event-desc">{item.eventDescription}</p>
-                          )}
+                      <div className="!flex !flex-col sm:!flex-row sm:!items-center !justify-between !w-full !px-5 !py-3 !gap-2 sm:!gap-0">
+                        {/* Icon & Title */}
+                        <div className="!flex !items-center !gap-4 !flex-1 !min-w-0">
+                          <span className="event-emoji !text-[18px] !shrink-0 !opacity-90">{getEventEmoji(item.eventTitle)}</span>
+                          <h4 className="event-title !text-[15px] !font-medium !text-slate-800 !truncate !m-0">{item.eventTitle}</h4>
+                        </div>
+                        
+                        {/* Date & Status */}
+                        <div className="!flex !items-center !justify-between sm:!justify-end !w-full sm:!w-auto !gap-6 !shrink-0 !pl-10 sm:!pl-0">
+                          <div className="event-date-display !font-medium !text-slate-500 !text-[14px] !w-auto sm:!w-[130px] sm:!text-right">{formattedDate}</div>
+                          <div className="status-badge-container !flex !items-center !w-auto sm:!w-[90px] !justify-end">
+                            {status === 'completed' && (
+                              <span className="!flex !items-center !gap-1.5 !text-slate-400 !font-medium !text-[13px]">
+                                ✓ Completed
+                              </span>
+                            )}
+                            {status === 'today' && (
+                              <span className="!flex !items-center !gap-1.5 !text-blue-600 !font-medium !text-[13px]">
+                                ● Today
+                              </span>
+                            )}
+                            {status === 'upcoming' && (
+                              <span className="!text-slate-500 !font-medium !text-[13px]">
+                                Upcoming
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div className="timeline-col-date-badge max-md:w-full max-md:justify-between max-md:mt-2 max-md:items-center">
-                        <div className="event-date-display">{formattedDate}</div>
-                        <div className="status-badge-container">
-                          {status === 'completed' && <span className="badge badge-completed">Completed</span>}
-                          {status === 'today' && <span className="badge badge-today">Today</span>}
-                          {status === 'upcoming' && <span className="badge badge-upcoming">Upcoming</span>}
 
-                          {status !== 'completed' && (
-                            <div className="calendar-export-actions">
-                              <button
-                                onClick={() => window.open(getGoogleCalendarUrl(item), '_blank')}
-                                title="Add to Google Calendar"
-                                className="cal-btn google"
-                              >
-                                Google
-                              </button>
-                              <button
-                                onClick={() => window.open(getOutlookCalendarUrl(item), '_blank')}
-                                title="Add to Outlook Calendar"
-                                className="cal-btn outlook"
-                              >
-                                Outlook
-                              </button>
-                              <button
-                                onClick={() => downloadIcsFile(item)}
-                                title="Download .ics Calendar Event"
-                                className="cal-btn ics"
-                              >
-                                iCal
-                              </button>
-                            </div>
-                          )}
+                      {/* Calendar Export for the last active event */}
+                      {idx === activeDates.length - 1 && status !== 'completed' && (
+                        <div className="!flex !justify-end !gap-2 !px-5 !pb-3 !pt-2 !border-t !border-slate-50 !mt-1">
+                          <button
+                            onClick={() => window.open(getGoogleCalendarUrl(item), '_blank')}
+                            title="Add to Google Calendar"
+                            className="cal-btn google !text-[12px] !font-medium !px-3 !py-1.5 !rounded-md !bg-slate-50 !text-slate-600 hover:!bg-slate-100 !border !border-slate-200 transition-colors"
+                          >
+                            Google
+                          </button>
+                          <button
+                            onClick={() => window.open(getOutlookCalendarUrl(item), '_blank')}
+                            title="Add to Outlook Calendar"
+                            className="cal-btn outlook !text-[12px] !font-medium !px-3 !py-1.5 !rounded-md !bg-slate-50 !text-slate-600 hover:!bg-slate-100 !border !border-slate-200 transition-colors"
+                          >
+                            Outlook
+                          </button>
+                          <button
+                            onClick={() => downloadIcsFile(item)}
+                            title="Download .ics Calendar Event"
+                            className="cal-btn ics !text-[12px] !font-medium !px-3 !py-1.5 !rounded-md !bg-slate-50 !text-slate-600 hover:!bg-slate-100 !border !border-slate-200 transition-colors"
+                          >
+                            iCal
+                          </button>
                         </div>
-                      </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
 
               {/* Print action helper */}
-              <div style={{ textAlign: "right", marginTop: "20px" }} className="no-print">
+              <div style={{ textAlign: "right", marginTop: "24px" }} className="no-print">
                 <button
                   onClick={() => window.print()}
                   style={{
@@ -981,6 +1002,7 @@ const getEventStatus = (dateStr) => {
                     alignItems: "center",
                     gap: "8px"
                   }}
+                  className="hover:bg-slate-50 transition-colors"
                 >
                   🖨️ Print Important Dates
                 </button>
@@ -1210,6 +1232,80 @@ const getEventStatus = (dateStr) => {
           )}
         </div>
       </section>
+      )}
+
+      {/* Dynamic Tabs Section */}
+      {sections && sections.filter(sec => sec.isVisible !== false).length > 0 && (
+        <section className="conf-dynamic-tabs-section anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
+          <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+            <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
+              {sections.filter(sec => sec.isVisible !== false).map((sec) => (
+                <button
+                  type="button"
+                  key={sec.id}
+                  className={`classic-tab-btn ${activeSection?.id === sec.id ? "active" : ""}`}
+                  onClick={() => setActiveSection(sec)}
+                >
+                  {sec.sectionName}
+                </button>
+              ))}
+            </div>
+
+            {activeSection && activeSection.items && activeSection.items.filter(item => item.isVisible !== false).length > 0 ? (
+              <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                {activeSection.items.filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)).map(item => (
+                  <div key={item.id} className="advisory-card-premium">
+                    <div 
+                      className="advisory-avatar-wrap-premium"
+                      style={{ cursor: item.description ? 'pointer' : 'default' }}
+                      onClick={() => {
+                        if (item.description) {
+                          setSelectedBioSpeaker({
+                            name: item.name,
+                            designation: item.designation,
+                            org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
+                            photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                            bio: item.description,
+                            website: item.websiteUrl,
+                            linkedin: item.linkedinUrl
+                          });
+                        }
+                      }}
+                    >
+                      <img
+                        src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                        alt={item.name}
+                        onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                      />
+                    </div>
+                    <div className="advisory-info-premium">
+                      <h3>{item.name}</h3>
+                      <p className="advisory-role-premium">{item.designation}</p>
+                      <p className="advisory-org-premium">{item.organization}{item.country ? `, ${item.country}` : ''}</p>
+                      {item.description && (
+                        <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
+                          name: item.name,
+                          designation: item.designation,
+                          org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
+                          photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                          bio: item.description,
+                          website: item.websiteUrl,
+                          linkedin: item.linkedinUrl
+                        })}>
+                          Read Details
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                No active entries found for this tab.
+              </div>
+            )}
+          </div>
+        </section>
       )}
 
       {/* 4. Conference Agenda Section */}
@@ -1588,7 +1684,98 @@ const getEventStatus = (dateStr) => {
         );
       })()}
 
+      {/* Gallery Section */}
+      {galleryImages.length > 0 && (() => {
+        const categories = ["ALL", ...new Set(galleryImages.map(img => img.category).filter(Boolean))];
+        const filtered = galleryFilter === "ALL" ? galleryImages : galleryImages.filter(img => img.category === galleryFilter);
 
+        const resolveGalleryUrl = (img) => {
+          const url = img.imageUrl || "";
+          if (!url) return null;
+          if (url.startsWith("http") || url.startsWith("data:")) return url;
+          if (url.startsWith("/uploads")) return `${BASE_URL}${url}`;
+          return url;
+        };
+
+        return (
+          <section className="conf-gallery-section anim-section" style={{ padding: "80px 0", background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
+            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+              <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "40px" }}>
+                <span className="sponsors-tag-pill">Photos</span>
+                <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginTop: "12px", marginBottom: "8px" }}>Event Gallery</h2>
+                <p style={{ color: "#64748b", fontSize: "15px" }}>Moments captured from our conference events</p>
+              </div>
+
+              {/* Category Filter Tabs */}
+              {categories.length > 2 && (
+                <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "32px", flexWrap: "wrap" }}>
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setGalleryFilter(cat)}
+                      style={{
+                        padding: "7px 20px", borderRadius: "20px", border: "1px solid",
+                        borderColor: galleryFilter === cat ? "var(--conf-primary, #e74c3c)" : "#cbd5e1",
+                        background: galleryFilter === cat ? "var(--conf-primary, #e74c3c)" : "#fff",
+                        color: galleryFilter === cat ? "#fff" : "#475569",
+                        fontWeight: "600", fontSize: "13px", cursor: "pointer", transition: "all 0.2s"
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Photo Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "16px" }}>
+                {filtered.map((img, i) => {
+                  const src = resolveGalleryUrl(img);
+                  if (!src) return null;
+                  return (
+                    <div
+                      key={img.id || i}
+                      onClick={() => setLightboxImg(src)}
+                      style={{
+                        borderRadius: "10px", overflow: "hidden", cursor: "zoom-in",
+                        height: "220px", position: "relative", background: "#e2e8f0",
+                        boxShadow: "0 2px 12px rgba(0,0,0,0.06)", transition: "transform 0.25s, box-shadow 0.25s"
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.14)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)"; }}
+                    >
+                      <img
+                        src={src}
+                        alt={img.caption || "Gallery photo"}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                      {img.caption && (
+                        <div style={{
+                          position: "absolute", bottom: 0, left: 0, right: 0,
+                          background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
+                          padding: "20px 14px 12px", color: "#fff", fontSize: "13px", fontWeight: "500"
+                        }}>
+                          {img.caption}
+                        </div>
+                      )}
+                      <div style={{
+                        position: "absolute", inset: 0, display: "flex", alignItems: "center",
+                        justifyContent: "center", background: "rgba(0,0,0,0)", transition: "background 0.2s",
+                        fontSize: "28px", opacity: 0
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.25)"; e.currentTarget.style.opacity = "1"; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "rgba(0,0,0,0)"; e.currentTarget.style.opacity = "0"; }}
+                      >
+                        🔍
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Redesigned Premium Bio & Profile Modal */}
       {selectedBioSpeaker && (
@@ -1631,6 +1818,20 @@ const getEventStatus = (dateStr) => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* GALLERY LIGHTBOX */}
+      {lightboxImg && (
+        <div
+          onClick={() => setLightboxImg(null)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 9999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out'
+          }}
+        >
+          <img src={lightboxImg} alt="Gallery" style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: '10px', boxShadow: '0 30px 80px rgba(0,0,0,0.6)' }} onClick={e => e.stopPropagation()} />
+          <button onClick={() => setLightboxImg(null)} style={{ position: 'absolute', top: '24px', right: '32px', background: 'none', border: 'none', color: '#fff', fontSize: '36px', cursor: 'pointer', lineHeight: 1 }}>×</button>
         </div>
       )}
     </div>

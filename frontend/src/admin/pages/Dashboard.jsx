@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../AdminContext';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
+import { getSubdomain } from '../../utils/subdomain';
 
 const Dashboard = () => {
   const { conferences, activeConferenceId, metrics } = useAdmin();
@@ -40,6 +41,9 @@ const Dashboard = () => {
     { color: 'var(--admin-danger)', text: <><strong>Contact inquiry</strong> from John Smith — requires response</>, time: '3 days ago' },
   ];
 
+  const isSubdomain = !!getSubdomain();
+  const isSuperAdmin = localStorage.getItem('adminRole') === 'SUPER_ADMIN';
+
   return (
     <div className="admin-page">
       <div className="admin-page-header">
@@ -47,14 +51,16 @@ const Dashboard = () => {
           <h2>Dashboard</h2>
           <p>Welcome back! Here's an overview of your conference platform.</p>
         </div>
-        <button className="btn-admin btn-admin-primary" onClick={() => navigate('/admin/conferences')}>
-          + Create Conference
-        </button>
+        {(!isSubdomain && isSuperAdmin) && (
+          <button className="btn-admin btn-admin-primary" onClick={() => navigate('/admin/conferences')}>
+            + Create Conference
+          </button>
+        )}
       </div>
 
       {/* Metric Cards */}
       <div className="admin-metrics-grid">
-        {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+        {(!isSubdomain && isSuperAdmin) && (
           <div className="metric-card" onClick={() => navigate('/admin/conferences')}>
             <div className="metric-icon metric-icon-primary">🏢</div>
             <div className="metric-content">
@@ -89,7 +95,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+        {(!isSubdomain && isSuperAdmin) && (
           <div className="metric-card">
             <div className="metric-icon metric-icon-primary">📅</div>
             <div className="metric-content">
@@ -129,7 +135,7 @@ const Dashboard = () => {
           </div>
 
           {/* Diagnostics Card - Super Admin Only */}
-          {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+          {(!isSubdomain && isSuperAdmin) && (
             <div className="admin-card">
               <div className="dashboard-section-title">🔍 System Diagnostics & Health</div>
             {loadingDiag ? (
@@ -274,7 +280,7 @@ const Dashboard = () => {
           <div className="admin-card">
             <div className="dashboard-section-title">⚡ Quick Actions</div>
             <div className="quick-actions-grid">
-              {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+              {(!isSubdomain && isSuperAdmin) && (
                 <button className="quick-action-btn" onClick={() => navigate('/admin/conferences')}>
                   <span>🏢</span><span>New Conference</span>
                 </button>
@@ -291,7 +297,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {localStorage.getItem('adminRole') === 'SUPER_ADMIN' && (
+          {(!isSubdomain && isSuperAdmin) && (
           <div className="admin-card">
             <div className="dashboard-section-title">📅 Upcoming Conferences</div>
             {conferences.filter(c => c.startDate && new Date(c.startDate) > new Date()).length === 0 ? (

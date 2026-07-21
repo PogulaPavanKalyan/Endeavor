@@ -139,13 +139,26 @@ public class WebinarController {
         }
     }
 
-    // Admin Endpoint: Delete Webinar
+    // Admin Endpoint: Delete Webinar (Soft-delete / Archive)
     @DeleteMapping("/admin/webinars/{id}")
     public ResponseEntity<Void> deleteWebinar(@PathVariable Long id, Principal principal) {
         Optional<Webinar> opt = webinarService.getById(id);
         if (opt.isPresent()) {
             webinarService.deleteWebinar(id);
             logAdminActivity(principal, "DELETE_WEBINAR", "Archived (Soft deleted) webinar: " + opt.get().getTitle() + " (ID: " + id + ")");
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Admin Endpoint: Permanently Delete Webinar (Hard Delete)
+    @DeleteMapping("/admin/webinars/{id}/permanent")
+    public ResponseEntity<Void> permanentlyDeleteWebinar(@PathVariable Long id, Principal principal) {
+        Optional<Webinar> opt = webinarService.getById(id);
+        if (opt.isPresent()) {
+            String title = opt.get().getTitle();
+            webinarService.permanentlyDeleteWebinar(id);
+            logAdminActivity(principal, "PERMANENT_DELETE_WEBINAR", "Permanently deleted webinar: " + title + " (ID: " + id + ")");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

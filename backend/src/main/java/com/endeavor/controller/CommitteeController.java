@@ -62,7 +62,8 @@ public class CommitteeController {
         return service.getById(id).map(member -> {
             try {
                 String folder = "uploads/committee/";
-                File uploadDir = new File(folder);
+                String absolutePath = System.getProperty("user.dir") + "/" + folder;
+                File uploadDir = new File(absolutePath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdirs();
                 }

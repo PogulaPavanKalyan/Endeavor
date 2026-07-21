@@ -31,20 +31,27 @@ public class ConferenceNavigationService {
     }
 
     public void generateDefaultNavigation(Long conferenceId) {
-        // Only generate if no navigation exists
         List<ConferenceNavigation> existing = repository.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
-        if (!existing.isEmpty()) {
-            return;
+        
+        String[][] defaults = {
+            {"Home", "", ""},
+            {"Speakers", "speakers", "speakers"},
+            {"Scientific Program", "program", "program"},
+            {"Brochure", "brochure", "brochure"},
+            {"Abstract Submissions", "submit-abstract", "submit-abstract"},
+            {"Registration", "register", "register"},
+            {"Venue", "venue", "venue"},
+            {"Contact Us", "contact", "contact"}
+        };
+        
+        int order = existing.isEmpty() ? 1 : existing.stream().mapToInt(ConferenceNavigation::getDisplayOrder).max().orElse(0) + 1;
+        
+        for (String[] def : defaults) {
+            boolean exists = existing.stream().anyMatch(e -> def[1].equals(e.getSlug()) || def[2].equals(e.getUrl()));
+            if (!exists) {
+                createDefaultItem(conferenceId, def[0], def[1], def[2], order++);
+            }
         }
-
-        int order = 1;
-        createDefaultItem(conferenceId, "Home", "", "", order++);
-        createDefaultItem(conferenceId, "Speakers", "speakers", "speakers", order++);
-        createDefaultItem(conferenceId, "Scientific Program", "program", "program", order++);
-        createDefaultItem(conferenceId, "Abstract Submissions", "abstract-submissions", "abstract-submissions", order++);
-        createDefaultItem(conferenceId, "Registration", "registration", "registration", order++);
-        createDefaultItem(conferenceId, "Venue", "venue", "venue", order++);
-        createDefaultItem(conferenceId, "Contact Us", "contact", "contact", order++);
     }
 
     private void createDefaultItem(Long confId, String name, String slug, String url, int order) {

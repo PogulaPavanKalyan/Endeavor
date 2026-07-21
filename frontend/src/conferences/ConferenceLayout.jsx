@@ -375,6 +375,12 @@ const ConferenceLayout = () => {
                   </Link>
                 );
               })}
+            <Link
+              to={getSubRoutePath("brochure")}
+              className={`conf-nav-link ${isLinkActive("brochure") ? "active" : ""}`}
+            >
+              Brochure
+            </Link>
           </nav>
 
           <button

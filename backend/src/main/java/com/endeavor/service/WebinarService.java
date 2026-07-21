@@ -91,6 +91,11 @@ public class WebinarService {
         }
     }
 
+    @Transactional
+    public void permanentlyDeleteWebinar(Long id) {
+        webinarRepository.deleteById(id);
+    }
+
     private void validateWebinar(Webinar w) {
         if (w.getTitle() == null || w.getTitle().trim().isEmpty()) {
             throw new IllegalArgumentException("Webinar Title is required");

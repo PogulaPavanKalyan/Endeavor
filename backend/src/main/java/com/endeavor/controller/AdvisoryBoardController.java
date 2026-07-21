@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.endeavor.entity.AdvisoryBoardMember;
 import com.endeavor.repo.AdvisoryBoardMemberRepo;
+import com.endeavor.service.SecurityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +29,22 @@ public class AdvisoryBoardController {
 
     @GetMapping("/api/admin/advisory-board")
     public ResponseEntity<List<AdvisoryBoardMember>> getAdminAdvisoryBoard(@RequestParam Long conferenceId) {
+        if (SecurityUtils.isConferenceAdmin()) {
+            Long tenantId = SecurityUtils.getTenantConferenceId(conferenceId);
+            if (!conferenceId.equals(tenantId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
         return ResponseEntity.ok(repo.findByConferenceIdOrderByDisplayOrderAsc(conferenceId));
     }
 
     @PostMapping("/api/admin/advisory-board")
     public ResponseEntity<AdvisoryBoardMember> createMember(@RequestBody AdvisoryBoardMember member) {
+        Long tenantId = SecurityUtils.getTenantConferenceId(member.getConferenceId());
+        if (tenantId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        member.setConferenceId(tenantId);
         return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(member));
     }
 
@@ -41,6 +53,12 @@ public class AdvisoryBoardController {
         Optional<AdvisoryBoardMember> opt = repo.findById(id);
         if (opt.isPresent()) {
             AdvisoryBoardMember m = opt.get();
+            if (SecurityUtils.isConferenceAdmin()) {
+                Long tenantId = SecurityUtils.getTenantConferenceId(m.getConferenceId());
+                if (!m.getConferenceId().equals(tenantId)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+            }
             m.setName(details.getName());
             m.setDesignation(details.getDesignation());
             m.setOrganization(details.getOrganization());
@@ -58,7 +76,15 @@ public class AdvisoryBoardController {
 
     @DeleteMapping("/api/admin/advisory-board/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        if (repo.existsById(id)) {
+        Optional<AdvisoryBoardMember> opt = repo.findById(id);
+        if (opt.isPresent()) {
+            AdvisoryBoardMember m = opt.get();
+            if (SecurityUtils.isConferenceAdmin()) {
+                Long tenantId = SecurityUtils.getTenantConferenceId(m.getConferenceId());
+                if (!m.getConferenceId().equals(tenantId)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+            }
             repo.deleteById(id);
             return ResponseEntity.noContent().build();
         }
@@ -71,9 +97,17 @@ public class AdvisoryBoardController {
         if (!opt.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+        AdvisoryBoardMember m = opt.get();
+        if (SecurityUtils.isConferenceAdmin()) {
+            Long tenantId = SecurityUtils.getTenantConferenceId(m.getConferenceId());
+            if (!m.getConferenceId().equals(tenantId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
         try {
             String folder = "uploads/advisory/";
-            File uploadDir = new File(folder);
+            String absolutePath = System.getProperty("user.dir") + "/" + folder;
+            File uploadDir = new File(absolutePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
@@ -86,8 +120,7 @@ public class AdvisoryBoardController {
             File destFile = new File(uploadDir, fileName);
             file.transferTo(destFile);
 
-            AdvisoryBoardMember m = opt.get();
-            m.setImagePath("/uploads/advisory/" + fileName);
+            m.setImagePath("/" + folder + fileName);
             return ResponseEntity.ok(repo.save(m));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -100,6 +133,12 @@ public class AdvisoryBoardController {
             Optional<AdvisoryBoardMember> opt = repo.findById(ids.get(i));
             if (opt.isPresent()) {
                 AdvisoryBoardMember m = opt.get();
+                if (SecurityUtils.isConferenceAdmin()) {
+                    Long tenantId = SecurityUtils.getTenantConferenceId(m.getConferenceId());
+                    if (!m.getConferenceId().equals(tenantId)) {
+                        continue;
+                    }
+                }
                 m.setDisplayOrder(i);
                 repo.save(m);
             }

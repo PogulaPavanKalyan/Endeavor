@@ -785,8 +785,18 @@ const Homepage = () => {
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
                 </p>
 
-                {/* Action Buttons (Removed) */}
-                <div className="hero-cta-buttons">
+                {/* Action Buttons */}
+                <div className="hero-cta-buttons" style={{ display: "flex", gap: "16px", marginTop: "24px" }}>
+                  {heroData?.button1Text && (
+                    <a href={heroData.button1Link || "#"} className="hero-btn hero-btn-primary" style={{ padding: "12px 24px", background: "#E91E63", color: "white", borderRadius: "8px", fontWeight: "600" }}>
+                      {heroData.button1Text}
+                    </a>
+                  )}
+                  {heroData?.button2Text && (
+                    <a href={heroData.button2Link || "#"} className="hero-btn hero-btn-secondary" style={{ padding: "12px 24px", background: "white", color: "#0F172A", border: "1px solid #E2E8F0", borderRadius: "8px", fontWeight: "600" }}>
+                      {heroData.button2Text}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -798,7 +808,7 @@ const Homepage = () => {
                   {/* Main image */}
                   <div className="collage-card card-main">
                     <OptimizedImage
-                      src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"
+                      src={heroData?.heroImageUrl || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"}
                       alt="International Scientific Congress"
                       fallbackType="conference"
                     />
@@ -808,7 +818,7 @@ const Homepage = () => {
                   {/* Second image - top right */}
                   <div className="collage-card card-sub-top">
                     <OptimizedImage
-                      src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=400&q=80"
+                      src={heroData?.backgroundImageUrl || "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=400&q=80"}
                       alt="Scientific Presentation"
                       fallbackType="conference"
                     />

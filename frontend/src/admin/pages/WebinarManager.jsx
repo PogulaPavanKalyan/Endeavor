@@ -176,6 +176,22 @@ const WebinarManager = () => {
     }
   };
 
+  const handlePermanentDelete = async (id) => {
+    if (!(await confirmDialog("⚠️ PERMANENT DELETE — This action CANNOT be undone! The webinar will be completely removed from the database. Are you absolutely sure?"))) return;
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      await api.delete(`/api/admin/webinars/${id}/permanent`);
+      setSuccess("Webinar permanently deleted.");
+      fetchWebinars();
+    } catch (err) {
+      setError("Failed to permanently delete webinar.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePublishToggle = async (webinar) => {
     setLoading(true);
     setError("");
@@ -387,6 +403,13 @@ const WebinarManager = () => {
                           {web.status !== 'ARCHIVED' && (
                             <button className="btn-action-delete" onClick={() => handleDelete(web.id)}>Archive</button>
                           )}
+                          <button
+                            className="btn-action-delete"
+                            style={{ background: '#dc2626', color: '#fff', border: 'none' }}
+                            onClick={() => handlePermanentDelete(web.id)}
+                          >
+                            Delete
+                          </button>
                         </div>
                       </td>
                     </tr>

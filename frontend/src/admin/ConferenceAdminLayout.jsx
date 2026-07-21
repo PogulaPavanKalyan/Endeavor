@@ -82,16 +82,16 @@ const ConferenceAdminLayout = () => {
           📊 Dashboard
         </NavLink>
         <NavLink to={`/admin/speakers${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🎙️ Speakers
+          🎙️ Keynote Speakers
         </NavLink>
         <NavLink to={`/admin/agenda${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📅 Agenda
+          📅 Conference Agenda
         </NavLink>
         <NavLink to={`/admin/sections${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           🗂️ Dynamic Tabs
         </NavLink>
         <NavLink to={`/admin/sessions${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📋 Sessions
+          📋 Sessions & Program
         </NavLink>
         <NavLink to={`/admin/registrations${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           🎟️ Registrations
@@ -101,7 +101,37 @@ const ConferenceAdminLayout = () => {
           📄 Abstracts
         </NavLink>
         <NavLink to={`/admin/contacts${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          ✉️ Contacts
+          ✉️ Contact Requests
+        </NavLink>
+        <NavLink to={`/admin/advisory-board${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🎓 Advisory Board
+        </NavLink>
+        <NavLink to={`/admin/tracks${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📑 Scientific Tracks
+        </NavLink>
+        <NavLink to={`/admin/committee${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          👥 Committee
+        </NavLink>
+        <NavLink to={`/admin/venue${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📍 Venue
+        </NavLink>
+        <NavLink to={`/admin/navbar${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📖 Pages Menu
+        </NavLink>
+        <NavLink to={`/admin/gallery${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🖼️ Photo Gallery
+        </NavLink>
+        <NavLink to={`/admin/brochures${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📁 Brochures
+        </NavLink>
+        <NavLink to={`/admin/sponsors${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🤝 Sponsors
+        </NavLink>
+        <NavLink to={`/admin/webinars${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🌐 Webinars
+        </NavLink>
+        <NavLink to={`/admin/program${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🔬 Scientific Program
         </NavLink>
         <div className="conference-admin-user-nav mobile-only">
           <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: '500' }}>Welcome, Conference Admin</span>
