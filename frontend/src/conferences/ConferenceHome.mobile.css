@@ -1,0 +1,700 @@
+﻿/**
+ * ConferenceHome.mobile.css
+ * Ultra-Premium Mobile Experience - Only applies at max-width: 768px
+ */
+
+/* ============================================================
+   PERFORMANCE: GPU acceleration base
+   ============================================================ */
+@media (max-width: 768px) {
+  .conf-home-portal * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION ENTER ANIMATIONS
+     ============================================================ */
+  .mob-anim-section {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .mob-anim-section.mob-in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mob-delay-1 { transition-delay: 0.05s; }
+  .mob-delay-2 { transition-delay: 0.12s; }
+  .mob-delay-3 { transition-delay: 0.19s; }
+  .mob-delay-4 { transition-delay: 0.26s; }
+  .mob-delay-5 { transition-delay: 0.33s; }
+  .mob-delay-6 { transition-delay: 0.40s; }
+
+  /* ============================================================
+     HERO SECTION
+     ============================================================ */
+  .conf-home-hero {
+    min-height: 100svh !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .conf-home-hero::before {
+    background: linear-gradient(180deg,rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.80) 100%) !important;
+  }
+  .conf-home-hero-content {
+    padding: 80px 20px 48px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100svh;
+    text-align: left !important;
+  }
+  .conf-home-hero h1 {
+    font-size: clamp(26px, 7.5vw, 38px) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 14px !important;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5) !important;
+    animation: mob-hero-title 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    animation-delay: 0.2s;
+  }
+  @keyframes mob-hero-title {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .conf-home-hero-meta {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,0.88) !important;
+    background: rgba(255,255,255,0.12) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 20px !important;
+    padding: 6px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+    width: fit-content !important;
+    animation: mob-hero-meta 0.7s cubic-bezier(0.22,1,0.36,1) both;
+    animation-delay: 0.1s;
+  }
+  @keyframes mob-hero-meta {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .conf-countdown {
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+    flex-wrap: nowrap !important;
+    animation: mob-hero-countdown 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    animation-delay: 0.4s;
+  }
+  @keyframes mob-hero-countdown {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .conf-countdown-item {
+    width: 68px !important;
+    height: 68px !important;
+    background: rgba(255,255,255,0.1) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1.5px solid rgba(255,255,255,0.25) !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.15) !important;
+  }
+  .conf-countdown-number {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    line-height: 1 !important;
+    font-variant-numeric: tabular-nums;
+  }
+  .conf-countdown-label {
+    font-size: 9px !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,0.7) !important;
+    margin-top: 2px !important;
+  }
+  .conf-slider-arrow { display: none !important; }
+  .conf-slider-dots {
+    bottom: 80px !important;
+    justify-content: flex-start !important;
+    left: 20px !important;
+    right: auto !important;
+  }
+  .conf-slider-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 3px !important;
+    background: rgba(255,255,255,0.5) !important;
+    transition: width 0.3s ease, background 0.3s ease !important;
+  }
+  .conf-slider-dot.active {
+    width: 20px !important;
+    background: #fff !important;
+  }
+
+  /* ============================================================
+     ADVISORY BOARD - Horizontal Swipe Carousel
+     ============================================================ */
+  .conf-advisory-grid-redesigned {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding: 8px 4px 16px !important;
+    scrollbar-width: none !important;
+    grid-template-columns: unset !important;
+  }
+  .conf-advisory-grid-redesigned::-webkit-scrollbar { display: none; }
+  .advisory-card-premium {
+    flex: 0 0 76vw !important;
+    max-width: 300px !important;
+    scroll-snap-align: start !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease !important;
+  }
+  .advisory-card-premium:active {
+    transform: scale(0.96) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08) !important;
+  }
+  .advisory-avatar-wrap-premium {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    margin-bottom: 12px !important;
+    border: 2px solid var(--conf-primary,#e74c3c) !important;
+    flex-shrink: 0 !important;
+  }
+  .advisory-avatar-wrap-premium img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  .advisory-info-premium h3 {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin-bottom: 4px !important;
+  }
+  .advisory-role-premium {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--conf-primary,#e74c3c) !important;
+    margin-bottom: 3px !important;
+  }
+  .advisory-org-premium {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    line-height: 1.4 !important;
+  }
+
+  /* ============================================================
+     SPEAKERS - Horizontal Swipe Carousel
+     ============================================================ */
+  .conf-speakers-grid-redesigned {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding: 8px 4px 16px !important;
+    scrollbar-width: none !important;
+    grid-template-columns: unset !important;
+  }
+  .conf-speakers-grid-redesigned::-webkit-scrollbar { display: none; }
+  .speaker-card-redesigned-premium {
+    flex: 0 0 72vw !important;
+    max-width: 260px !important;
+    scroll-snap-align: start !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 20px 16px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+    cursor: pointer !important;
+  }
+  .speaker-card-redesigned-premium:active { transform: scale(0.96) !important; }
+  .speaker-image-wrapper {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    margin-bottom: 12px !important;
+    border: 2.5px solid var(--conf-primary,#e74c3c) !important;
+  }
+
+  /* ============================================================
+     SPONSORS - Horizontal scroll
+     ============================================================ */
+  .sponsor-logos-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    scrollbar-width: none !important;
+    grid-template-columns: unset !important;
+  }
+  .sponsor-logos-grid::-webkit-scrollbar { display: none; }
+  .sponsor-logo-box {
+    flex: 0 0 140px !important;
+    scroll-snap-align: center !important;
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px 12px !important;
+    min-height: 80px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+  }
+  .sponsor-logo-box:active { transform: scale(0.95) !important; }
+
+  /* ============================================================
+     GALLERY - Horizontal Snap Slider
+     ============================================================ */
+  .conf-gallery-section > div > div:last-child {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+    padding: 8px 4px 12px !important;
+    scrollbar-width: none !important;
+    grid-template-columns: unset !important;
+  }
+  .conf-gallery-section > div > div:last-child::-webkit-scrollbar { display: none; }
+  .conf-gallery-section > div > div:last-child > div {
+    flex: 0 0 78vw !important;
+    max-width: 320px !important;
+    height: 200px !important;
+    scroll-snap-align: start !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1) !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ============================================================
+     TIMELINE / IMPORTANT DATES
+     ============================================================ */
+  .timeline-row {
+    border-radius: 12px !important;
+    margin-bottom: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+    overflow: hidden !important;
+  }
+  .timeline-row:active { transform: scale(0.985) !important; }
+  .timeline-row.today {
+    border-color: var(--conf-primary,#e74c3c) !important;
+    box-shadow: 0 0 0 1px var(--conf-primary,#e74c3c),0 4px 16px rgba(231,76,60,0.12) !important;
+  }
+
+  /* ============================================================
+     AGENDA TABS - Horizontal scroll
+     ============================================================ */
+  .classic-agenda-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 8px !important;
+    padding-bottom: 8px !important;
+    scrollbar-width: none !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+  }
+  .classic-agenda-tabs::-webkit-scrollbar { display: none; }
+  .classic-tab-btn {
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    padding: 10px 16px !important;
+    white-space: nowrap !important;
+  }
+  .classic-tab-btn:active { transform: scale(0.97) !important; }
+  .classic-timeline-sidebar { display: none !important; }
+  .classic-agenda-container {
+    width: 100% !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
+  }
+
+  /* ============================================================
+     SECTION HEADERS
+     ============================================================ */
+  .conf-section-header h2 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    color: #0f172a !important;
+  }
+  .conf-section-header p {
+    font-size: 14px !important;
+    color: #64748b !important;
+  }
+  .sponsors-tag-pill {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 5px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  /* ============================================================
+     BUTTONS - Premium mobile CTAs
+     ============================================================ */
+  .btn-conf-submit,
+  .btn-conf-download {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 14px 28px !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+    width: 100% !important;
+    text-align: center !important;
+    display: block !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+  }
+  .btn-conf-submit:active,
+  .btn-conf-download:active {
+    transform: scale(0.97) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  }
+
+  /* ============================================================
+     MODAL - Bottom sheet
+     ============================================================ */
+  .conf-premium-bio-modal-overlay { align-items: flex-end !important; }
+  .conf-modal-inner-premium {
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 92svh !important;
+    overflow-y: auto !important;
+    animation: mob-sheet-up 0.4s cubic-bezier(0.22,1,0.36,1) !important;
+  }
+  @keyframes mob-sheet-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .conf-modal-grid-premium { grid-template-columns: 1fr !important; }
+
+  /* ============================================================
+     PRICING CARDS - Horizontal scroll
+     ============================================================ */
+  .conf-pricing-grid, .conf-tickets-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding: 8px 4px 16px !important;
+    scrollbar-width: none !important;
+    grid-template-columns: unset !important;
+    flex-wrap: nowrap !important;
+  }
+  .conf-pricing-grid::-webkit-scrollbar,
+  .conf-tickets-grid::-webkit-scrollbar { display: none; }
+  .conf-pricing-card, .conf-ticket-card, .ticket-card-redesigned {
+    flex: 0 0 76vw !important;
+    max-width: 280px !important;
+    scroll-snap-align: start !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.09) !important;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
+  }
+  .conf-pricing-card:active,
+  .conf-ticket-card:active,
+  .ticket-card-redesigned:active { transform: scale(0.97) !important; }
+
+  /* ============================================================
+     INFO UPDATE CARDS
+     ============================================================ */
+  .info-update-card {
+    flex: 0 0 72vw !important;
+    max-width: 260px !important;
+    scroll-snap-align: start !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.09) !important;
+  }
+  .info-update-card:active { transform: scale(0.97) !important; }
+
+  /* ============================================================
+     GLOBAL OVERFLOW & CONTAINER
+     ============================================================ */
+  .conf-home-portal { overflow-x: hidden !important; }
+  a, button { -webkit-tap-highlight-color: transparent !important; }
+  .conf-home-hero-slider { touch-action: pan-y !important; }
+
+  /* Last card margin for carousel breathing room */
+  .conf-advisory-grid-redesigned > *:last-child,
+  .conf-speakers-grid-redesigned > *:last-child { margin-right: 16px !important; }
+
+  /* About highlights - horizontal */
+  .conf-about-highlights {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    margin-top: 20px !important;
+    scrollbar-width: none !important;
+  }
+  .conf-about-highlights::-webkit-scrollbar { display: none; }
+  .conf-highlight-card {
+    flex: 0 0 75vw !important;
+    max-width: 280px !important;
+    scroll-snap-align: start !important;
+    border-radius: 14px !important;
+  }
+  .conf-highlight-card:active { transform: scale(0.97) !important; }
+}
+
+/* Extra-small screens */
+@media (max-width: 375px) {
+  .conf-countdown-item { width: 60px !important; height: 60px !important; }
+  .conf-countdown-number { font-size: 19px !important; }
+  .conf-home-hero h1 { font-size: 24px !important; }
+  .advisory-avatar-wrap-premium { width: 70px !important; height: 70px !important; }
+}
+
+/* ============================================================
+   ADDITIONAL MOBILE ENHANCEMENTS
+   ============================================================ */
+@media (max-width: 768px) {
+
+  /* Swipe hint for carousel sections */
+  .mob-swipe-hint {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 16px 10px;
+    animation: mob-hint-in 0.6s ease 1s both;
+  }
+  @keyframes mob-hint-in {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* conf-speaker-card-premium on mobile */
+  .conf-speaker-card-premium {
+    flex: 0 0 72vw !important;
+    max-width: 260px !important;
+    scroll-snap-align: start !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07) !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+  }
+  .conf-speaker-card-premium:active { transform: scale(0.96) !important; }
+
+  /* advisory-card-premium already in carousel styles */
+
+  /* Speakers grid layout override */
+  .conf-speakers-grid-redesigned {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding: 8px 16px 20px !important;
+    scrollbar-width: none !important;
+  }
+  .conf-speakers-grid-redesigned::-webkit-scrollbar { display: none !important; }
+  .conf-speakers-grid-redesigned > * { flex-shrink: 0 !important; }
+
+  /* Advisory grid override */
+  .conf-advisory-grid-redesigned {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding: 8px 16px 20px !important;
+    scrollbar-width: none !important;
+  }
+  .conf-advisory-grid-redesigned::-webkit-scrollbar { display: none !important; }
+  .conf-advisory-grid-redesigned > * { flex-shrink: 0 !important; }
+
+  /* Hero action buttons */
+  .hero-actions-premium,
+  .conf-home-hero-actions {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .conf-home-hero-actions a,
+  .hero-actions-premium a {
+    width: 100% !important;
+    max-width: 320px !important;
+    text-align: center !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    padding: 14px 20px !important;
+    display: block !important;
+  }
+
+  /* Registration section CTA buttons */
+  .conf-registration-home-container a,
+  .conf-register-btn {
+    width: 100% !important;
+    max-width: 340px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    min-height: 52px !important;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+  }
+  .conf-registration-home-container a:active,
+  .conf-register-btn:active { transform: scale(0.97) !important; }
+
+  /* Section padding reset for mobile */
+  .conf-speakers-section .container,
+  .conf-advisory-section-redesigned .container,
+  .conf-committee-section-redesigned .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100vw !important;
+  }
+
+  .conf-speakers-section .conf-section-header,
+  .conf-advisory-section-redesigned .conf-section-header,
+  .conf-committee-section-redesigned .conf-section-header,
+  .conf-sponsors-partners-section .conf-section-header {
+    padding: 0 16px !important;
+    text-align: left !important;
+  }
+
+  .conf-speakers-section .conf-section-header p,
+  .conf-advisory-section-redesigned .conf-section-header p,
+  .conf-committee-section-redesigned .conf-section-header p {
+    text-align: left !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Registration cards row */
+  .conf-reg-cards-row {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 12px !important;
+    padding: 8px 16px 16px !important;
+    scrollbar-width: none !important;
+  }
+  .conf-reg-cards-row::-webkit-scrollbar { display: none; }
+  .conf-reg-card {
+    flex: 0 0 76vw !important;
+    scroll-snap-align: start !important;
+    border-radius: 16px !important;
+  }
+
+  /* Premium section separator */
+  section + section::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+    margin: 0 16px;
+  }
+
+  /* Glow on active sponsor logos */
+  .sponsor-logo-box:focus,
+  .sponsor-logo-box:active {
+    box-shadow: 0 0 0 2px var(--conf-primary, #e74c3c), 0 4px 16px rgba(231,76,60,0.15) !important;
+  }
+
+  /* Timeline + important dates = full-width cards */
+  .timeline-row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Agenda section container */
+  .conf-agenda-section-redesigned .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Smooth section reveals — stagger children */
+  .mob-anim-section.mob-in-view .mob-delay-1 { opacity: 1 !important; transform: translateY(0) !important; }
+  .mob-anim-section.mob-in-view .mob-delay-2 { opacity: 1 !important; transform: translateY(0) !important; }
+  .mob-anim-section.mob-in-view .mob-delay-3 { opacity: 1 !important; transform: translateY(0) !important; }
+
+  /* Touch press scale for all cards */
+  .sponsor-tier-group .sponsor-logo-box,
+  .timeline-row,
+  .advisory-card-premium,
+  .conf-speaker-card-premium {
+    cursor: pointer !important;
+  }
+
+  /* About section responsive */
+  .conf-about-section {
+    padding: 40px 16px !important;
+  }
+
+  /* Ensure no content bleeds */
+  .sponsors-tiers-container {
+    overflow: hidden !important;
+  }
+}

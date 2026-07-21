@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
 import "./ConferenceHome.css";
+import "./ConferenceHome.mobile.css";
 
 const DEFAULT_PRICING_TIERS = [
   { type: "Student Registration", earlyPrice: 129, midPrice: 159, finalPrice: 189 },
@@ -133,6 +134,85 @@ const ConferenceHome = () => {
       observer.disconnect();
     };
   }, [loading]);
+
+  // ── MOBILE: mob-anim-section scroll-reveal observer ──────────────────────
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    const mobObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('mob-in-view');
+          mobObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    const mobSections = document.querySelectorAll('.mob-anim-section');
+    mobSections.forEach(el => mobObserver.observe(el));
+
+    return () => mobObserver.disconnect();
+  }, [loading]);
+
+  // ── MOBILE: Hero slider swipe gesture ────────────────────────────────────
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    const hero = document.querySelector('.conf-home-hero-slider');
+    if (!hero) return;
+    let startX = 0;
+    const onTouchStart = (e) => { startX = e.touches[0].clientX; };
+    const onTouchEnd = (e) => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        const arrows = document.querySelectorAll('.conf-slider-arrow');
+        if (arrows.length >= 2) {
+          diff > 0 ? arrows[1].click() : arrows[0].click();
+        }
+      }
+    };
+    hero.addEventListener('touchstart', onTouchStart, { passive: true });
+    hero.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      hero.removeEventListener('touchstart', onTouchStart);
+      hero.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
+
+  // ── MOBILE: Ripple effect on buttons ─────────────────────────────────────
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    const addRipple = (e) => {
+      const btn = e.currentTarget;
+      const circle = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      circle.style.cssText = `
+        position:absolute;border-radius:50%;
+        width:${size}px;height:${size}px;
+        top:${e.clientY - rect.top - size / 2}px;
+        left:${e.clientX - rect.left - size / 2}px;
+        background:rgba(255,255,255,0.3);
+        transform:scale(0);pointer-events:none;
+        animation:mob-ripple 0.55s linear forwards;
+      `;
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    };
+
+    const style = document.createElement('style');
+    style.textContent = `@keyframes mob-ripple{0%{transform:scale(0);opacity:0.6}100%{transform:scale(4);opacity:0}}`;
+    document.head.appendChild(style);
+
+    const btns = document.querySelectorAll('.btn-conf-submit, .btn-conf-download, .btn-hero-primary, .btn-hero-secondary');
+    btns.forEach(btn => btn.addEventListener('click', addRipple));
+    return () => {
+      btns.forEach(btn => btn.removeEventListener('click', addRipple));
+      style.remove();
+    };
+  }, [loading]);
+
+
 
 const getEventStatus = (dateStr) => {
     const today = new Date();
@@ -672,7 +752,7 @@ const getEventStatus = (dateStr) => {
   return (
     <div className="conf-home-portal max-w-[100vw] overflow-x-hidden">
       {/* Hero Section */}
-      <section className="conf-home-hero anim-section max-md:min-h-[100svh]">
+      <section className="conf-home-hero anim-section mob-anim-section max-md:min-h-[100svh]">
         <div className="conf-home-hero-slider">
           {heroImages.map((imgUrl, idx) => (
             <div
@@ -739,7 +819,7 @@ const getEventStatus = (dateStr) => {
       </section>
 
       {/* About Section */}
-      <section className="conf-about-section anim-section bg-white px-4 md:px-0 py-12 md:py-20 max-md:py-12">
+      <section className="conf-about-section anim-section mob-anim-section bg-white px-4 md:px-0 py-12 md:py-20 max-md:py-12">
         <div className="container mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center max-md:grid-cols-1 max-md:px-4">
           <div className="conf-about-text">
             <h2 style={{ fontSize: "32px", color: "#0f172a", fontWeight: "800", marginBottom: "25px", position: "relative", display: "inline-block" }}>
@@ -799,7 +879,7 @@ const getEventStatus = (dateStr) => {
         const rightColumnTracks = tracksList.slice(midPoint);
 
         return (
-          <section className="conf-sessions-section anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
+          <section className="conf-sessions-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff", borderTop: "1px solid #f1f5f9" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header text-left" style={{ marginBottom: "35px" }}>
                 <h2 style={{ fontSize: "28px", fontWeight: "800", color: "#0f172a", marginBottom: "15px", textTransform: "none" }}>
@@ -898,7 +978,7 @@ const getEventStatus = (dateStr) => {
         const nextDeadline = upcomingDates[0];
 
         return (
-          <section className="conf-important-dates-section anim-section" id="important-dates">
+          <section className="conf-important-dates-section anim-section mob-anim-section" id="important-dates">
             <div className="container" style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "45px" }}>
                 <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginBottom: "15px" }}>
@@ -1014,7 +1094,7 @@ const getEventStatus = (dateStr) => {
 
       {/* 1. Keynote & Invited Speakers Section */}
       {/* 2. International Advisory Board Section */}
-      <section className="conf-advisory-section-redesigned anim-section" id="advisory-board">
+      <section className="conf-advisory-section-redesigned anim-section mob-anim-section" id="advisory-board">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Academic Guidance</span>
@@ -1084,7 +1164,7 @@ const getEventStatus = (dateStr) => {
         </div>
       </section>
 
-      <section className="conf-speakers-section anim-section" id="keynote-speakers">
+      <section className="conf-speakers-section anim-section mob-anim-section" id="keynote-speakers">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Presentations</span>
@@ -1174,7 +1254,7 @@ const getEventStatus = (dateStr) => {
 
       {/* 3. Organizing Committee Section */}
       {conference.showCommittee !== false && (
-      <section className="conf-committee-section-redesigned anim-section" id="organizing-committee">
+      <section className="conf-committee-section-redesigned anim-section mob-anim-section" id="organizing-committee">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Committee</span>
@@ -1236,7 +1316,7 @@ const getEventStatus = (dateStr) => {
 
       {/* Dynamic Tabs Section */}
       {sections && sections.filter(sec => sec.isVisible !== false).length > 0 && (
-        <section className="conf-dynamic-tabs-section anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
+        <section className="conf-dynamic-tabs-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
           <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
             <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
               {sections.filter(sec => sec.isVisible !== false).map((sec) => (
@@ -1309,7 +1389,7 @@ const getEventStatus = (dateStr) => {
       )}
 
       {/* 4. Conference Agenda Section */}
-      <section className="conf-agenda-section-redesigned anim-section" id="agenda-schedule">
+      <section className="conf-agenda-section-redesigned anim-section mob-anim-section" id="agenda-schedule">
         <div className="container">
           <div className="conf-section-header">
             <span className="sponsors-tag-pill">Scientific Timetable</span>
@@ -1548,7 +1628,7 @@ const getEventStatus = (dateStr) => {
 
       {/* Media Partners & Sponsors Section (Admin added only) */}
       {sponsors && sponsors.length > 0 && (
-        <section className="conf-sponsors-partners-section anim-section">
+        <section className="conf-sponsors-partners-section anim-section mob-anim-section">
           <div className="container">
             <div className="conf-section-header">
               <span className="sponsors-tag-pill">Partnerships</span>
@@ -1642,7 +1722,7 @@ const getEventStatus = (dateStr) => {
         const activeInfoUpdates = infoUpdates && infoUpdates.length > 0 ? infoUpdates : fallbackInfoUpdates;
 
         return (
-          <section className="conf-info-update-section anim-section" style={{ padding: "80px 0", backgroundColor: "#f8fafc" }}>
+          <section className="conf-info-update-section anim-section mob-anim-section" style={{ padding: "80px 0", backgroundColor: "#f8fafc" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "50px" }}>
                 <span style={{ fontSize: "14px", fontWeight: "700", color: "#94a3b8", letterSpacing: "1.5px", textTransform: "uppercase" }}>Info Update</span>
@@ -1698,7 +1778,7 @@ const getEventStatus = (dateStr) => {
         };
 
         return (
-          <section className="conf-gallery-section anim-section" style={{ padding: "80px 0", background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
+          <section className="conf-gallery-section anim-section mob-anim-section" style={{ padding: "80px 0", background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
             <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
               <div className="conf-section-header" style={{ textAlign: "center", marginBottom: "40px" }}>
                 <span className="sponsors-tag-pill">Photos</span>
