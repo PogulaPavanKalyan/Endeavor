@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const AgendaManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [days, setDays] = useState([]);
@@ -21,7 +21,7 @@ const AgendaManager = () => {
   const [editingDay, setEditingDay] = useState(null);
   const [dayFormData, setDayFormData] = useState({
     dayNumber: 1,
-    dayTitle: ""
+    dayTitle: "Day 1"
   });
 
   // Session Modal
@@ -86,7 +86,6 @@ const AgendaManager = () => {
 
   const fetchDays = async () => {
     setLoading(true);
-    setError("");
     try {
       const data = await api.get(`/api/admin/agenda/days?conferenceId=${activeConferenceId}`);
       const sorted = (data || []).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
@@ -95,7 +94,7 @@ const AgendaManager = () => {
         setActiveDayId(sorted[0].id);
       }
     } catch (err) {
-      setError("Failed to fetch agenda days.");
+      toast.error("Failed to fetch agenda days.");
     } finally {
       setLoading(false);
     }
@@ -129,31 +128,31 @@ const AgendaManager = () => {
       };
       if (editingDay) {
         await api.put(`/api/admin/agenda/days/${editingDay.id}`, payload);
-        setSuccess("Day updated successfully.");
+        toast.success("✓ Agenda day updated successfully!");
       } else {
         const created = await api.post("/api/admin/agenda/days", payload);
         setActiveDayId(created.id);
-        setSuccess("Day added successfully.");
+        toast.success("✓ Agenda day added successfully!");
       }
       setShowDayModal(false);
       fetchDays();
     } catch (err) {
-      setError("Failed to save day.");
+      toast.error("Failed to save day.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteDay = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this day and all its sessions?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this day and all its sessions?", "Delete Agenda Day"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/agenda/days/${id}`);
-      setSuccess("Day deleted.");
+      toast.success("✓ Agenda day deleted successfully!");
       setActiveDayId(null);
       fetchDays();
     } catch (err) {
-      setError("Failed to delete day.");
+      toast.error("Failed to delete day.");
     } finally {
       setLoading(false);
     }
@@ -216,29 +215,29 @@ const AgendaManager = () => {
 
       if (editingSession) {
         await api.put(`/api/admin/agenda/sessions/${editingSession.id}`, payload);
-        setSuccess("Session updated successfully!");
+        toast.success("✓ Agenda session updated successfully!");
       } else {
         await api.post(`/api/admin/agenda/days/${activeDayId}/sessions`, payload);
-        setSuccess("Session added successfully!");
+        toast.success("✓ Agenda session added successfully!");
       }
       setShowSessionModal(false);
       fetchDays();
     } catch (err) {
-      setError("Failed to save session.");
+      toast.error("Failed to save session.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteSession = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this session?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this session?", "Delete Agenda Session"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/agenda/sessions/${id}`);
-      setSuccess("Session deleted.");
+      toast.success("✓ Agenda session deleted successfully!");
       fetchDays();
     } catch (err) {
-      setError("Failed to delete session.");
+      toast.error("Failed to delete session.");
     } finally {
       setLoading(false);
     }

@@ -211,41 +211,72 @@ const ConferenceManager = () => {
     if (!editingConf) return;
     
     setLoading(true);
-    setError('');
-    
     try {
       if (editingDate) {
         const updated = await api.put(`/api/admin/important-dates/${editingDate.id}`, dateFormData);
         setImportantDates(prev => prev.map(d => d.id === editingDate.id ? updated : d));
-        setSuccess('Important date updated successfully.');
+        toast.success("✓ Important date updated successfully!");
       } else {
         const created = await api.post(`/api/admin/conference-details/${editingConf.id}/important-dates`, dateFormData);
         setImportantDates(prev => [...prev, created]);
-        setSuccess('Important date added successfully.');
+        toast.success("✓ Important date added successfully!");
       }
       
       setShowImportantDateForm(false);
       setEditingDate(null);
       setDateFormData({ eventTitle: '', eventDescription: '', eventDate: '', isActive: true, isHighlighted: false });
     } catch (err) {
-      setError(err.message || 'Failed to save important date.');
+      toast.error(err.message || 'Failed to save important date.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteImportantDate = async (dateId) => {
-    if (!(await confirmDialog('Are you sure you want to delete this important date?'))) return;
+    if (!(await confirmDialog('Are you sure you want to delete this important date?', 'Delete Important Date'))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/important-dates/${dateId}`);
       setImportantDates(prev => prev.filter(d => d.id !== dateId));
-      setSuccess('Important date deleted successfully.');
+      toast.success('✓ Important date deleted successfully!');
     } catch (err) {
-      setError('Failed to delete important date.');
+      toast.error('Failed to delete important date.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSoftDelete = async (id) => {
+    if (!(await confirmDialog('Archive this conference? It can be restored later.', 'Archive Conference'))) return;
+    setLoading(true);
+    try {
+      await api.delete(`/api/admin/conference-details/${id}`);
+      toast.success('✓ Conference archived successfully!');
+      await fetchConferences();
+    } catch (e) { toast.error('Failed to archive conference.'); }
+    finally { setLoading(false); }
+  };
+
+  const handleRestore = async (id) => {
+    if (!(await confirmDialog('Restore this conference from archives?', 'Restore Conference'))) return;
+    setLoading(true);
+    try {
+      await api.put(`/api/admin/conference-details/${id}/restore`);
+      toast.success('✓ Conference restored successfully!');
+      await fetchConferences();
+    } catch (e) { toast.error('Failed to restore conference.'); }
+    finally { setLoading(false); }
+  };
+
+  const handleForceDelete = async (id) => {
+    if (!(await confirmDialog('Are you absolutely sure? This will PERMANENTLY delete the conference and all associated data.', 'Delete Conference Permanently'))) return;
+    setLoading(true);
+    try {
+      await api.delete(`/api/admin/conference-details/${id}/force`);
+      toast.success('✓ Conference permanently deleted!');
+      await fetchConferences();
+    } catch (e) { toast.error('Failed to permanently delete conference.'); }
+    finally { setLoading(false); }
   };
 
   const handleToggleImportantDateFlag = async (date, field) => {
@@ -487,35 +518,13 @@ const ConferenceManager = () => {
 
   // ── Delete/Restore/Force conference ──
   const handleDelete = async (id) => {
-    if (!(await confirmDialog('Are you sure you want to archive this conference? It can be restored later.'))) return;
+    if (!(await confirmDialog('Are you sure you want to archive this conference? It can be restored later.', 'Archive Conference'))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/conference-details/${id}`);
-      setSuccess('Conference archived.');
+      toast.success('✓ Conference archived successfully!');
       await fetchConferences();
-    } catch (e) { setError('Failed to archive conference.'); }
-    finally { setLoading(false); }
-  };
-
-  const handleRestore = async (id) => {
-    if (!(await confirmDialog('Restore this conference from archives?'))) return;
-    setLoading(true);
-    try {
-      await api.put(`/api/admin/conference-details/${id}/restore`);
-      setSuccess('Conference restored.');
-      await fetchConferences();
-    } catch (e) { setError('Failed to restore conference.'); }
-    finally { setLoading(false); }
-  };
-
-  const handleForceDelete = async (id) => {
-    if (!(await confirmDialog('Are you absolutely sure? This will PERMANENTLY delete the conference and all associated data. This action is irreversible.'))) return;
-    setLoading(true);
-    try {
-      await api.delete(`/api/admin/conference-details/${id}/force`);
-      setSuccess('Conference permanently deleted.');
-      await fetchConferences();
-    } catch (e) { setError('Failed to permanently delete conference.'); }
+    } catch (e) { toast.error('Failed to archive conference.'); }
     finally { setLoading(false); }
   };
 

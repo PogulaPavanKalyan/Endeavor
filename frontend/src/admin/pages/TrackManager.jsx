@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const TrackManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [tracks, setTracks] = useState([]);
@@ -35,18 +35,16 @@ const TrackManager = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    fetchTracks();
+    if (activeConferenceId) fetchTracks();
   }, [activeConferenceId]);
 
   const fetchTracks = async () => {
-    if (!activeConferenceId) return;
     setLoading(true);
-    setError("");
     try {
-      const data = await api.get(`/api/tracks?conferenceId=${activeConferenceId}`);
+      const data = await api.get(`/api/admin/tracks?conferenceId=${activeConferenceId}`);
       setTracks(data || []);
     } catch (err) {
-      setError("Failed to fetch scientific tracks.");
+      toast.error("Failed to fetch tracks.");
     } finally {
       setLoading(false);
     }
@@ -106,8 +104,6 @@ const TrackManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       let iconPath = formData.trackIcon;
@@ -131,30 +127,29 @@ const TrackManager = () => {
       
       if (editingTrack) {
         await api.put(`/api/admin/tracks/${editingTrack.id}`, payload);
-        setSuccess("Track updated successfully!");
+        toast.success("✓ Scientific track updated successfully!");
       } else {
         await api.post("/api/admin/tracks", payload);
-        setSuccess("Track created successfully!");
+        toast.success("✓ Scientific track created successfully!");
       }
       setShowModal(false);
       fetchTracks();
     } catch (err) {
-      setError("Failed to save track.");
+      toast.error("Failed to save track.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this track?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this track?", "Delete Scientific Track"))) return;
     setLoading(true);
-    setError("");
     try {
       await api.delete(`/api/admin/tracks/${id}`);
-      setSuccess("Track deleted successfully.");
+      toast.success("✓ Scientific track deleted successfully!");
       fetchTracks();
     } catch (err) {
-      setError("Failed to delete track.");
+      toast.error("Failed to delete track.");
     } finally {
       setLoading(false);
     }

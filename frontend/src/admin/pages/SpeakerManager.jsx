@@ -1,11 +1,10 @@
-import { useAdminDialog } from '../components/AdminDialogContext';
 import React, { useState, useEffect } from 'react';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const SpeakerManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
-
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
   const { activeConferenceId } = useAdmin();
   const [activeTab, setActiveTab] = useState('speakers'); // 'speakers' or 'categories'
 
@@ -57,7 +56,7 @@ const SpeakerManager = () => {
       const data = await api.get(`/api/admin/speaker-categories?conferenceId=${activeConferenceId}`);
       setCategories(data || []);
     } catch (err) {
-      setError("Failed to fetch categories.");
+      toast.error("Failed to fetch categories.");
     } finally {
       setLoadingCategories(false);
     }
@@ -81,28 +80,28 @@ const SpeakerManager = () => {
       const payload = { ...categoryFormData, conferenceId: parseInt(activeConferenceId) };
       if (editingCategory) {
         await api.put(`/api/admin/speaker-categories/${editingCategory.id}`, payload);
-        setSuccessMsg("Category updated successfully!");
+        toast.success("✓ Category updated successfully!");
       } else {
         await api.post("/api/admin/speaker-categories", payload);
-        setSuccessMsg("Category created successfully!");
+        toast.success("✓ Category created successfully!");
       }
       setShowCategoryModal(false);
       fetchCategories();
     } catch (err) {
-      setError("Failed to save category.");
+      toast.error("Failed to save category.");
     } finally {
       setLoadingCategories(false);
     }
   };
 
   const handleDeleteCategory = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this category?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this category?", "Delete Category"))) return;
     try {
       await api.delete(`/api/admin/speaker-categories/${id}`);
-      setSuccessMsg("Category deleted successfully!");
+      toast.success("✓ Category deleted successfully!");
       fetchCategories();
     } catch (err) {
-      setError("Cannot delete default system categories or categories with speakers.");
+      toast.error("Cannot delete default system categories or categories with speakers.");
     }
   };
 
@@ -111,9 +110,9 @@ const SpeakerManager = () => {
       const payload = { ...cat, status: !cat.status };
       await api.put(`/api/admin/speaker-categories/${cat.id}`, payload);
       setCategories(prev => prev.map(c => c.id === cat.id ? { ...c, status: !cat.status } : c));
-      setSuccessMsg("Category status toggled.");
+      toast.success("✓ Category status updated.");
     } catch (err) {
-      setError("Failed to toggle status.");
+      toast.error("Failed to toggle status.");
     }
   };
 
@@ -125,7 +124,7 @@ const SpeakerManager = () => {
       const sorted = (data || []).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
       setSpeakers(sorted);
     } catch (err) {
-      setError("Failed to fetch speakers.");
+      toast.error("Failed to fetch speakers.");
     } finally {
       setLoadingSpeakers(false);
     }
@@ -155,7 +154,7 @@ const SpeakerManager = () => {
   const handleSaveSpeaker = async (e) => {
     e.preventDefault();
     if (!activeConferenceId) {
-      setError("Select a conference first."); return;
+      toast.warning("Select a conference first."); return;
     }
     setLoadingSpeakers(true);
     try {
@@ -172,26 +171,26 @@ const SpeakerManager = () => {
         fileData.append("file", photoFile);
         await api.postMultipart(`/api/admin/speakers/${savedSpeaker.id}/photo`, fileData);
       }
-      setSuccessMsg(editingSpeaker ? "Speaker updated successfully!" : "Speaker created successfully!");
+      toast.success(editingSpeaker ? "✓ Speaker updated successfully!" : "✓ Speaker added successfully!");
       setShowSpeakerModal(false);
       fetchSpeakers();
-      fetchCategories(); // To update the speaker counts
+      fetchCategories();
     } catch (err) {
-      setError("Failed to save speaker.");
+      toast.error("Failed to save speaker.");
     } finally {
       setLoadingSpeakers(false);
     }
   };
 
   const handleDeleteSpeaker = async (id) => {
-    if (!(await confirmDialog("Are you sure?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this speaker?", "Delete Speaker"))) return;
     try {
       await api.delete(`/api/admin/speakers/${id}`);
-      setSuccessMsg("Speaker deleted!");
+      toast.success("✓ Speaker deleted successfully!");
       fetchSpeakers();
       fetchCategories();
     } catch (err) {
-      setError("Failed to delete speaker.");
+      toast.error("Failed to delete speaker.");
     }
   };
 
@@ -240,9 +239,6 @@ const SpeakerManager = () => {
         </button>
       </div>
 
-      {error && <div style={{background: '#fee2e2', color: '#b91c1c', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px'}}>{error}</div>}
-      {successMsg && <div style={{background: '#dcfce7', color: '#15803d', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px'}}>{successMsg}</div>}
-
       {/* CATEGORIES TAB */}
       {activeTab === 'categories' && (
         <>
@@ -261,7 +257,7 @@ const SpeakerManager = () => {
                 </tr>
               </thead>
               <tbody>
-                {categories.map((cat, idx) => (
+                {categories.map((cat) => (
                   <tr key={cat.id}>
                     <td style={{fontWeight: '600', color: '#0f172a'}}>
                       {cat.categoryName} {cat.isDefault && <span style={{fontSize: '11px', background: '#e2e8f0', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px'}}>Default</span>}
@@ -274,14 +270,14 @@ const SpeakerManager = () => {
                       </button>
                     </td>
                     <td>
-                      <button className="btn-action-edit" onClick={() => handleOpenCategoryModal(cat)}>Edit</button>
-                      {!cat.isDefault && (
-                        <button className="btn-action-delete" onClick={() => handleDeleteCategory(cat.id)}>Delete</button>
-                      )}
+                      <button onClick={() => handleOpenCategoryModal(cat)} style={{marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#3b82f6'}}>Edit</button>
+                      <button onClick={() => handleDeleteCategory(cat.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444'}}>Delete</button>
                     </td>
                   </tr>
                 ))}
-                {categories.length === 0 && <tr><td colSpan="5" style={{textAlign: 'center', padding: '20px'}}>No categories found.</td></tr>}
+                {categories.length === 0 && (
+                  <tr><td colSpan="5" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>No categories found.</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -292,45 +288,60 @@ const SpeakerManager = () => {
       {activeTab === 'speakers' && (
         <>
           <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '15px'}}>
-             <div style={{display: 'flex', alignItems: 'center', gap: '10px', flex: 1, maxWidth: '400px'}}>
-              <input type="text" placeholder="Search speakers..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1'}} />
-            </div>
-            <button className="btn-admin-primary" onClick={() => handleOpenSpeakerModal()}>+ Add New Speaker</button>
+            <input 
+              type="text" 
+              placeholder="Search speakers..." 
+              value={searchQuery} 
+              onChange={e => setSearchQuery(e.target.value)}
+              className="admin-form-input" 
+              style={{width: '260px', margin: 0}}
+            />
+            <button className="btn-admin-primary" onClick={() => handleOpenSpeakerModal()}>+ Add Speaker</button>
           </div>
-          
           <div className="admin-card" style={{padding: '0', overflow: 'hidden'}}>
             <table className="admin-table">
               <thead style={{background: '#f8fafc'}}>
                 <tr>
-                  <th>Photo</th>
-                  <th>Speaker Info</th>
+                  <th>Speaker</th>
+                  <th>Designation / Affiliation</th>
                   <th>Category</th>
-                  <th>Active</th>
+                  <th>Country</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {paginatedSpeakers.map(spk => (
+                {paginatedSpeakers.map((spk) => (
                   <tr key={spk.id}>
-                    <td style={{padding: '16px 10px'}}>
-                      <img src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")} alt="Speaker" style={{width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover'}} />
+                    <td>
+                      <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                        {spk.photoUrl ? (
+                          <img src={`${BASE_URL}${spk.photoUrl}`} alt={spk.name} style={{width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover'}} />
+                        ) : (
+                          <div style={{width: '36px', height: '36px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'}}>
+                            {spk.name?.charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <strong>{spk.academicTitle} {spk.name}</strong>
+                          {spk.isFeatured && <span style={{fontSize: '10px', background: '#fef3c7', color: '#b45309', padding: '2px 4px', borderRadius: '4px', marginLeft: '6px'}}>Featured</span>}
+                        </div>
+                      </div>
                     </td>
                     <td>
-                      <div style={{fontWeight: '600'}}>{spk.academicTitle ? spk.academicTitle + ' ' : ''}{spk.name}</div>
-                      <div style={{fontSize: '13px', color: '#475569'}}>{spk.designation}, {spk.affiliation}</div>
+                      <div>{spk.designation}</div>
+                      <small style={{color: '#64748b'}}>{spk.affiliation}</small>
                     </td>
+                    <td>{getCategoryName(spk)}</td>
+                    <td>{spk.country}</td>
                     <td>
-                      <span style={{background: '#dbeafe', color: '#1d4ed8', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600'}}>
-                        {getCategoryName(spk)}
-                      </span>
-                    </td>
-                    <td>{spk.isActive ? '🟢' : '🔴'}</td>
-                    <td>
-                      <button className="btn-action-edit" onClick={() => handleOpenSpeakerModal(spk)}>Edit</button>
-                      <button className="btn-action-delete" onClick={() => handleDeleteSpeaker(spk.id)}>Delete</button>
+                      <button onClick={() => handleOpenSpeakerModal(spk)} style={{marginRight: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#3b82f6'}}>Edit</button>
+                      <button onClick={() => handleDeleteSpeaker(spk.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444'}}>Delete</button>
                     </td>
                   </tr>
                 ))}
+                {paginatedSpeakers.length === 0 && (
+                  <tr><td colSpan="5" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>No speakers found.</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -339,17 +350,25 @@ const SpeakerManager = () => {
 
       {/* CATEGORY MODAL */}
       {showCategoryModal && (
-        <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '500px', maxWidth: '95%'}}>
-            <h3>{editingCategory ? "Edit Category" : "Add Category"}</h3>
-            <form onSubmit={handleSaveCategory} style={{display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px'}}>
+        <div style={{position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <div style={{background: '#fff', borderRadius: '8px', padding: '24px', maxWidth: '400px', width: '100%'}}>
+            <h3>{editingCategory ? 'Edit Category' : 'Add Category'}</h3>
+            <form onSubmit={handleSaveCategory} style={{marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
               <div>
-                <label>Category Name</label>
-                <input type="text" value={categoryFormData.categoryName} onChange={e => setCategoryFormData({...categoryFormData, categoryName: e.target.value})} required style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                <label>Category Name *</label>
+                <input 
+                  type="text" 
+                  required 
+                  value={categoryFormData.categoryName} 
+                  onChange={e => setCategoryFormData({ ...categoryFormData, categoryName: e.target.value })} 
+                  className="admin-form-input" 
+                />
               </div>
-              <div style={{display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '15px'}}>
                 <button type="button" onClick={() => setShowCategoryModal(false)} className="btn-admin-secondary">Cancel</button>
-                <button type="submit" className="btn-admin-primary" disabled={loadingCategories}>Save</button>
+                <button type="submit" disabled={loadingCategories} className="btn-admin-primary">
+                  {loadingCategories ? "Saving..." : "Save Category"}
+                </button>
               </div>
             </form>
           </div>
@@ -358,56 +377,55 @@ const SpeakerManager = () => {
 
       {/* SPEAKER MODAL */}
       {showSpeakerModal && (
-        <div className="modal-overlay" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div className="modal-content" style={{background: '#fff', padding: '24px', borderRadius: '12px', width: '700px', maxWidth: '95%', maxHeight: '90vh', overflowY: 'auto'}}>
-            <h3>{editingSpeaker ? "Edit Speaker" : "Add Speaker"}</h3>
-            <form onSubmit={handleSaveSpeaker} style={{display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px'}}>
-              
-              <div style={{display: 'flex', gap: '15px'}}>
-                <div style={{flex: 1}}>
+        <div style={{position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <div style={{background: '#fff', borderRadius: '8px', padding: '24px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto'}}>
+            <h3>{editingSpeaker ? 'Edit Speaker' : 'Add Speaker'}</h3>
+            <form onSubmit={handleSaveSpeaker} style={{marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px'}}>
+                <div>
                   <label>Title</label>
-                  <input type="text" value={speakerFormData.academicTitle} onChange={e => setSpeakerFormData({...speakerFormData, academicTitle: e.target.value})} placeholder="Dr., Prof." style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                  <input type="text" value={speakerFormData.academicTitle} onChange={e => setSpeakerFormData({...speakerFormData, academicTitle: e.target.value})} className="admin-form-input" placeholder="Prof. / Dr." />
                 </div>
-                <div style={{flex: 2}}>
-                  <label>Name</label>
-                  <input type="text" value={speakerFormData.name} onChange={e => setSpeakerFormData({...speakerFormData, name: e.target.value})} required style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                <div>
+                  <label>Full Name *</label>
+                  <input type="text" required value={speakerFormData.name} onChange={e => setSpeakerFormData({...speakerFormData, name: e.target.value})} className="admin-form-input" />
                 </div>
               </div>
 
-              <div>
-                <label>Speaker Category</label>
-                <select value={speakerFormData.categoryId} onChange={e => setSpeakerFormData({...speakerFormData, categoryId: e.target.value})} required style={{width: '100%', padding: '8px', marginTop: '4px'}}>
-                  <option value="">-- Select Category --</option>
-                  {categories.map(c => (
-                    <option key={c.id} value={c.id}>{c.categoryName}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label>Designation</label>
-                <input type="text" value={speakerFormData.designation} onChange={e => setSpeakerFormData({...speakerFormData, designation: e.target.value})} style={{width: '100%', padding: '8px', marginTop: '4px'}} />
-              </div>
-              
-              <div style={{display: 'flex', gap: '15px'}}>
-                <div style={{flex: 1}}>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
+                <div>
+                  <label>Designation</label>
+                  <input type="text" value={speakerFormData.designation} onChange={e => setSpeakerFormData({...speakerFormData, designation: e.target.value})} className="admin-form-input" />
+                </div>
+                <div>
                   <label>Affiliation / University</label>
-                  <input type="text" value={speakerFormData.affiliation} onChange={e => setSpeakerFormData({...speakerFormData, affiliation: e.target.value})} style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                  <input type="text" value={speakerFormData.affiliation} onChange={e => setSpeakerFormData({...speakerFormData, affiliation: e.target.value})} className="admin-form-input" />
                 </div>
-                <div style={{flex: 1}}>
+              </div>
+
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
+                <div>
+                  <label>Category</label>
+                  <select value={speakerFormData.categoryId} onChange={e => setSpeakerFormData({...speakerFormData, categoryId: e.target.value})} className="admin-form-input">
+                    {categories.map(c => <option key={c.id} value={c.id}>{c.categoryName}</option>)}
+                  </select>
+                </div>
+                <div>
                   <label>Country</label>
-                  <input type="text" value={speakerFormData.country} onChange={e => setSpeakerFormData({...speakerFormData, country: e.target.value})} style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                  <input type="text" value={speakerFormData.country} onChange={e => setSpeakerFormData({...speakerFormData, country: e.target.value})} className="admin-form-input" />
                 </div>
               </div>
 
               <div>
                 <label>Photo</label>
-                <input type="file" accept="image/*" onChange={e => setPhotoFile(e.target.files[0])} style={{width: '100%', padding: '8px', marginTop: '4px'}} />
+                <input type="file" accept="image/*" onChange={e => setPhotoFile(e.target.files[0])} className="admin-form-input" />
               </div>
 
-              <div style={{display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '10px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '15px'}}>
                 <button type="button" onClick={() => setShowSpeakerModal(false)} className="btn-admin-secondary">Cancel</button>
-                <button type="submit" className="btn-admin-primary" disabled={loadingSpeakers}>Save</button>
+                <button type="submit" disabled={loadingSpeakers} className="btn-admin-primary">
+                  {loadingSpeakers ? "Saving..." : "Save Speaker"}
+                </button>
               </div>
             </form>
           </div>

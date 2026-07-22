@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const SponsorManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [sponsors, setSponsors] = useState([]);
@@ -26,13 +26,12 @@ const SponsorManager = () => {
 
   const fetchSponsors = async () => {
     setLoading(true);
-    setError("");
     try {
-      const qs = activeConferenceId ? `?conferenceId=${activeConferenceId}` : '';
-      const data = await api.get(`/api/admin/sponsors${qs}`);
+      const url = activeConferenceId ? `/api/sponsors?conferenceId=${activeConferenceId}` : '/api/sponsors';
+      const data = await api.get(url);
       setSponsors(data || []);
     } catch (err) {
-      setError("Failed to fetch sponsors.");
+      toast.error("Failed to fetch sponsors.");
     } finally {
       setLoading(false);
     }
@@ -47,7 +46,9 @@ const SponsorManager = () => {
         tier: sponsor.tier || "SILVER"
       });
     } else {
-      setFormData({ sponsorName: "", description: "", tier: "SILVER" });
+      setFormData({
+        sponsorName: "", description: "", tier: "SILVER"
+      });
     }
     setImageFile(null);
     setShowModal(true);
@@ -56,8 +57,6 @@ const SponsorManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       const payload = { ...formData };
@@ -68,10 +67,10 @@ const SponsorManager = () => {
       let savedSponsor;
       if (editingSponsor) {
         savedSponsor = await api.put(`/api/admin/sponsors/${editingSponsor.id}`, payload);
-        setSuccess("Sponsor updated successfully!");
+        toast.success("✓ Sponsor updated successfully!");
       } else {
         savedSponsor = await api.post("/api/admin/sponsors", payload);
-        setSuccess("Sponsor created successfully!");
+        toast.success("✓ Sponsor added successfully!");
       }
 
       if (imageFile && savedSponsor.id) {
@@ -83,23 +82,21 @@ const SponsorManager = () => {
       setShowModal(false);
       fetchSponsors();
     } catch (err) {
-      setError("Failed to save sponsor details.");
+      toast.error("Failed to save sponsor details.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this sponsor?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this sponsor?", "Delete Sponsor"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/sponsors/${id}`);
-      setSuccess("Sponsor deleted successfully.");
+      toast.success("✓ Sponsor deleted successfully!");
       fetchSponsors();
     } catch (err) {
-      setError("Failed to delete sponsor.");
+      toast.error("Failed to delete sponsor.");
     } finally {
       setLoading(false);
     }

@@ -43,6 +43,7 @@ import WebinarManager from "./admin/pages/WebinarManager";
 import ConferenceSectionManager from "./admin/pages/ConferenceSectionManager";
 import ProgramManager from "./admin/pages/ProgramManager";
 import AdminUsersManager from "./admin/pages/AdminUsersManager";
+import FooterManager from "./admin/pages/FooterManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -58,6 +59,7 @@ import ConferenceContact from "./conferences/ConferenceContact";
 import ConferenceSuggestSpeaker from "./conferences/ConferenceSuggestSpeaker";
 import DynamicConferencePage from "./conferences/DynamicConferencePage";
 import ConferenceTracks from "./conferences/ConferenceTracks";
+import ConferenceSponsorship from "./conferences/ConferenceSponsorship";
 
 import NotFoundPage from "./components/NotFoundPage";
 import Sponsors from "./Home/Sponsors.jsx";
@@ -78,6 +80,7 @@ function App() {
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
             <Route path="tracks" element={<ConferenceTracks />} />
+            <Route path="sponsorship" element={<ConferenceSponsorship />} />
             <Route path="guidelines" element={<ConferenceGuidelines />} />
             <Route path="privacy" element={<ConferencePrivacy />} />
             <Route path="terms" element={<ConferenceTerms />} />
@@ -112,6 +115,7 @@ function App() {
             <Route path="webinars" element={<WebinarManager />} />
             <Route path="program" element={<ProgramManager />} />
             <Route path="users" element={<AdminUsersManager />} />
+            <Route path="footer" element={<FooterManager />} />
           </Route>
 
           {/* Subdomain 404 route */}
@@ -133,6 +137,7 @@ function App() {
             <Route path="speakers" element={<ConferenceSpeakers />} />
             <Route path="program" element={<ConferenceProgram />} />
             <Route path="tracks" element={<ConferenceTracks />} />
+            <Route path="sponsorship" element={<ConferenceSponsorship />} />
             <Route path="guidelines" element={<ConferenceGuidelines />} />
             <Route path="privacy" element={<ConferencePrivacy />} />
             <Route path="terms" element={<ConferenceTerms />} />
@@ -185,6 +190,7 @@ function App() {
             <Route path="webinars" element={<WebinarManager />} />
             <Route path="program" element={<ProgramManager />} />
             <Route path="users" element={<AdminUsersManager />} />
+            <Route path="footer" element={<FooterManager />} />
           </Route>
 
           {/* Main Website 404 route */}

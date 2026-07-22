@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const ContactManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [messages, setMessages] = useState([]);
@@ -20,32 +20,29 @@ const ContactManager = () => {
 
   const fetchMessages = async () => {
     setLoading(true);
-    setError("");
     try {
       const qs = activeConferenceId ? `?conferenceId=${activeConferenceId}` : '';
       const data = await api.get(`/api/admin/contacts${qs}`);
       setMessages(data || []);
     } catch (err) {
-      setError("Failed to fetch contact inquiries.");
+      toast.error("Failed to fetch contact inquiries.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this message?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this inquiry message?", "Delete Inquiry Message"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/contacts/${id}`);
-      setSuccess("Message deleted successfully.");
+      toast.success("✓ Inquiry message deleted successfully!");
       if (selectedMsg && selectedMsg.id === id) {
         setSelectedMsg(null);
       }
       fetchMessages();
     } catch (err) {
-      setError("Failed to delete message.");
+      toast.error("Failed to delete message.");
     } finally {
       setLoading(false);
     }

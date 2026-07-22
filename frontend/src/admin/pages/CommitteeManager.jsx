@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const CommitteeManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [members, setMembers] = useState([]);
@@ -60,7 +60,7 @@ const CommitteeManager = () => {
       const sorted = (data || []).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
       setMembers(sorted);
     } catch (err) {
-      setError("Failed to fetch committee members.");
+      toast.error("Failed to fetch committee members.");
     } finally {
       setLoading(false);
     }
@@ -114,12 +114,10 @@ const CommitteeManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!activeConferenceId) {
-      setError("Please select a conference from the header dropdown first.");
+      toast.warning("Please select a conference from the header dropdown first.");
       return;
     }
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       const payload = {
@@ -140,25 +138,25 @@ const CommitteeManager = () => {
         await api.postMultipart(`/api/admin/committee/${savedMember.id}/photo`, fileData);
       }
 
-      setSuccess(editingMember ? "Committee member updated!" : "Committee member created!");
+      toast.success(editingMember ? "✓ Committee member updated successfully!" : "✓ Committee member added successfully!");
       setShowModal(false);
       fetchMembers();
     } catch (err) {
-      setError("Failed to save committee member.");
+      toast.error("Failed to save committee member.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this member?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this committee member?", "Delete Committee Member"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/committee/${id}`);
-      setSuccess("Committee member deleted.");
+      toast.success("✓ Committee member deleted successfully!");
       fetchMembers();
     } catch (err) {
-      setError("Failed to delete committee member.");
+      toast.error("Failed to delete committee member.");
     } finally {
       setLoading(false);
     }
@@ -166,16 +164,15 @@ const CommitteeManager = () => {
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!(await confirmDialog(`Are you sure you want to delete all ${selectedIds.length} selected members?`))) return;
+    if (!(await confirmDialog(`Are you sure you want to delete all ${selectedIds.length} selected members?`, "Delete Selected Members"))) return;
     setLoading(true);
-    setError("");
     try {
       await Promise.all(selectedIds.map(id => api.delete(`/api/admin/committee/${id}`)));
-      setSuccess("Selected members deleted successfully.");
+      toast.success("✓ Selected members deleted successfully!");
       setSelectedIds([]);
       fetchMembers();
     } catch (err) {
-      setError("Failed to delete some members.");
+      toast.error("Failed to delete some members.");
     } finally {
       setLoading(false);
     }

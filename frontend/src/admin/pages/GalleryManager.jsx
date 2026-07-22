@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const GalleryManager = () => {
-  const { confirmDialog } = useAdminDialog();
+  const { confirmDialog, toast } = useAdminDialog();
   const { activeConferenceId } = useAdmin();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,12 +27,11 @@ const GalleryManager = () => {
 
   const fetchImages = async () => {
     setLoading(true);
-    setError("");
     try {
       const data = await api.get(`/api/admin/gallery?conferenceId=${activeConferenceId}`);
       setImages(data || []);
     } catch (err) {
-      setError("Failed to fetch gallery images.");
+      toast.error("Failed to fetch gallery images.");
     } finally {
       setLoading(false);
     }
@@ -74,8 +73,6 @@ const GalleryManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       const payload = { ...formData };
@@ -84,10 +81,8 @@ const GalleryManager = () => {
       let savedImage;
       if (editingImage) {
         savedImage = await api.put(`/api/admin/gallery/${editingImage.id}`, payload);
-        setSuccess("Gallery image updated successfully!");
       } else {
         savedImage = await api.post("/api/admin/gallery", payload);
-        setSuccess("Gallery image added successfully!");
       }
 
       // Upload file if selected
@@ -95,27 +90,27 @@ const GalleryManager = () => {
         const fd = new FormData();
         fd.append("file", imageFile);
         await api.postMultipart(`/api/admin/gallery/${savedImage.id}/upload`, fd);
-        setSuccess(editingImage ? "Gallery image updated with new photo!" : "Gallery image added with photo!");
       }
 
+      toast.success(editingImage ? "✓ Gallery image updated successfully!" : "✓ Gallery image uploaded successfully!");
       setShowModal(false);
       fetchImages();
     } catch (err) {
-      setError("Failed to save gallery image.");
+      toast.error("Failed to save gallery image.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this gallery image?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this gallery image?", "Delete Gallery Image"))) return;
     setLoading(true);
     try {
       await api.delete(`/api/admin/gallery/${id}`);
-      setSuccess("Gallery image deleted successfully.");
+      toast.success("✓ Gallery image deleted successfully!");
       fetchImages();
     } catch (err) {
-      setError("Failed to delete gallery image.");
+      toast.error("Failed to delete gallery image.");
     } finally {
       setLoading(false);
     }

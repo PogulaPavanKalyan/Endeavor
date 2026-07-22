@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../AdminContext';
+import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 
 const VenueManager = () => {
   const { activeConferenceId } = useAdmin();
+  const { toast } = useAdminDialog();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -69,13 +71,11 @@ const VenueManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!activeConferenceId) {
-      setError("Please select a conference first.");
+      toast.warning("Please select a conference first.");
       return;
     }
 
     setSaving(true);
-    setError("");
-    setSuccess("");
     try {
       const payload = {
         ...formData,
@@ -86,9 +86,9 @@ const VenueManager = () => {
       }
       const saved = await api.post("/api/admin/venue", payload);
       setVenue(saved);
-      setSuccess("Venue details saved successfully!");
+      toast.success("✓ Venue information saved successfully!");
     } catch (err) {
-      setError("Failed to save venue details.");
+      toast.error("Failed to save venue details.");
     } finally {
       setSaving(false);
     }

@@ -3,12 +3,10 @@ import { useAdminDialog } from '../components/AdminDialogContext';
 import { api } from '../../utils/api';
 
 const WebinarManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const [webinars, setWebinars] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   
   // Filters & Search
   const [search, setSearch] = useState("");
@@ -56,7 +54,6 @@ const WebinarManager = () => {
 
   const fetchWebinars = async () => {
     setLoading(true);
-    setError("");
     try {
       let url = `/api/admin/webinars?page=${page}&size=${pageSize}&includeArchived=${includeArchived}`;
       if (statusFilter) {
@@ -77,7 +74,7 @@ const WebinarManager = () => {
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch webinars list from the backend database.");
+      toast.error("Failed to fetch webinars list.");
     } finally {
       setLoading(false);
     }
@@ -85,8 +82,6 @@ const WebinarManager = () => {
 
   const handleOpenModal = (webinar = null) => {
     setEditingWebinar(webinar);
-    setError("");
-    setSuccess("");
     if (webinar) {
       setFormData({
         title: webinar.title || "",
@@ -132,12 +127,10 @@ const WebinarManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     // Front-end validation
     if (formData.registrationRequired && !formData.registrationUrl.trim()) {
-      setError("Registration URL is required when registration is set to required.");
+      toast.warning("Registration URL is required when registration is set to required.");
       setLoading(false);
       return;
     }
@@ -145,42 +138,38 @@ const WebinarManager = () => {
     try {
       if (editingWebinar) {
         await api.put(`/api/admin/webinars/${editingWebinar.id}`, formData);
-        setSuccess("Webinar details updated successfully!");
+        toast.success("✓ Webinar updated successfully!");
       } else {
         await api.post("/api/admin/webinars", formData);
-        setSuccess("Webinar created successfully!");
+        toast.success("✓ Webinar created successfully!");
       }
       setShowModal(false);
       fetchWebinars();
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to save webinar changes. Please check fields and try again.");
+      toast.error(err.message || "Failed to save webinar changes.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete/archive this webinar? It will be soft-deleted and moved to Archived status."))) return;
+    if (!(await confirmDialog("Are you sure you want to archive this webinar?", "Archive Webinar"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/webinars/${id}`);
-      setSuccess("Webinar soft-deleted (archived) successfully.");
+      toast.success("✓ Webinar archived successfully!");
       fetchWebinars();
     } catch (err) {
-      setError("Failed to archive webinar.");
+      toast.error("Failed to archive webinar.");
     } finally {
       setLoading(false);
     }
   };
 
   const handlePermanentDelete = async (id) => {
-    if (!(await confirmDialog("⚠️ PERMANENT DELETE — This action CANNOT be undone! The webinar will be completely removed from the database. Are you absolutely sure?"))) return;
+    if (!(await confirmDialog("⚠️ PERMANENT DELETE — This action CANNOT be undone! Are you absolutely sure?", "Permanent Delete Webinar"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/webinars/${id}/permanent`);
       setSuccess("Webinar permanently deleted.");

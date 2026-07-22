@@ -133,6 +133,9 @@ const ConferenceAdminLayout = () => {
         <NavLink to={`/admin/program${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           🔬 Scientific Program
         </NavLink>
+        <NavLink to={`/admin/footer${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🦶 Footer Management
+        </NavLink>
         <div className="conference-admin-user-nav mobile-only">
           <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: '500' }}>Welcome, Conference Admin</span>
           <button onClick={logout} className="conference-admin-logout" style={{ width: '100%', justifyContent: 'center' }}>

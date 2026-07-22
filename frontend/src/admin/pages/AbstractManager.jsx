@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api, BASE_URL } from '../../utils/api';
 
 const AbstractManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [submissions, setSubmissions] = useState([]);
@@ -19,13 +19,12 @@ const AbstractManager = () => {
 
   const fetchSubmissions = async () => {
     setLoading(true);
-    setError("");
     try {
       const qs = activeConferenceId ? `?conferenceId=${activeConferenceId}` : '';
       const data = await api.get(`/api/admin/abstracts${qs}`);
       setSubmissions(data || []);
     } catch (err) {
-      setError("Failed to load abstract submissions.");
+      toast.error("Failed to load abstract submissions.");
     } finally {
       setLoading(false);
     }
@@ -33,30 +32,26 @@ const AbstractManager = () => {
 
   const handleUpdateStatus = async (id, status) => {
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.put(`/api/admin/abstracts/${id}/status?status=${status}`, {});
-      setSuccess(`Submission status updated to ${status}!`);
+      toast.success(`✓ Submission status updated to ${status}!`);
       fetchSubmissions();
     } catch (err) {
-      setError("Failed to update status.");
+      toast.error("Failed to update status.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this submission?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this submission?", "Delete Abstract Proposal"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/abstracts/${id}`);
-      setSuccess("Submission deleted successfully.");
+      toast.success("✓ Abstract submission deleted successfully!");
       fetchSubmissions();
     } catch (err) {
-      setError("Failed to delete submission.");
+      toast.error("Failed to delete submission.");
     } finally {
       setLoading(false);
     }

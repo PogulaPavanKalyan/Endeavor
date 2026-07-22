@@ -81,6 +81,8 @@ public class Security {
 
                                 "/api/speaker-categories/**",
                                 "/api/program-categories/**",
+                                "/api/footer/**",
+                                "/api/footer",
 
                                 "/uploads/**")
                         .permitAll()

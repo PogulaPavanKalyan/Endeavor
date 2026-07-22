@@ -4,7 +4,7 @@ import { useAdmin } from '../AdminContext';
 import { api } from '../../utils/api';
 
 const SessionManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { activeConferenceId } = useAdmin();
   const [sessions, setSessions] = useState([]);
@@ -27,13 +27,12 @@ const SessionManager = () => {
 
   const fetchSessions = async () => {
     setLoading(true);
-    setError("");
     try {
-      const qs = activeConferenceId ? `?conferenceId=${activeConferenceId}` : '';
-      const data = await api.get(`/api/sessions${qs}`);
+      const url = activeConferenceId ? `/api/sessions?conferenceId=${activeConferenceId}` : '/api/sessions';
+      const data = await api.get(url);
       setSessions(data || []);
     } catch (err) {
-      setError("Failed to fetch scientific program sessions.");
+      toast.error("Failed to fetch sessions.");
     } finally {
       setLoading(false);
     }
@@ -70,8 +69,6 @@ const SessionManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       const payload = { ...formData };
@@ -81,31 +78,29 @@ const SessionManager = () => {
 
       if (editingSession) {
         await api.put(`/api/admin/sessions/${editingSession.id}`, payload);
-        setSuccess("Session updated successfully!");
+        toast.success("✓ Session updated successfully!");
       } else {
         await api.post("/api/admin/sessions", payload);
-        setSuccess("Session created successfully!");
+        toast.success("✓ Program session added successfully!");
       }
       setShowModal(false);
       fetchSessions();
     } catch (err) {
-      setError("Failed to save session.");
+      toast.error("Failed to save session.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!(await confirmDialog("Are you sure you want to delete this session?"))) return;
+    if (!(await confirmDialog("Are you sure you want to delete this session?", "Delete Session"))) return;
     setLoading(true);
-    setError("");
-    setSuccess("");
     try {
       await api.delete(`/api/admin/sessions/${id}`);
-      setSuccess("Session deleted successfully.");
+      toast.success("✓ Session deleted successfully!");
       fetchSessions();
     } catch (err) {
-      setError("Failed to delete session.");
+      toast.error("Failed to delete session.");
     } finally {
       setLoading(false);
     }

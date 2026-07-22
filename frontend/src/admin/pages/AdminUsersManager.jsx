@@ -4,7 +4,7 @@ import { api } from '../../utils/api';
 import { useAdmin } from '../AdminContext';
 
 const AdminUsersManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { conferences, adminRole } = useAdmin();
   const [admins, setAdmins] = useState([]);
@@ -36,15 +36,13 @@ const AdminUsersManager = () => {
       const data = await api.get('/api/admin/admins');
       setAdmins(data || []);
     } catch (err) {
-      setError('Failed to load administrators.');
+      toast.error('Failed to load administrators.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleOpenModal = (admin = null) => {
-    setError('');
-    setSuccess('');
     if (admin) {
       setFormData({
         id: admin.id,
@@ -74,10 +72,9 @@ const AdminUsersManager = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
     
     if (formData.role === 'CONFERENCE_ADMIN' && !formData.conferenceId) {
-      setError('Conference Admin must be assigned to a conference.');
+      toast.warning('Conference Admin must be assigned to a conference.');
       setLoading(false);
       return;
     }
@@ -92,15 +89,15 @@ const AdminUsersManager = () => {
 
       if (payload.id) {
         await api.put(`/api/admin/update-admin/${payload.id}`, payload);
-        setSuccess('Administrator updated successfully.');
+        toast.success('✓ Administrator updated successfully!');
       } else {
         await api.post('/api/admin/create-admin', payload);
-        setSuccess('Administrator created successfully.');
+        toast.success('✓ Administrator created successfully!');
       }
       setShowModal(false);
       fetchAdmins();
     } catch (err) {
-      setError(err.response?.data || err.message || 'Failed to save administrator.');
+      toast.error(err.response?.data || err.message || 'Failed to save administrator.');
     } finally {
       setLoading(false);
     }
@@ -108,18 +105,18 @@ const AdminUsersManager = () => {
 
   const handleDelete = async (id, username) => {
     if (username.toLowerCase() === 'pavan') {
-      await alertDialog("Cannot delete the master Super Admin account.");
+      toast.warning("Cannot delete the master Super Admin account.");
       return;
     }
-    if (!(await confirmDialog(`Are you sure you want to delete administrator "${username}"?`))) return;
+    if (!(await confirmDialog(`Are you sure you want to delete administrator "${username}"?`, "Delete Administrator"))) return;
     
     setLoading(true);
     try {
       await api.delete(`/api/admin/delete-admin/${id}`);
-      setSuccess('Administrator deleted.');
+      toast.success('✓ Administrator deleted successfully!');
       fetchAdmins();
     } catch (err) {
-      setError('Failed to delete administrator.');
+      toast.error('Failed to delete administrator.');
     } finally {
       setLoading(false);
     }

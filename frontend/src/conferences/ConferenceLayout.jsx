@@ -65,8 +65,21 @@ const ConferenceLayout = () => {
     }, 1200);
   };
 
+  const [footerSettings, setFooterSettings] = useState(null);
+
   useEffect(() => {
     if (activeConf && activeConf.id) {
+      const fetchFooterSettings = async () => {
+        try {
+          const res = await api.get(`/api/footer?conferenceId=${activeConf.id}`);
+          if (res) {
+            setFooterSettings(res);
+          }
+        } catch (err) {
+          console.error("Failed to load footer settings:", err);
+        }
+      };
+
       const fetchNavPages = async () => {
         try {
           const res = await api.get(`/api/navigation?conferenceId=${activeConf.id}`);
@@ -119,6 +132,7 @@ const ConferenceLayout = () => {
         }
       };
 
+      fetchFooterSettings();
       fetchNavPages();
       fetchSubmenuItems();
       fetchSpeakerCategories();
@@ -397,7 +411,7 @@ const ConferenceLayout = () => {
 
       {/* Renders dynamic child routes */}
       <div className="conf-portal-body">
-        <Outlet context={{ conference: activeConf, getSubRoutePath }} />
+        <Outlet context={{ conference: activeConf, getSubRoutePath, footerSettings }} />
       </div>
 
       {/* Compact Footer */}
@@ -407,63 +421,70 @@ const ConferenceLayout = () => {
           {/* Left: Brand + Links + Socials */}
           <div className="saas-footer-brand-col">
             <div className="saas-footer-links-row">
-              <Link to={getSubRoutePath("register")} className="saas-pill-link">🤝 Sponsorship</Link>
+              <Link to={getSubRoutePath("sponsorship")} className="saas-pill-link">🤝 Sponsorship</Link>
               <Link to={getSubRoutePath("guidelines")} className="saas-pill-link">📄 Guidelines</Link>
               <Link to={getSubRoutePath("contact")} className="saas-pill-link">✉️ Contact</Link>
               <Link to={getSubRoutePath("privacy")} className="saas-pill-link">🛡️ Privacy</Link>
             </div>
             <div className="saas-footer-socials">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="saas-social-icon fb" title="Facebook">
+              <a href={footerSettings?.facebook || "https://facebook.com"} target="_blank" rel="noreferrer" className="saas-social-icon fb" title="Facebook">
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M14 13.5h2.5l1-3H14V8.6c0-.8.2-1.1 1-1.1h1.5V4.7c-.5-.1-1.6-.2-2.7-.2-2.8 0-4.3 1.4-4.3 4v2.5H7v3h2.5V20h4.5v-6.5z"/></svg>
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="saas-social-icon li" title="LinkedIn">
+              <a href={footerSettings?.linkedin || "https://linkedin.com"} target="_blank" rel="noreferrer" className="saas-social-icon li" title="LinkedIn">
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="saas-social-icon tw" title="Twitter/X">
+              <a href={footerSettings?.twitter || "https://twitter.com"} target="_blank" rel="noreferrer" className="saas-social-icon tw" title="Twitter/X">
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.2 4h2.7l-5.9 6.8 6.9 9.2h-5.4l-4.2-5.5-4.8 5.5H4.8l6.3-7.2L4.5 4h5.6l3.9 5.1L18.2 4zm-.9 14.4h1.5L9.3 5.8H7.7l10.6 12.6z"/></svg>
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="saas-social-icon ig" title="Instagram">
+              <a href={footerSettings?.instagram || "https://instagram.com"} target="_blank" rel="noreferrer" className="saas-social-icon ig" title="Instagram">
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m8.4 2.5a1 1 0 1 1 2 0 1 1 0 0 1-2 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="saas-social-icon yt" title="YouTube">
+              <a href={footerSettings?.youtube || "https://youtube.com"} target="_blank" rel="noreferrer" className="saas-social-icon yt" title="YouTube">
                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.6a2.7 2.7 0 0 0-1.9-1.9C18 5.2 12 5.2 12 5.2s-6 0-7.7.5a2.7 2.7 0 0 0-1.9 1.9C2 9.3 2 12 2 12s0 2.7.4 4.4a2.7 2.7 0 0 0 1.9 1.9c1.7.5 7.7.5 7.7.5s6 0 7.7-.5a2.7 2.7 0 0 0 1.9-1.9c.4-1.7.4-4.4.4-4.4s0-2.7-.4-4.4zM9.8 15.5V8.5l6 3.5-6 3.5z"/></svg>
               </a>
+              {footerSettings?.github && (
+                <a href={footerSettings.github} target="_blank" rel="noreferrer" className="saas-social-icon gh" title="GitHub">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                </a>
+              )}
             </div>
           </div>
 
           {/* Right: Compact Subscribe */}
-          <div className="saas-footer-subscribe-col">
-            <p className="saas-sub-label">📬 Stay Updated</p>
-            <form onSubmit={handleSubscribeSubmit} className="saas-sub-inline-form">
-              <input
-                type="text"
-                placeholder="Full Name"
-                required
-                value={subName}
-                onChange={(e) => setSubName(e.target.value)}
-                className="saas-inline-input"
-              />
-              <input
-                type="email"
-                placeholder="Email Address"
-                required
-                value={subEmail}
-                onChange={(e) => setSubEmail(e.target.value)}
-                className="saas-inline-input"
-              />
-              <button type="submit" className="saas-inline-btn" disabled={subscribing}>
-                {subscribing ? "..." : "Subscribe"}
-              </button>
-              {subscribed && <span className="saas-success-icon">✅</span>}
-            </form>
-          </div>
+          {footerSettings?.newsletterEnabled !== false && (
+            <div className="saas-footer-subscribe-col">
+              <p className="saas-sub-label">📬 Stay Updated</p>
+              <form onSubmit={handleSubscribeSubmit} className="saas-sub-inline-form">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  required
+                  value={subName}
+                  onChange={(e) => setSubName(e.target.value)}
+                  className="saas-inline-input"
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  required
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
+                  className="saas-inline-input"
+                />
+                <button type="submit" className="saas-inline-btn" disabled={subscribing}>
+                  {subscribing ? "..." : "Subscribe"}
+                </button>
+                {subscribed && <span className="saas-success-icon">✅</span>}
+              </form>
+            </div>
+          )}
         </div>
 
         {/* Footer Bottom Bar */}
         <div className="saas-footer-bottom">
           <div className="saas-bottom-container">
             <div className="saas-bottom-copyright">
-              © {new Date().getFullYear()} {activeConf.title || "Innovinc International"}. All Rights Reserved.
+              © {new Date().getFullYear()} {activeConf.title || "Intelevo Research"}. All Rights Reserved.
             </div>
             <div className="saas-bottom-links">
               <Link to={getSubRoutePath("privacy")}>Privacy Policy</Link>
