@@ -12,6 +12,8 @@ export const getRegistrationRoute = (url, slug) => {
         parsedUrl.hostname === "51.21.159.47" ||
         parsedUrl.hostname === "localhost" ||
         parsedUrl.hostname === "127.0.0.1" ||
+        parsedUrl.hostname === "intelevoresearch.com" ||
+        parsedUrl.hostname.endsWith(".intelevoresearch.com") ||
         parsedUrl.hostname === "intelevoresearch.org" ||
         parsedUrl.hostname.endsWith(".intelevoresearch.org")
       ) {

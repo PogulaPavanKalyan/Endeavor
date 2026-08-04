@@ -1,7 +1,7 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
-import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./Register.css";
 
 const Register = () => {
@@ -142,13 +142,19 @@ const Register = () => {
 
   return (
     <>
+      <SEOHead
+        title="Conference Registration Desk | Intelevo Research"
+        description="Secure your delegate registration, speaker pass, or student attendance for upcoming Intelevo Research international conferences."
+        robots="noindex, follow"
+      />
       <Header />
 
       <section className="register-hero">
         <div className="hero-overlay"></div>
-        <div className="container register-hero-content">
-          <span className="badge-premium">SECURE REGISTRATION</span>
-          <h1>Conference Registration Desk</h1>
+        <div className="container register-hero-content" style={{ textAlign: "center" }}>
+          <img src="/logo.svg" alt="Intelevo Research Logo" style={{ height: "56px", marginBottom: "12px", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }} />
+          <div style={{ fontSize: "13px", fontWeight: "700", letterSpacing: "3px", textTransform: "uppercase", color: "#60A5FA", marginBottom: "8px" }}>Intelligence Evolved</div>
+          <h1>Intelevo Research Registration</h1>
           <p>Complete your booking to secure your attendance and conference delegate pack.</p>
         </div>
       </section>

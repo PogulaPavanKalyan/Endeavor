@@ -1,0 +1,18 @@
+{
+  "name": "Intelevo Research",
+  "short_name": "Intelevo",
+  "description": "Intelevo Research - Intelligence Evolved. Global Scientific Conferences, Publications, and AI Research.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0B1B3D",
+  "background_color": "#0B1B3D",
+  "orientation": "portrait-primary"
+}

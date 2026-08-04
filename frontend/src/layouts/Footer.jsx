@@ -67,7 +67,7 @@ const Footer = () => {
           {/* Column 1 – Brand */}
           <div className="footer-col-brand">
             <div className="footer-logo">
-              <img src="/logo.png" alt="Intelevo Research" className="footer-logo-img" />
+              <img src="/logo.svg" alt="Intelevo Research" className="footer-logo-img" />
             </div>
             <p className="brand-desc">
               Empowering global research communities through international conferences,
@@ -181,30 +181,16 @@ const Footer = () => {
             <div id="footer-contact-info-container" className="contact-cards-container">
               <div className="contact-info-card">
                 <h4>Email</h4>
-                <p><a href="mailto:info@intelevoresearch.org">info@intelevoresearch.org</a></p>
+                <p><a href="mailto:info@intelevoresearch.com">📧 info@intelevoresearch.com</a></p>
               </div>
               <div className="contact-info-card">
-                <h4>Phone</h4>
-                <p><a href="tel:+12092995348">+1 (209) 299-5348</a></p>
-              </div>
-              <div className="contact-info-card">
-                <h4>USA Office</h4>
-                <p>1043 Garland Ave, Unit C #1012, San Jose, CA 95126-3159</p>
-                <a
-                  href="https://maps.google.com/?q=1043+Garland+Ave,+San+Jose,+CA+95126"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="maps-link-action"
-                >
-                  View on Google Maps →
-                </a>
-              </div>
-              <div className="contact-info-card">
-                <h4>India Office</h4>
-                <p>#8-2-630, Mount Banjara Complex, Road No 12, Banjara Hills, Hyderabad, Telangana 500034</p>
-              </div>
-              <div className="contact-info-card-hours">
-                <p>🕒 <strong>Business Hours:</strong> Mon – Fri, 9:00 AM – 6:00 PM EST</p>
+                <h4>Office Address</h4>
+                <p>📍 SRI SAI ANANDAMAI,<br />
+                Chennareddy Enclave Road,<br />
+                Indira Nagar Colony,<br />
+                Hyderabad,<br />
+                Telangana,<br />
+                India</p>
               </div>
             </div>
           </div>
@@ -220,7 +206,7 @@ const Footer = () => {
       <div className="footer-bottom-bar">
         <div className="bottom-bar-container max-md:flex-col max-md:text-center max-md:gap-4 max-md:px-4 max-md:py-6">
           <div className="bottom-copyright max-md:mb-2">
-            <p>© {new Date().getFullYear()} Intelevo Research Private Limited. All Rights Reserved.</p>
+            <p>© 2026 Intelevo Research. All Rights Reserved.</p>
           </div>
 
           <div className="bottom-legal-links max-md:flex max-md:flex-wrap max-md:justify-center max-md:gap-y-3">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
-import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./AbstractSubmission.css";
 
 const AbstractSubmission = () => {
@@ -104,12 +104,18 @@ const AbstractSubmission = () => {
 
   return (
     <>
+      <SEOHead
+        title="Submit Research Abstract | Intelevo Research"
+        description="Submit your research proposal, keynote abstract, or scientific poster to Intelevo Research for double-blind peer review and conference presentation."
+        keywords="Submit Abstract, Call for Papers, Keynote Abstract, Poster Presentation, Intelevo Research, Peer Review, Academic Papers"
+      />
       <Header />
       
       <section className="abstract-hero">
         <div className="hero-overlay"></div>
-        <div className="container abstract-hero-content">
-          <span className="badge-premium">CALL FOR PAPERS</span>
+        <div className="container abstract-hero-content" style={{ textAlign: "center" }}>
+          <img src="/logo.svg" alt="Intelevo Research Logo" style={{ height: "56px", marginBottom: "12px", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }} />
+          <div style={{ fontSize: "13px", fontWeight: "700", letterSpacing: "3px", textTransform: "uppercase", color: "#60A5FA", marginBottom: "8px" }}>Intelevo Research • Intelligence Evolved</div>
           <h1>Submit Your Research Abstract</h1>
           <p>
             Share your research outcomes with the global scientific community. 

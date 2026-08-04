@@ -4,6 +4,7 @@ import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
 import { getSubdomainUrl } from "../utils/subdomain.jsx";
+import SEOHead from "../components/SEOHead";
 import "./Confrencespage.css";
 
 const Confrencespage = () => {
@@ -39,6 +40,29 @@ const Confrencespage = () => {
 
   return (
     <>
+      <SEOHead
+        title="Technology Solutions | Intelevo Research"
+        description="Explore international scientific conferences, technology solutions, and call for papers across AI, healthcare, engineering, and digital transformation at Intelevo Research."
+        keywords="Technology Solutions, Intelevo Research, International Conferences, Call for Papers, AI Conferences, Software Development, Research Summits, Digital Transformation"
+        ogTitle="Technology Solutions & International Conferences | Intelevo Research"
+        ogDescription="Browse upcoming scientific summits, international workshops, and publication tracks hosted by Intelevo Research."
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "Upcoming International Conferences",
+            "url": "https://intelevoresearch.com/conferences"
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://intelevoresearch.com/" },
+              { "@type": "ListItem", "position": 2, "name": "Conferences", "item": "https://intelevoresearch.com/conferences" }
+            ]
+          }
+        ]}
+      />
       <Header />
       
       <section className="conf-hero">

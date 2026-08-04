@@ -76,7 +76,7 @@ const Header = () => {
             {/* Logo */}
             <div className="logo">
               <Link to="/">
-                <img src="/logo.png" alt="Intelevo Research" />
+                <img src="/logo.svg" alt="Intelevo Research" />
               </Link>
             </div>
 
@@ -110,7 +110,7 @@ const Header = () => {
             {/* Logo in Sticky State (Fades in on scroll) */}
             <div className="sticky-logo">
               <Link to="/">
-                <img src="/logo.png" alt="Logo" className="sticky-logo-img" />
+                <img src="/logo.svg" alt="Intelevo Research" className="sticky-logo-img" />
               </Link>
             </div>
 

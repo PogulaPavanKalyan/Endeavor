@@ -50,8 +50,10 @@ const ConferenceAdminLogin = () => {
     <div className="conf-login-page">
       <div className="conf-login-container">
         <div className="conf-login-header">
-          <h2>Conference Admin</h2>
-          <p>Sign in to manage your specific conference workspace.</p>
+          <img src="/logo.svg" alt="Intelevo Research" style={{ height: "50px", marginBottom: "12px" }} />
+          <h2>Intelevo Research</h2>
+          <div style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "2px", color: "#60A5FA", textTransform: "uppercase", marginBottom: "8px" }}>Intelligence Evolved</div>
+          <p>Sign in to manage your conference workspace.</p>
         </div>
 
         {error && <div className="conf-login-error">{error}</div>}

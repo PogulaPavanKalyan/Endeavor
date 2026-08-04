@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
+import SEOHead from "../components/SEOHead";
 import "../Home/About.css";
 
 function AboutPage() {
@@ -26,6 +27,30 @@ function AboutPage() {
 
   return (
     <div className="abt-wrapper">
+      <SEOHead
+        title="About Intelevo Research | AI, Research & Technology"
+        description="Learn about Intelevo Research, a global institution fostering scientific excellence, double-blind peer-reviewed publications, international summits, and academic collaborations."
+        keywords="About Intelevo Research, Intelligence Evolved, Technology Research, Artificial Intelligence, Academic Conferences, Scientific Publications, Peer Review, Global Collaborations"
+        ogTitle="About Intelevo Research | AI, Research & Technology"
+        ogDescription="Intelevo Research fosters academic excellence and scientific discovery through double-blind peer-reviewed conferences and publications."
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "About Intelevo Research",
+            "url": "https://intelevoresearch.com/about",
+            "description": "Intelevo Research is a premier global institution dedicated to academic excellence, high-impact research dissemination, and scientific discovery."
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://intelevoresearch.com/" },
+              { "@type": "ListItem", "position": 2, "name": "About Us", "item": "https://intelevoresearch.com/about" }
+            ]
+          }
+        ]}
+      />
       <Header />
 
       {/* SECTION 1 — HERO BANNER */}
@@ -44,6 +69,10 @@ function AboutPage() {
         
         <div className="abt-container">
           <div className="abt-hero-new-content">
+            <div className="abt-hero-brand-top" style={{ textAlign: "center", marginBottom: "16px" }}>
+              <img src="/logo.svg" alt="Intelevo Research Logo" style={{ height: "64px", width: "auto", marginBottom: "8px", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }} />
+              <div style={{ fontSize: "13px", fontWeight: "700", letterSpacing: "3px", textTransform: "uppercase", color: "#60A5FA" }}>Intelligence Evolved</div>
+            </div>
             <div className="abt-new-breadcrumbs">
               <Link to="/">Home</Link>
               <span className="abt-new-breadcrumbs-sep">/</span>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import SEOHead from "./SEOHead";
 import { getSubdomain, getSubdomainUrl } from "../utils/subdomain.jsx";
 
 const NotFoundPage = () => {
@@ -17,18 +17,24 @@ const NotFoundPage = () => {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      backgroundColor: "#0d1117",
-      color: "#ffffff",
-      fontFamily: "'Outfit', 'Inter', sans-serif",
-      textAlign: "center",
-      padding: "20px"
-    }}>
+    <>
+      <SEOHead
+        title="404 - Page Not Found | Intelevo Research"
+        description="The page you requested could not be found on Intelevo Research."
+        robots="noindex, nofollow"
+      />
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        backgroundColor: "#0B1B3D",
+        color: "#ffffff",
+        fontFamily: "'Outfit', 'Inter', sans-serif",
+        textAlign: "center",
+        padding: "20px"
+      }}>
       <h1 style={{
         fontSize: "120px",
         fontWeight: "800",
@@ -91,6 +97,7 @@ const NotFoundPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

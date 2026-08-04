@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./Sponsors.css";
 
 const Sponsors = () => {
@@ -27,6 +28,13 @@ const Sponsors = () => {
 
   return (
     <>
+      <SEOHead
+        title="Global Sponsors & Academic Partners | Intelevo Research"
+        description="Discover the leading academic institutions, publishing partners, and global technology sponsors collaborating with Intelevo Research."
+        keywords="Intelevo Research Sponsors, Academic Partners, Global Collaborations, Scientific Publishing, Technology Sponsors"
+        ogTitle="Global Sponsors & Academic Partners | Intelevo Research"
+        ogDescription="Partnering with global technology organizations and academic institutions to advance research."
+      />
       <Header />
 
       <section className="sponsors-hero">

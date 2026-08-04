@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 160" width="500" height="160">
+  <!-- Background -->
+  <rect width="500" height="160" rx="8" fill="#0B1B3D"/>
+  
+  <!-- Icon Group: Nested Hexagons centered at x=75, y=80 -->
+  <g transform="translate(75, 80)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer Hexagon -->
+    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" stroke-width="5"/>
+    
+    <!-- Middle Hexagon 1 -->
+    <polygon points="0,-38 33,-19 33,19 0,38 -33,19 -33,-19" stroke-width="4"/>
+    
+    <!-- Middle Hexagon 2 -->
+    <polygon points="0,-25 21,-12.5 21,12.5 0,25 -21,12.5 -21,-12.5" stroke-width="3.5"/>
+    
+    <!-- Inner Solid Hexagon -->
+    <polygon points="0,-12 10,-6 10,6 0,12 -10,6 -10,-6" fill="#FFFFFF" stroke="none"/>
+  </g>
+  
+  <!-- Brand Name Typography -->
+  <text x="160" y="82" font-family="'Cinzel', 'Times New Roman', 'Georgia', serif" font-size="44" font-weight="700" fill="#FFFFFF" letter-spacing="3">INTELEVO</text>
+  
+  <!-- Tagline -->
+  <text x="162" y="116" font-family="'Outfit', 'Inter', 'Montserrat', 'Helvetica Neue', sans-serif" font-size="16" font-weight="500" fill="#FFFFFF" letter-spacing="5.5">INTELLIGENCE EVOLVED</text>
+</svg>

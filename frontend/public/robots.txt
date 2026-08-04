@@ -1,0 +1,24 @@
+# Intelevo Research - Intelligence Evolved
+# Official Robots.txt File
+
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /conferences
+Allow: /webinars
+Allow: /proceedings
+Allow: /sponsors
+Allow: /register
+Allow: /submit-abstract
+Allow: /favicon.svg
+Allow: /logo.svg
+
+# Disallow Administrative Routes and Private Files
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /uploads/private/
+
+# Sitemap Location
+Sitemap: https://intelevoresearch.com/sitemap.xml

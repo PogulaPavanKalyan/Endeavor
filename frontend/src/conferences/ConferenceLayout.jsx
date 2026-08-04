@@ -163,8 +163,8 @@ const ConferenceLayout = () => {
             date: `${data.startDate} to ${data.endDate}`,
             countdownTarget: data.countdownEndDate || `${data.startDate}T09:00:00`,
             venue: data.venue,
-            email: data.contactEmail || "hello@intelevoresearch.org",
-            phone: data.contactPhone || "+1 (209) 299-5348",
+            email: data.contactEmail || "info@intelevoresearch.com",
+            phone: data.contactPhone || "",
             image: data.photo?.fileName
               ? `/uploads/conference/${data.photo.fileName}`
               : "https://images.unsplash.com/photo-1540575467063-178a50c2df87",

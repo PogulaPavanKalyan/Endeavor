@@ -29,13 +29,36 @@
   width: 100%;
 }
 
-.contact-hero h1 {
+.contact-brand-header {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-hero-logo {
+  height: 64px;
+  width: auto;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.contact-company-name {
   font-size: 3.2rem;
   font-weight: 800;
-  margin: 0 0 15px 0;
+  margin: 0 0 4px 0;
   color: #ffffff;
-  font-family: 'Outfit', 'Inter', sans-serif;
-  letter-spacing: -0.5px;
+  font-family: 'Cinzel', 'Outfit', serif;
+  letter-spacing: 2px;
+}
+
+.contact-company-tagline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #60A5FA;
+  margin-bottom: 12px;
 }
 
 .breadcrumb-box {

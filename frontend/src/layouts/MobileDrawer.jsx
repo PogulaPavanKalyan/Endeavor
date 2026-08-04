@@ -136,7 +136,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
           </div>
           <div className="drawer-brand-details">
              <h2 className="drawer-conf-name">Intelevo Research</h2>
-             <p className="drawer-conf-theme">Advancing Research Through Global Conferences</p>
+             <p className="drawer-conf-theme">Intelligence Evolved</p>
              <div className="drawer-conf-meta">
                <span className="drawer-conf-year">2027</span>
                <span className="drawer-conf-dot">•</span>
@@ -249,7 +249,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
             <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="drawer-social-btn-premium" aria-label="YouTube" tabIndex={open ? 0 : -1}>
               <SvgYouTube />
             </a>
-            <a href="mailto:info@intelevoresearch.org" className="drawer-social-btn-premium" aria-label="Email" tabIndex={open ? 0 : -1}>
+            <a href="mailto:info@intelevoresearch.com" className="drawer-social-btn-premium" aria-label="Email" tabIndex={open ? 0 : -1}>
               <SvgEmail />
             </a>
           </div>

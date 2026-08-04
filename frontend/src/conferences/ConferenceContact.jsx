@@ -12,12 +12,12 @@ const ConferenceContact = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const email = footerSettings?.contactEmail || conference?.email || "info@intelevoresearch.org";
-  const phone = footerSettings?.contactPhone || conference?.phone || "+1 (209) 299-5348";
+  const email = footerSettings?.contactEmail || conference?.email || "info@intelevoresearch.com";
+  const phone = footerSettings?.contactPhone || conference?.phone || "";
   const whatsapp = footerSettings?.contactWhatsapp;
-  const address = footerSettings?.contactAddress || "1043 Garland Ave, Unit C #1012, San Jose, CA 95126-3159";
-  const googleMap = footerSettings?.googleMap || "https://maps.google.com/?q=1043+Garland+Ave,+San+Jose,+CA+95126";
-  const officeHours = footerSettings?.officeHours || "Mon – Fri, 9:00 AM – 6:00 PM EST";
+  const address = footerSettings?.contactAddress || "SRI SAI ANANDAMAI, Chennareddy Enclave Road, Indira Nagar Colony, Hyderabad, Telangana, India";
+  const googleMap = footerSettings?.googleMap || "https://maps.google.com/?q=SRI+SAI+ANANDAMAI,+Chennareddy+Enclave+Road,+Indira+Nagar+Colony,+Hyderabad,+Telangana,+India";
+  const officeHours = footerSettings?.officeHours || "Mon – Fri, 9:00 AM – 6:00 PM IST";
 
   const handleChange = (e) => {
     const { name, value } = e.target;

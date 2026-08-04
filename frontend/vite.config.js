@@ -10,16 +10,19 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
+        secure: false,
       },
       '/auth': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
+        secure: false,
       },
       '/uploads': {
-        target: 'http://localhost:8081',
+        target: 'https://intelevoresearch.org',
         changeOrigin: true,
+        secure: false,
       }
     }
   }

@@ -515,7 +515,7 @@ const FooterManager = () => {
               </div>
               <div className="form-group col-third">
                 <label>Main Website Link</label>
-                <input type="text" name="website" value={formData.website || ""} onChange={handleChange} placeholder="https://intelevoresearch.org" />
+                <input type="text" name="website" value={formData.website || ""} onChange={handleChange} placeholder="https://intelevoresearch.com" />
               </div>
             </div>
           </div>

@@ -7,7 +7,7 @@ import BrochureModal from "../components/BrochureModal";
 import { getSubdomainUrl } from "../utils/subdomain.jsx";
 import { fetchHero, fetchStatistics, fetchTrustBadges } from "../services/heroService";
 import AOS from "aos";
-import "aos/dist/aos.css";
+import SEOHead from "../components/SEOHead";
 import "./Homepage.css";
 
 /* ─── Optimized Image with Fallback and Skeleton ────────────────────────── */
@@ -756,6 +756,38 @@ const Homepage = () => {
 
   return (
     <div className="homepage-redesign-wrapper max-w-[100vw] overflow-x-hidden">
+      <SEOHead
+        title="Intelevo Research | Intelligence Evolved"
+        description="Intelevo Research connects global researchers, academicians, and industry experts through international scientific conferences, indexed publications, and AI technology research."
+        keywords="Intelevo Research, Intelligence Evolved, Artificial Intelligence, Software Development, Technology Research, Innovation, Digital Transformation, IT Consulting, Research Services, AI Solutions, Enterprise Software, Technology Company Hyderabad"
+        ogTitle="Intelevo Research | Intelligence Evolved"
+        ogDescription="Discover world-class scientific conferences, double-blind peer-reviewed journals, and global AI technology research at Intelevo Research."
+        ogImage="https://intelevoresearch.com/logo.svg"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Intelevo Research",
+            "url": "https://intelevoresearch.com",
+            "logo": "https://intelevoresearch.com/logo.svg",
+            "slogan": "Intelligence Evolved",
+            "email": "info@intelevoresearch.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "SRI SAI ANANDAMAI, Chennareddy Enclave Road, Indira Nagar Colony",
+              "addressLocality": "Hyderabad",
+              "addressRegion": "Telangana",
+              "addressCountry": "India"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Intelevo Research",
+            "url": "https://intelevoresearch.com"
+          }
+        ]}
+      />
       {/* 1. NAVBAR (UNTOUCHED) */}
       <Header />
 
@@ -785,19 +817,7 @@ const Homepage = () => {
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
                 </p>
 
-                {/* Action Buttons */}
-                <div className="hero-cta-buttons" style={{ display: "flex", gap: "16px", marginTop: "24px" }}>
-                  {heroData?.button1Text && (
-                    <a href={heroData.button1Link || "#"} className="hero-btn hero-btn-primary" style={{ padding: "12px 24px", background: "#E91E63", color: "white", borderRadius: "8px", fontWeight: "600" }}>
-                      {heroData.button1Text}
-                    </a>
-                  )}
-                  {heroData?.button2Text && (
-                    <a href={heroData.button2Link || "#"} className="hero-btn hero-btn-secondary" style={{ padding: "12px 24px", background: "white", color: "#0F172A", border: "1px solid #E2E8F0", borderRadius: "8px", fontWeight: "600" }}>
-                      {heroData.button2Text}
-                    </a>
-                  )}
-                </div>
+                
               </div>
             </div>
 

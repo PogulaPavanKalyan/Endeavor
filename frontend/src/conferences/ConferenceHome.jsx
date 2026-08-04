@@ -1708,7 +1708,7 @@ const getEventStatus = (dateStr) => {
           {
             title: "Conferences",
             imageUrl: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80",
-            link: "https://intelevoresearch.org",
+            link: "https://intelevoresearch.com",
             color: "#f97316"
           },
           {

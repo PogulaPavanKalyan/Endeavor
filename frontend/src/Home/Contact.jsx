@@ -1,8 +1,9 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./Contact.css";
 
 const Contact = () => {
@@ -48,13 +49,54 @@ const Contact = () => {
 
   return (
     <>
+      <SEOHead
+        title="Contact Intelevo Research | Hyderabad"
+        description="Contact Intelevo Research headquarters in Hyderabad, Telangana, India. Find our office address, official email info@intelevoresearch.com, business hours, and contact form."
+        keywords="Contact Intelevo Research, Hyderabad, Office Address, Email, Business Hours, Contact Form, Intelligence Evolved, IT Consulting, Technology Company Hyderabad"
+        ogTitle="Contact Intelevo Research | Hyderabad"
+        ogDescription="Connect with Intelevo Research headquarters in Hyderabad. Office address, email, and direct inquiry form."
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact Intelevo Research",
+            "url": "https://intelevoresearch.com/contact"
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Intelevo Research",
+            "image": "https://intelevoresearch.com/logo.svg",
+            "url": "https://intelevoresearch.com/contact",
+            "email": "info@intelevoresearch.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "SRI SAI ANANDAMAI, Chennareddy Enclave Road, Indira Nagar Colony",
+              "addressLocality": "Hyderabad",
+              "addressRegion": "Telangana",
+              "postalCode": "500033",
+              "addressCountry": "IN"
+            },
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "09:00",
+              "closes": "18:00"
+            }
+          }
+        ]}
+      />
       <Header />
 
       {/* HERO */}
       <section className="contact-hero">
         <div className="hero-overlay"></div>
         <div className="hero-content container">
-          <h1>Contact Us</h1>
+          <div className="contact-brand-header">
+            <img src="/logo.svg" alt="Intelevo Research Logo" className="contact-hero-logo" />
+            <h1 className="contact-company-name">Intelevo Research</h1>
+            <p className="contact-company-tagline">Intelligence Evolved</p>
+          </div>
           <div className="breadcrumb-box">
             <Link to="/">Home</Link> &gt; <span>Contact Us</span>
           </div>
@@ -67,13 +109,14 @@ const Contact = () => {
           
           {/* LEFT SIDE: Contact Information */}
           <div className="contact-left">
-            <span className="contact-sub">GET INFORMATION</span>
-            <h2>Contact Information</h2>
+            <span className="contact-sub">GET IN TOUCH</span>
+            <h2>Intelevo Research Headquarters</h2>
             <p className="contact-text">
-              Reach out to our organizing committee directly.
+              Connect with our international scientific committee and research operations team.
             </p>
 
             <div className="contact-info-list">
+              {/* Office Address */}
               <div className="contact-item">
                 <div className="contact-icon">
                   <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1.2em" width="1.2em" xmlns="http://www.w3.org/2000/svg">
@@ -82,13 +125,16 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div className="contact-item-text">
-                  <h4>Address</h4>
-                  <p><strong>Intelevo Research Private Limited</strong></p>
-                  <p>1043 Garland Ave, Unit C #1012,</p>
-                  <p>San Jose, CA 95126-3159</p>
+                  <h4>Office Address</h4>
+                  <p><strong>Intelevo Research</strong></p>
+                  <p>SRI SAI ANANDAMAI,</p>
+                  <p>Chennareddy Enclave Road,</p>
+                  <p>Indira Nagar Colony,</p>
+                  <p>Hyderabad, Telangana, India</p>
                 </div>
               </div>
 
+              {/* Official Email */}
               <div className="contact-item">
                 <div className="contact-icon">
                   <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1.2em" width="1.2em" xmlns="http://www.w3.org/2000/svg">
@@ -97,21 +143,23 @@ const Contact = () => {
                   </svg>
                 </div>
                 <div className="contact-item-text">
-                  <h4>Emails</h4>
-                  <p>info@intelevoresearch.org</p>
-                  <p>geology@intelevoresearch.org</p>
+                  <h4>Official Email</h4>
+                  <p><a href="mailto:info@intelevoresearch.com">info@intelevoresearch.com</a></p>
                 </div>
               </div>
 
+              {/* Business Hours */}
               <div className="contact-item">
                 <div className="contact-icon">
                   <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1.2em" width="1.2em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
                 </div>
                 <div className="contact-item-text">
-                  <h4>Phones</h4>
-                  <p>+1 (209) 299-5348</p>
+                  <h4>Business Hours</h4>
+                  <p>Monday – Friday: 9:00 AM – 6:00 PM IST</p>
+                  <p>Saturday – Sunday: Closed</p>
                 </div>
               </div>
             </div>
@@ -119,10 +167,10 @@ const Contact = () => {
 
           {/* RIGHT SIDE: Send Message Form */}
           <div className="contact-right">
-            <span className="contact-sub">SEND MESSAGE</span>
-            <h2>Have Questions?</h2>
+            <span className="contact-sub">DIRECT INQUIRY</span>
+            <h2>Send Us a Message</h2>
 
-            {success && <div className="success-message">Your message has been sent successfully. We will get back to you soon!</div>}
+            {success && <div className="success-message">Your message has been sent successfully to Intelevo Research. We will respond promptly.</div>}
             {error && <div className="error-message">{error}</div>}
 
             <form onSubmit={handleSubmit}>
@@ -130,7 +178,7 @@ const Contact = () => {
                 <input
                   type="text"
                   name="fullName"
-                  placeholder="First Name"
+                  placeholder="Full Name"
                   value={formData.fullName}
                   onChange={handleChange}
                   required
@@ -139,7 +187,7 @@ const Contact = () => {
                 <input
                   type="text"
                   name="phone"
-                  placeholder="Phone"
+                  placeholder="Phone Number"
                   value={formData.phone}
                   onChange={handleChange}
                   required
@@ -169,14 +217,14 @@ const Contact = () => {
               <textarea
                 name="message"
                 rows="6"
-                placeholder="Your message..."
+                placeholder="How can Intelevo Research assist you?"
                 value={formData.message}
                 onChange={handleChange}
                 required
               ></textarea>
 
               <button type="submit" disabled={loading}>
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? "Sending Message..." : "Send Message"}
               </button>
             </form>
           </div>
@@ -184,11 +232,11 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* MAP SECTION */}
+      {/* GOOGLE MAP SECTION */}
       <section className="map-section">
         <iframe
-          title="map"
-          src="https://maps.google.com/maps?q=1043%20Garland%20Ave,%20San%20Jose,%20CA%2095126&t=&z=14&ie=UTF8&iwloc=&output=embed"
+          title="Intelevo Research Headquarters Map"
+          src="https://maps.google.com/maps?q=SRI%20SAI%20ANANDAMAI,%20Chennareddy%20Enclave%20Road,%20Indira%20Nagar%20Colony,%20Hyderabad,%20Telangana,%20India&t=&z=15&ie=UTF8&iwloc=&output=embed"
         />
       </section>
 

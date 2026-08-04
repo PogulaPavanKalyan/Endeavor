@@ -4,6 +4,7 @@ import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
 import { api } from "../utils/api";
 import { getRegistrationRoute } from "../utils/routeHelper";
+import SEOHead from "../components/SEOHead";
 import "./Webinar.css";
 
 const Webinar = () => {
@@ -97,6 +98,13 @@ const Webinar = () => {
 
   return (
     <>
+      <SEOHead
+        title="Technology Insights | Intelevo Research Blog"
+        description="Explore technology insights, virtual keynote webinars, and live research broadcasts presented by global academic leaders at Intelevo Research."
+        keywords="Technology Insights, Intelevo Research Blog, Webinars, Virtual Keynote, AI Webinars, Live Research Broadcasts"
+        ogTitle="Technology Insights & Live Webinars | Intelevo Research Blog"
+        ogDescription="Join virtual keynote webinars and interactive scientific broadcasts hosted by Intelevo Research."
+      />
       <Header />
 
       <section className="webinar-hero">

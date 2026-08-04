@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
-import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./WebinarRegister.css";
 
 const WebinarRegister = () => {
@@ -140,11 +140,17 @@ const WebinarRegister = () => {
 
   return (
     <>
+      <SEOHead
+        title={`Register: ${webinar?.title || "Webinar"} | Intelevo Research`}
+        description={`Register for ${webinar?.title || "scientific webinar"} presented by ${webinar?.speakerName || "guest speaker"} at Intelevo Research.`}
+        robots="noindex, follow"
+      />
       <Header />
       <div className="webinar-reg-wrapper">
         <div className="webinar-reg-hero" style={{ backgroundImage: `linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8)), url(${webinar.bannerUrl || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80"})` }}>
-          <div className="container">
-            <div className="hero-badge">WEBINAR REGISTRATION PORTAL</div>
+          <div className="container" style={{ textAlign: "center" }}>
+            <img src="/logo.svg" alt="Intelevo Research Logo" style={{ height: "48px", marginBottom: "10px", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }} />
+            <div style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "3px", textTransform: "uppercase", color: "#60A5FA", marginBottom: "8px" }}>Intelevo Research • Intelligence Evolved</div>
             <h1>{webinar.title}</h1>
             <p className="speaker-credit">🎙️ Speaker: <strong>{webinar.speakerName}</strong> - {webinar.speakerDesignation}</p>
           </div>

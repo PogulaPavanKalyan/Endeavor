@@ -1,6 +1,7 @@
-﻿import React from "react";
+import React from "react";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
+import SEOHead from "../components/SEOHead";
 import "./Proceedings.css";
 
 const Proceedings = () => {
@@ -12,6 +13,13 @@ const Proceedings = () => {
 
   return (
     <>
+      <SEOHead
+        title="Indexed Proceedings & Scholarly Publications | Intelevo Research"
+        description="Access double-blind peer-reviewed conference proceedings, ISBN volumes, and indexed scholarly publications hosted by Intelevo Research."
+        keywords="Indexed Proceedings, Scholarly Publications, Peer Review, ISBN Proceedings, Intelevo Research, Scopus Indexing, Web of Science"
+        ogTitle="Indexed Proceedings & Scholarly Publications | Intelevo Research"
+        ogDescription="Explore full-text conference proceedings and indexed scholarly volumes."
+      />
       <Header />
       <section className="proceedings-hero">
         <div className="hero-overlay"></div>
