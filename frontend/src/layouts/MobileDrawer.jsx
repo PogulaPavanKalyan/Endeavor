@@ -123,7 +123,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
         <div className="drawer-header-premium">
           <div className="drawer-header-top">
             <Link to="/" onClick={handleNavClick} tabIndex={open ? 0 : -1}>
-              <img src="/logo.png" alt="Intelevo Research" className="drawer-logo-premium" />
+              <img src="/logo.svg" alt="Intelevo Research" className="drawer-logo-premium" />
             </Link>
             <button
               className="drawer-close-btn-premium"

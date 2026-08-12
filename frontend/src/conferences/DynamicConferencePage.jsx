@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useOutletContext, Link } from 'react-router-dom';
 import { api, BASE_URL } from '../utils/api';
 import NotFoundPage from '../components/NotFoundPage';
+import SEOHead from '../components/SEOHead';
 import './DynamicConferencePage.css';
 
 const DynamicConferencePage = () => {
@@ -78,8 +79,24 @@ const DynamicConferencePage = () => {
     ? { backgroundImage: `url(${getBannerUrl(bannerPath)})` } 
     : { background: `linear-gradient(135deg, #1e293b 0%, #0f172a 100%)` };
 
+  const cleanDescription = content ? content.replace(/<[^>]*>?/gm, '').trim().substring(0, 160) : `${pageTitle || title} - ${conference?.title || 'Conference'}`;
+
   return (
     <div className="dynamic-page-wrapper">
+      <SEOHead
+        title={`${pageTitle || title} | ${conference?.title || "Conference"}`}
+        description={cleanDescription}
+        keywords={`${title}, ${pageTitle || ''}, ${conference?.title || ''}`}
+        ogTitle={`${pageTitle || title} | ${conference?.title || "Conference"}`}
+        ogDescription={cleanDescription}
+        ogImage={bannerPath ? getBannerUrl(bannerPath) : conference?.image}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": pageTitle || title,
+          "description": cleanDescription
+        }}
+      />
       {/* Dynamic Hero Banner */}
       <div className="dynamic-hero-banner" style={heroStyle}>
         <div className="dynamic-hero-overlay" />

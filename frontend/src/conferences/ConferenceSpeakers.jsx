@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceSpeakers.css";
 
 const ConferenceSpeakers = () => {
@@ -58,6 +59,13 @@ const ConferenceSpeakers = () => {
 
   return (
     <section className="conf-subpage-section">
+      <SEOHead
+        title={`${categoryName ? categoryName : "Scientific Committee & Speakers"} | ${conference?.title || "Conference"}`}
+        description={`Explore the distinguished keynote speakers, advisory committee, and paper presenters for ${conference?.title || "our conference"}.`}
+        keywords={`speakers, keynote, committee, advisory board, ${conference?.title || ""}`}
+        ogTitle={`${categoryName ? categoryName : "Speakers & Committee"} | ${conference?.title || "Conference"}`}
+        ogDescription={`Discover featured keynote speakers for ${conference?.title || "our conference"}.`}
+      />
       <div className="conf-subpage-container">
         <h2 className="conf-page-title">
           {categoryName ? categoryName : "Scientific Committee & Speakers"}

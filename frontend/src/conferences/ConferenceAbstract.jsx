@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceAbstract.css";
 
 const ConferenceAbstract = () => {
@@ -46,6 +47,13 @@ const ConferenceAbstract = () => {
 
   return (
     <section className="conf-subpage-section">
+      <SEOHead
+        title={`Submit Abstract Proposal | ${conference?.title || "Conference"}`}
+        description={`Submit your research paper abstract for oral, poster, or keynote presentation at ${conference?.title || "our conference"}.`}
+        keywords={`submit abstract, call for papers, research submission, oral presentation, poster contest, ${conference?.title || ""}`}
+        ogTitle={`Call for Papers & Abstract Submission | ${conference?.title || "Conference"}`}
+        ogDescription={`Submit your paper abstract for ${conference?.title || "our conference"}.`}
+      />
       <div className="conf-subpage-container conf-form-card">
         <h2 className="conf-page-title">Submit Abstract Proposal</h2>
 

@@ -28,6 +28,9 @@ public class ConferenceDetailsService {
     @Autowired
     private ScientificSessionRepo sessionRepo;
 
+    @Autowired
+    private ConferenceNavigationService navigationService;
+
     public Optional<ConferenceDetails> getConferenceDetails() {
         List<ConferenceDetails> list = conferenceDetailsRepo.findByIsDeletedFalse();
         if (!list.isEmpty()) {
@@ -96,7 +99,15 @@ public class ConferenceDetailsService {
             }
         }
 
-        return conferenceDetailsRepo.save(details);
+        ConferenceDetails saved = conferenceDetailsRepo.save(details);
+        if (saved != null && saved.getId() != null) {
+            try {
+                navigationService.generateDefaultNavigation(saved.getId());
+            } catch (Exception e) {
+                // Ignore navigation seed exception if any
+            }
+        }
+        return saved;
     }
 
     @Transactional

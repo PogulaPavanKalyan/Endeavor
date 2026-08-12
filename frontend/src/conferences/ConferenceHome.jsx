@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceHome.css";
 import "./ConferenceHome.mobile.css";
 
@@ -749,8 +750,39 @@ const getEventStatus = (dateStr) => {
     ));
   };
 
+  const eventStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": conference?.title || "International Conference",
+    "description": conference?.about || `Join global leaders and researchers at ${conference?.title || 'our international conference'}.`,
+    "startDate": conference?.startDate,
+    "endDate": conference?.endDate,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": conference?.venue || "Conference Center",
+      "address": conference?.venue || "International Venue"
+    },
+    "image": conference?.image,
+    "organizer": {
+      "@type": "Organization",
+      "name": "Intelevo Research",
+      "url": "https://intelevoresearch.com"
+    }
+  };
+
   return (
     <div className="conf-home-portal max-w-[100vw] overflow-x-hidden">
+      <SEOHead
+        title={`${conference?.title || "International Conference"} | Intelevo Research`}
+        description={conference?.about || `Join global researchers, academicians, and industry experts at ${conference?.title || "our conference"}.`}
+        keywords={`${conference?.title || ""}, international conference, research paper, abstract submission, ${conference?.venue || ""}`}
+        ogTitle={conference?.title}
+        ogDescription={conference?.about}
+        ogImage={conference?.image}
+        structuredData={eventStructuredData}
+      />
       {/* Hero Section */}
       <section className="conf-home-hero anim-section mob-anim-section max-md:min-h-[100svh]">
         <div className="conf-home-hero-slider">
@@ -1112,16 +1144,14 @@ const getEventStatus = (dateStr) => {
                     className="advisory-avatar-wrap-premium"
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      if (member.bio) {
-                        setSelectedBioSpeaker({
-                          name: member.name,
-                          designation: member.designation,
-                          org: `${member.organization}, ${member.country}`,
-                          photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                          bio: member.bio,
-                          research: member.researchExpertise
-                        });
-                      }
+                      setSelectedBioSpeaker({
+                        name: member.name,
+                        designation: member.designation,
+                        org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
+                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                        bio: member.bio || member.description || "Biography details are currently pending publication.",
+                        research: member.researchExpertise
+                      });
                     }}
                   >
                     <img
@@ -1131,26 +1161,38 @@ const getEventStatus = (dateStr) => {
                     />
                   </div>
                   <div className="advisory-info-premium">
-                    <h3>{member.name}</h3>
+                    <h3
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setSelectedBioSpeaker({
+                          name: member.name,
+                          designation: member.designation,
+                          org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
+                          photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                          bio: member.bio || member.description || "Biography details are currently pending publication.",
+                          research: member.researchExpertise
+                        });
+                      }}
+                    >
+                      {member.name}
+                    </h3>
                     <p className="advisory-role-premium">{member.designation}</p>
-                    <p className="advisory-org-premium">{member.organization}, {member.country}</p>
+                    <p className="advisory-org-premium">{member.organization}{member.country ? `, ${member.country}` : ''}</p>
                     {member.researchExpertise && (
                       <div className="advisory-expertise-premium">
                         <strong>Expertise:</strong> {member.researchExpertise}
                       </div>
                     )}
-                    {member.bio && (
-                      <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
-                        name: member.name,
-                        designation: member.designation,
-                        org: `${member.organization}, ${member.country}`,
-                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                        bio: member.bio,
-                        research: member.researchExpertise
-                      })}>
-                        Read Biography
-                      </button>
-                    )}
+                    <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
+                      name: member.name,
+                      designation: member.designation,
+                      org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
+                      photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                      bio: member.bio || member.description || "Biography details are currently pending publication.",
+                      research: member.researchExpertise
+                    })}>
+                      Read Biography
+                    </button>
                   </div>
                 </div>
               ))}

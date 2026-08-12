@@ -80,10 +80,21 @@ const ConferenceLayout = () => {
         }
       };
 
+const DEFAULT_NAV_PAGES = [
+  { id: "def-home", pageKey: "home", label: "Home", route: "", isEnabled: true, displayOrder: 1 },
+  { id: "def-speakers", pageKey: "speakers", label: "Speakers", route: "speakers", isEnabled: true, displayOrder: 2 },
+  { id: "def-program", pageKey: "program", label: "Scientific Program", route: "program", isEnabled: true, displayOrder: 3 },
+  { id: "def-brochure", pageKey: "brochure", label: "Brochure", route: "brochure", isEnabled: true, displayOrder: 4 },
+  { id: "def-abstract", pageKey: "submit-abstract", label: "Abstract Submissions", route: "submit-abstract", isEnabled: true, displayOrder: 5 },
+  { id: "def-register", pageKey: "register", label: "Registration", route: "register", isEnabled: true, displayOrder: 6 },
+  { id: "def-venue", pageKey: "venue", label: "Venue", route: "venue", isEnabled: true, displayOrder: 7 },
+  { id: "def-contact", pageKey: "contact", label: "Contact Us", route: "contact", isEnabled: true, displayOrder: 8 }
+];
+
       const fetchNavPages = async () => {
         try {
           const res = await api.get(`/api/navigation?conferenceId=${activeConf.id}`);
-          if (Array.isArray(res)) {
+          if (Array.isArray(res) && res.length > 0) {
             const mappedPages = res.map(nav => ({
               id: nav.id,
               pageKey: nav.slug,
@@ -93,9 +104,12 @@ const ConferenceLayout = () => {
               displayOrder: nav.displayOrder || 0
             }));
             setNavPages(mappedPages);
+          } else {
+            setNavPages(DEFAULT_NAV_PAGES);
           }
         } catch (err) {
           console.error("Failed to load nav pages:", err);
+          setNavPages(DEFAULT_NAV_PAGES);
         }
       };
 
@@ -334,7 +348,7 @@ const ConferenceLayout = () => {
         <div className="conf-header-container">
           <div className="conf-logo">
             <Link to={getSubRoutePath("")}>
-              <img src="/logo.png" alt="Intelevo Research" />
+              <img src="/logo.svg" alt="Intelevo Research" />
             </Link>
           </div>
 
@@ -389,12 +403,14 @@ const ConferenceLayout = () => {
                   </Link>
                 );
               })}
-            <Link
-              to={getSubRoutePath("brochure")}
-              className={`conf-nav-link ${isLinkActive("brochure") ? "active" : ""}`}
-            >
-              Brochure
-            </Link>
+            {!navPages.some(p => p.isEnabled && (p.pageKey === "brochure" || p.route === "brochure" || (p.label && p.label.toLowerCase() === "brochure"))) && (
+              <Link
+                to={getSubRoutePath("brochure")}
+                className={`conf-nav-link ${isLinkActive("brochure") ? "active" : ""}`}
+              >
+                Brochure
+              </Link>
+            )}
           </nav>
 
           <button

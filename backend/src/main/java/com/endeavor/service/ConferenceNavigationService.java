@@ -13,7 +13,15 @@ public class ConferenceNavigationService {
     private ConferenceNavigationRepository repository;
 
     public List<ConferenceNavigation> getNavigationByConferenceId(Long conferenceId) {
-        return repository.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
+        if (conferenceId == null) {
+            return java.util.Collections.emptyList();
+        }
+        List<ConferenceNavigation> list = repository.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
+        if (list.isEmpty()) {
+            generateDefaultNavigation(conferenceId);
+            list = repository.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
+        }
+        return list;
     }
 
     public ConferenceNavigation save(ConferenceNavigation navigation) {

@@ -178,8 +178,9 @@
 }
 
 .sticky-logo-img {
-  max-height: 30px;
-  filter: brightness(0) invert(1); /* Force logo to white for dark navy background */
+  max-height: 38px;
+  width: auto;
+  object-fit: contain;
 }
 
 /* ==========================================================================

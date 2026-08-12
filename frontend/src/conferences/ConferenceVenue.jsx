@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceVenue.css";
 
 const ConferenceVenue = () => {
@@ -29,6 +30,13 @@ const ConferenceVenue = () => {
   if (!venue) {
     return (
       <section className="conf-subpage-section">
+        <SEOHead
+          title={`Congress Venue & Accommodation | ${conference?.title || "Conference"}`}
+          description={`Explore venue location, hotel accommodation, and travel details for ${conference?.title || "our conference"}.`}
+          keywords={`venue, hotel, accommodation, travel guide, ${conference?.title || ""}`}
+          ogTitle={`Congress Venue & Location | ${conference?.title || "Conference"}`}
+          ogDescription={`Venue information and travel guide for ${conference?.title || "our conference"}.`}
+        />
         <div className="conf-subpage-container">
           <h2 className="conf-page-title">Congress Venue & Location</h2>
           <div className="venue-grid" style={{ gridTemplateColumns: "1fr", textAlign: "center", padding: "60px 0" }}>
@@ -49,6 +57,13 @@ const ConferenceVenue = () => {
 
   return (
     <section className="conf-subpage-section">
+      <SEOHead
+        title={`Congress Venue & Accommodation | ${conference?.title || "Conference"}`}
+        description={`Explore venue location, hotel accommodation, and travel details for ${conference?.title || "our conference"}.`}
+        keywords={`venue, hotel, accommodation, travel guide, ${conference?.title || ""}`}
+        ogTitle={`Congress Venue & Location | ${conference?.title || "Conference"}`}
+        ogDescription={`Venue information and travel guide for ${conference?.title || "our conference"}.`}
+      />
       <div className="conf-subpage-container">
         <h2 className="conf-page-title">Congress Venue & Location</h2>
         

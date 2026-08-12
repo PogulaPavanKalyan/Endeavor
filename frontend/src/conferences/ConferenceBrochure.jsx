@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api, BASE_URL } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceBrochure.css";
 
 const ConferenceBrochure = () => {
@@ -37,6 +38,13 @@ const ConferenceBrochure = () => {
 
   return (
     <section className="conf-subpage-section">
+      <SEOHead
+        title={`Request Official Event Brochure | ${conference?.title || "Conference"}`}
+        description={`Download the complete PDF event brochure, conference schedule, and scientific program for ${conference?.title || "our conference"}.`}
+        keywords={`brochure, pdf download, event guide, schedule, conference program, ${conference?.title || ""}`}
+        ogTitle={`Download PDF Brochure | ${conference?.title || "Conference"}`}
+        ogDescription={`Get the full conference agenda and brochure for ${conference?.title || "our conference"}.`}
+      />
       <div className="conf-subpage-container conf-form-card">
         <h2 className="conf-page-title">Download Conference Brochure</h2>
         {success ? (
