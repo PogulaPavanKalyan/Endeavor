@@ -1055,17 +1055,17 @@ const Homepage = () => {
 
                 {/* Floating glassmorphism badge */}
                 <div className="about-float-badge">
-                  <span className="float-badge-icon">🏆</span>
+                  <span className="float-badge-icon">{aboutData?.badgeIcon || "🏆"}</span>
                   <div className="float-badge-body">
-                    <strong>Est. 2015</strong>
-                    <span>10+ Years of Excellence</span>
+                    <strong>{aboutData?.badgeTitle || "Est. 2015"}</strong>
+                    <span>{aboutData?.badgeText || "10+ Years of Excellence"}</span>
                   </div>
                 </div>
 
                 {/* Floating stat card */}
                 <div className="about-float-stat">
-                  <span className="float-stat-num">50+</span>
-                  <span className="float-stat-lbl">Countries</span>
+                  <span className="float-stat-num">{aboutData?.statNum || "50+"}</span>
+                  <span className="float-stat-lbl">{aboutData?.statLabel || "Countries"}</span>
                 </div>
               </div>
             </div>

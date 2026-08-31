@@ -1,5 +1,9 @@
 package com.endeavor.controller;
 
+import com.endeavor.entity.AboutServiceItem;
+import com.endeavor.entity.AboutUsSection;
+import com.endeavor.service.AboutUsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,43 +15,64 @@ import java.util.*;
 @RequestMapping("/api")
 public class DynamicContentController {
 
+    @Autowired(required = false)
+    private AboutUsService aboutUsService;
+
     @GetMapping("/homepage-dynamic-data")
     public ResponseEntity<Map<String, Object>> getHomepageDynamicData() {
         Map<String, Object> data = new HashMap<>();
 
-        // 1. About Organization Details
+        // 1. About Organization Details (Dynamic from database with fallback defaults)
         Map<String, Object> about = new HashMap<>();
-        about.put("title", "Empowering Global Scientific Discovery");
-        about.put("tag", "About Organization");
-        about.put("description", "Intelevo Research acts as a pivotal axis connecting international experts, ideas, and publication pathways.");
+        AboutUsSection section = (aboutUsService != null) ? aboutUsService.getAboutUsSection() : null;
 
+        about.put("title", section != null && section.getOverviewTitle() != null && !section.getOverviewTitle().isEmpty() 
+                ? section.getOverviewTitle() : "Empowering Global Scientific Discovery");
+        about.put("tag", section != null && section.getOverviewLabel() != null && !section.getOverviewLabel().isEmpty() 
+                ? section.getOverviewLabel() : "About Organization");
+        about.put("description", section != null && section.getOverviewLead() != null && !section.getOverviewLead().isEmpty() 
+                ? section.getOverviewLead() : "Intelevo Research acts as a pivotal axis connecting international experts, ideas, and publication pathways across 50+ countries.");
+        about.put("badgeIcon", section != null && section.getOverviewBadgeIcon() != null && !section.getOverviewBadgeIcon().isEmpty() 
+                ? section.getOverviewBadgeIcon() : "🏆");
+        about.put("badgeTitle", section != null && section.getOverviewBadgeTitle() != null && !section.getOverviewBadgeTitle().isEmpty() 
+                ? section.getOverviewBadgeTitle() : "Est. 2015");
+        about.put("badgeText", section != null && section.getOverviewBadgeText() != null && !section.getOverviewBadgeText().isEmpty() 
+                ? section.getOverviewBadgeText() : "10+ Years of Excellence");
+        about.put("statNum", section != null && section.getStatCountries() != null 
+                ? (section.getStatCountries() + "+") : "50+");
+        about.put("statLabel", "Countries");
+
+        // Service pillars from DB
+        List<AboutServiceItem> dbServices = (aboutUsService != null) ? aboutUsService.getServiceItems() : null;
         List<Map<String, String>> pillars = new ArrayList<>();
-        pillars.add(createPillar("👤", "Who We Are", "Intelevo Research brings together academicians, researchers, and engineers worldwide to exchange discoveries."));
-        pillars.add(createPillar("🎯", "What We Do", "We build communities through high-quality international meetings, workshops, virtual webinars, and proceedings."));
-        pillars.add(createPillar("💡", "Why Choose Us", "Exceptional global networking, robust abstract review, and guaranteed distribution through indexed media channels."));
+        if (dbServices != null && !dbServices.isEmpty()) {
+            for (AboutServiceItem item : dbServices) {
+                if (item.getIsActive() == null || Boolean.TRUE.equals(item.getIsActive())) {
+                    pillars.add(createPillar(
+                        item.getIcon() != null && !item.getIcon().isEmpty() ? item.getIcon() : "✨", 
+                        item.getTitle() != null ? item.getTitle() : "Service", 
+                        item.getDescription() != null ? item.getDescription() : ""
+                    ));
+                }
+            }
+        }
+        if (pillars.isEmpty()) {
+            pillars.add(createPillar("👤", "Who We Are", "Intelevo Research brings together academicians, researchers, and engineers worldwide to exchange discoveries."));
+            pillars.add(createPillar("🎯", "What We Do", "We build communities through high-quality international meetings, workshops, virtual webinars, and proceedings."));
+            pillars.add(createPillar("💡", "Why Choose Us", "Exceptional global networking, robust abstract review, and guaranteed distribution through indexed media channels."));
+            pillars.add(createPillar("📖", "Publication Support", "Fast-track proceedings published in Scopus, Web of Science indexed journals."));
+        }
         about.put("pillars", pillars);
 
+        // Images from section overview or tabs
         Map<String, Map<String, Object>> tabs = new HashMap<>();
+        String img1 = (section != null && section.getOverviewImage1() != null && !section.getOverviewImage1().isEmpty()) 
+                ? section.getOverviewImage1() : "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80";
+        String img2 = (section != null && section.getOverviewImage2() != null && !section.getOverviewImage2().isEmpty()) 
+                ? section.getOverviewImage2() : "https://images.unsplash.com/photo-1560439514-4e9645039924?auto=format&fit=crop&w=600&q=80";
         tabs.put("about", createTab("About Company", 
-            "Intelevo Research is the scientific perseverance and so is the learning. Scientific Events are not just limited to discussion, but to connect people with people, people with ideas, and people with opportunities. Intelevo Research is one of the innovative organizers of webinars, conferences, workshops and exhibitions. Our webinars and conferences provide a great platform to share scientific research among the attendees turning up round the globe.",
-            List.of("https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80", 
-                    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80")
-        ));
-        tabs.put("scientific", createTab("Scientific Mission", 
-            "The very cognizance of How, What, Why, When, Where has been at the core of scientific endeavor, and has been the forefront in understanding the needs and creating developments which have improved life on Earth in boundless manners. Presently, life on this planet is confronting new difficulties from both nature and the constructed world, and logical application is our best instrument with which to respond. Science is a worldwide undertaking and we as researchers have the responsibility to make meetings more reasonable, and open to thoughtful analysis and experts.",
-            List.of("https://images.unsplash.com/photo-1579389083046-7c64c784dc24?auto=format&fit=crop&w=800&q=80", 
-                    "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80")
-        ));
-        tabs.put("meeting", createTab("Meeting Goals", 
-            "The very conscience of explore-get-explored and connect in an inexorably interconnected world encouraged by innovative progressions in correspondence, choices have been investigated to supplant the in-person experience that is unreachable for some experts, and ideal occasion to change logical gatherings. Webinars and Video-and virtual-conferencing of talks can significantly upgrade gathering openness and improve the experience and interaction.",
-            List.of("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80", 
-                    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80")
-        ));
-        tabs.put("services", createTab("Our Services", 
-            "We provide a comprehensive range of services tailored to the global scientific community. Conferences: Organizing global summits and international meetings. Webinars: Interactive virtual sessions with industry leaders. Workshops: Hands-on training and skill development. Exhibitions: Showcasing the latest technological advancements in key sectors.",
-            List.of("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80", 
-                    "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80")
-        ));
+            section != null && section.getOverviewBody() != null ? section.getOverviewBody() : "Intelevo Research connects researchers, academicians, industry experts and innovators through international conferences.", 
+            List.of(img1, img2)));
         about.put("tabs", tabs);
         data.put("about", about);
 

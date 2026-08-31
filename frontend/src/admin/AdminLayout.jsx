@@ -126,6 +126,9 @@ const AdminLayout = () => {
           <NavLink to="/admin/webinars" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🌐</span> Webinars
           </NavLink>
+          <NavLink to="/admin/about" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">🏢</span> About Us Section
+          </NavLink>
           <NavLink to="/admin/footer" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🦶</span> Footer Management
           </NavLink>

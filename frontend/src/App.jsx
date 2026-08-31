@@ -44,6 +44,7 @@ import ConferenceSectionManager from "./admin/pages/ConferenceSectionManager";
 import ProgramManager from "./admin/pages/ProgramManager";
 import AdminUsersManager from "./admin/pages/AdminUsersManager";
 import FooterManager from "./admin/pages/FooterManager";
+import AboutManager from "./admin/pages/AboutManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -191,6 +192,7 @@ function App() {
             <Route path="program" element={<ProgramManager />} />
             <Route path="users" element={<AdminUsersManager />} />
             <Route path="footer" element={<FooterManager />} />
+            <Route path="about" element={<AboutManager />} />
           </Route>
 
           {/* Main Website 404 route */}
