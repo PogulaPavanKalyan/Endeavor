@@ -272,17 +272,16 @@ public class AboutUsService {
             }
         }
         List<AboutPartnerNetwork> list = new ArrayList<>();
-        list.add(createPartner("IEEE Technical Chapter", "Technical Co-Sponsor", 1));
-        list.add(createPartner("Scopus Indexed Journals", "Publication Partner", 2));
-        list.add(createPartner("Global Science Network", "Academic Alliance", 3));
-        list.add(createPartner("Springer Proceedings", "Indexing Partner", 4));
+        list.add(createPartner("IEEE Technical Chapter", 1));
+        list.add(createPartner("Scopus Indexed Journals", 2));
+        list.add(createPartner("Global Science Network", 3));
+        list.add(createPartner("Springer Proceedings", 4));
         return list;
     }
 
-    private AboutPartnerNetwork createPartner(String name, String type, int order) {
+    private AboutPartnerNetwork createPartner(String name, int order) {
         AboutPartnerNetwork p = new AboutPartnerNetwork();
         p.setName(name);
-        p.setType(type);
         p.setDisplayOrder(order);
         return p;
     }
@@ -335,12 +334,12 @@ public class AboutUsService {
         return list;
     }
 
-    private AboutAdvisoryLeader createLeader(String name, String role, String affiliation, String photo, int order) {
+    private AboutAdvisoryLeader createLeader(String name, String role, String institution, String photo, int order) {
         AboutAdvisoryLeader l = new AboutAdvisoryLeader();
         l.setName(name);
         l.setRole(role);
-        l.setAffiliation(affiliation);
-        l.setPhoto(photo);
+        l.setInstitution(institution);
+        l.setPhotoFileName(photo);
         l.setDisplayOrder(order);
         return l;
     }
