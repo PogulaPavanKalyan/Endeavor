@@ -16,6 +16,7 @@ public class AboutServiceItem {
     private String icon;
     private String tag; // E.g., "150+ Events"
     private Integer displayOrder = 0;
+    private Boolean isActive = true;
 
     public AboutServiceItem() {}
 
@@ -36,4 +37,7 @@ public class AboutServiceItem {
 
     public Integer getDisplayOrder() { return displayOrder; }
     public void setDisplayOrder(Integer displayOrder) { this.displayOrder = displayOrder; }
+
+    public Boolean getIsActive() { return isActive != null ? isActive : true; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }
