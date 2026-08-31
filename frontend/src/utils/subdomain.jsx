@@ -33,7 +33,7 @@ export const getSubdomain = () => {
     if (parts.length >= 2) {
       prodBaseDomain = `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
     } else {
-      prodBaseDomain = "intelevoresearch.com";
+      prodBaseDomain = "intelevoresearch.org";
     }
   }
   
@@ -88,7 +88,7 @@ export const getSubdomainUrl = (subdomain, path = "") => {
     if (parts.length >= 2) {
       prodBaseDomain = `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
     } else {
-      prodBaseDomain = "intelevoresearch.com";
+      prodBaseDomain = "intelevoresearch.org";
     }
   }
   

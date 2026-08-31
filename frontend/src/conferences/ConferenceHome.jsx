@@ -1705,9 +1705,11 @@ const getEventStatus = (dateStr) => {
                         </div>
                         <div className="sponsor-logos-grid max-md:grid max-md:grid-cols-2 max-[480px]:grid-cols-1 max-md:gap-4">
                           {list.map(sp => {
-                            const logoUrl = sp.image?.fileName
-                              ? `${BASE_URL}/uploads/sponsors/${sp.image.fileName}`
-                              : null;
+                            const logoUrl = (sp.image?.filePath && sp.image.filePath.startsWith("http"))
+                              ? sp.image.filePath
+                              : (sp.image?.fileName
+                                  ? `/uploads/sponsors/${sp.image.fileName}`
+                                  : null);
 
                             return (
                               <div key={sp.id} className="sponsor-logo-box">

@@ -63,9 +63,11 @@ const Sponsors = () => {
               </div>
             ) : (
               sponsors.map((sponsor) => {
-                const logoUrl = sponsor.image?.fileName
-                  ? `/uploads/sponsors/${sponsor.image.fileName}`
-                  : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80";
+                const logoUrl = (sponsor.image?.filePath && sponsor.image.filePath.startsWith("http"))
+                  ? sponsor.image.filePath
+                  : (sponsor.image?.fileName
+                      ? `/uploads/sponsors/${sponsor.image.fileName}`
+                      : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80");
 
                 return (
                   <div key={sponsor.id} className="sponsor-card">

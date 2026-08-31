@@ -179,16 +179,20 @@ const DEFAULT_NAV_PAGES = [
             venue: data.venue,
             email: data.contactEmail || "info@intelevoresearch.com",
             phone: data.contactPhone || "",
-            image: data.photo?.fileName
-              ? `/uploads/conference/${data.photo.fileName}`
-              : "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+            image: (data.photo?.filePath && data.photo.filePath.startsWith("http"))
+              ? data.photo.filePath
+              : (data.photo?.fileName
+                ? `/uploads/conference/${data.photo.fileName}`
+                : "https://images.unsplash.com/photo-1540575467063-178a50c2df87"),
             images: data.photos && data.photos.length > 0
               ? [...data.photos]
                 .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-                .map(p => `/uploads/conference/${p.fileName}`)
-              : [data.photo?.fileName
-                ? `/uploads/conference/${data.photo.fileName}`
-                : "https://images.unsplash.com/photo-1540575467063-178a50c2df87"],
+                .map(p => (p.filePath && p.filePath.startsWith("http")) ? p.filePath : `/uploads/conference/${p.fileName}`)
+              : [(data.photo?.filePath && data.photo.filePath.startsWith("http"))
+                ? data.photo.filePath
+                : (data.photo?.fileName
+                  ? `/uploads/conference/${data.photo.fileName}`
+                  : "https://images.unsplash.com/photo-1540575467063-178a50c2df87")],
             theme: {
               primary: data.themePrimary || "#e74c3c",
               primaryHover: data.themePrimaryHover || "#c0392b",

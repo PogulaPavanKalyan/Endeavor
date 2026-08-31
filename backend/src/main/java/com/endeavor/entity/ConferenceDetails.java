@@ -59,6 +59,7 @@ public class ConferenceDetails {
     private String status = "PUBLISHED"; // DRAFT, PUBLISHED, ARCHIVED
     private String themePrimary = "#e74c3c";
     private String themePrimaryHover = "#c0392b";
+    private String themeSecondary = "#f39c12";
     private String themeAccent = "#f39c12";
     private String contactEmail;
     private String contactPhone;
@@ -251,8 +252,16 @@ public class ConferenceDetails {
         this.themePrimaryHover = themePrimaryHover;
     }
 
+    public String getThemeSecondary() {
+        return themeSecondary != null ? themeSecondary : themeAccent;
+    }
+
+    public void setThemeSecondary(String themeSecondary) {
+        this.themeSecondary = themeSecondary;
+    }
+
     public String getThemeAccent() {
-        return themeAccent;
+        return themeAccent != null ? themeAccent : themeSecondary;
     }
 
     public void setThemeAccent(String themeAccent) {

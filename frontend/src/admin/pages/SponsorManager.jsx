@@ -171,9 +171,15 @@ const SponsorManager = () => {
                           border: '1px solid #e2e8f0', borderRadius: '6px', overflow: 'hidden',
                           display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
-                          {s.image?.fileName ? (
+                          {(s.image?.filePath && s.image.filePath.startsWith('http')) ? (
                             <img 
-                              src={`${BASE_URL}/uploads/sponsors/${s.image.fileName}`} 
+                              src={s.image.filePath} 
+                              alt={s.sponsorName}
+                              style={{maxWidth: '90%', maxHeight: '90%', objectFit: 'contain'}}
+                            />
+                          ) : (s.image?.fileName || (typeof s.image === 'string' && s.image)) ? (
+                            <img 
+                              src={`/uploads/sponsors/${s.image?.fileName || s.image}`} 
                               alt={s.sponsorName}
                               style={{maxWidth: '90%', maxHeight: '90%', objectFit: 'contain'}}
                             />

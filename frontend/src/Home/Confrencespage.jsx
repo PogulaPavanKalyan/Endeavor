@@ -22,9 +22,11 @@ const Confrencespage = () => {
             title: conf.title || conf.tittle,
             date: `${conf.startDate} to ${conf.endDate}`,
             venue: conf.venue,
-            image: conf.photo?.filePath 
-              ? `/uploads/conference/${conf.photo.fileName}` 
-              : "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+            image: (conf.photo?.filePath && conf.photo.filePath.startsWith("http"))
+              ? conf.photo.filePath
+              : (conf.photo?.fileName 
+                  ? `/uploads/conference/${conf.photo.fileName}` 
+                  : (conf.aboutImage && conf.aboutImage.startsWith("http") ? conf.aboutImage : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80")),
             subdomain: conf.slug
           }));
           setConferences(mappedList);

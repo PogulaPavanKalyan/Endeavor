@@ -10,7 +10,7 @@ const slugify = (text) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 100);
 
 const ConferenceManager = () => {
-  const { confirmDialog, alertDialog } = useAdminDialog();
+  const { confirmDialog, alertDialog, toast } = useAdminDialog();
 
   const { conferences, fetchConferences, setActiveConferenceId } = useAdmin();
   const [loading, setLoading] = useState(false);
@@ -169,6 +169,18 @@ const ConferenceManager = () => {
       fetchSessionsForConf(conf.id);
       setImportantDates([]);
       fetchImportantDatesForConf(conf.id);
+
+      // Load tracks
+      api.get(`/api/admin/tracks?conferenceId=${conf.id}`)
+        .then(tracks => {
+          if (Array.isArray(tracks) && tracks.length > 0) {
+            setFormData(prev => ({
+              ...prev,
+              scientificSessions: tracks.map(t => t.name)
+            }));
+          }
+        })
+        .catch(err => console.error("Failed to load tracks for conf:", err));
     } else {
       setFormData({
         tittle: '', slug: '', description: '', startDate: '', endDate: '',
@@ -287,9 +299,9 @@ const ConferenceManager = () => {
     try {
       const updated = await api.put(`/api/admin/important-dates/${date.id}`, updatedPayload);
       setImportantDates(prev => prev.map(d => d.id === date.id ? updated : d));
-      setSuccess('Status updated successfully.');
+      toast.success('✓ Date status updated.');
     } catch (err) {
-      setError('Failed to update status.');
+      toast.error('Failed to update status.');
     }
   };
 
@@ -307,9 +319,9 @@ const ConferenceManager = () => {
     try {
       const ids = newDates.map(d => d.id);
       await api.put(`/api/admin/conference-details/${editingConf.id}/important-dates/reorder`, ids);
-      setSuccess('Dates order saved successfully.');
+      toast.success('✓ Date order saved.');
     } catch (err) {
-      setError('Failed to save order in backend.');
+      toast.error('Failed to save date order.');
     }
   };
 
@@ -332,16 +344,19 @@ const ConferenceManager = () => {
         const fd = new FormData();
         fd.append('file', photoFile);
         finalConf = await api.postMultipart(`/api/admin/conference-details/${saved.id}/photo`, fd);
+        setPhotoFile(null);
       }
       if (brochureFile && saved.id) {
         const bd = new FormData();
         bd.append('file', brochureFile);
         finalConf = await api.postMultipart(`/api/admin/conference-details/${saved.id}/brochure`, bd);
+        setBrochureFile(null);
       }
       if (aboutImageFile && saved.id) {
         const ad = new FormData();
         ad.append('file', aboutImageFile);
         finalConf = await api.postMultipart(`/api/admin/conference-details/${saved.id}/about-image`, ad);
+        setAboutImageFile(null);
       }
 
       await fetchConferences();
@@ -491,7 +506,7 @@ const ConferenceManager = () => {
   // ── Pricing management ──
   const handlePricingChange = (i, field, value) => {
     const arr = [...formData.pricingTiers];
-    arr[i][field] = value;
+    arr[i][field] = field === 'type' ? value : (parseFloat(value) || 0);
     setFormData({ ...formData, pricingTiers: arr });
   };
   const addPricingTier = () => setFormData({ ...formData, pricingTiers: [...formData.pricingTiers, { type: '', earlyPrice: 0, midPrice: 0, finalPrice: 0 }] });
@@ -507,12 +522,29 @@ const ConferenceManager = () => {
         series: formData.seriesId ? { id: parseInt(formData.seriesId) } : null,
         year: parseInt(formData.year)
       };
-      await api.post('/api/admin/conference-details', payload);
-      setSuccess('Conference saved successfully!');
+      const saved = await api.post('/api/admin/conference-details', payload);
+
+      if (photoFile && saved.id) {
+        const fd = new FormData();
+        fd.append('file', photoFile);
+        await api.postMultipart(`/api/admin/conference-details/${saved.id}/photo`, fd);
+      }
+      if (brochureFile && saved.id) {
+        const bd = new FormData();
+        bd.append('file', brochureFile);
+        await api.postMultipart(`/api/admin/conference-details/${saved.id}/brochure`, bd);
+      }
+      if (aboutImageFile && saved.id) {
+        const ad = new FormData();
+        ad.append('file', aboutImageFile);
+        await api.postMultipart(`/api/admin/conference-details/${saved.id}/about-image`, ad);
+      }
+
+      toast.success('✓ Conference saved successfully!');
       setShowModal(false);
       fetchConferences();
     } catch (err) {
-      setError('Failed to save conference.');
+      toast.error('Failed to save conference.');
     } finally { setLoading(false); }
   };
 

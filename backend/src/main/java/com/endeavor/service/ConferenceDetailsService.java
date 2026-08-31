@@ -77,27 +77,32 @@ public class ConferenceDetailsService {
             details.getPhoto().setConferenceDetails(details);
         }
 
-        // Auto Slug Generation
-        if (details.getSlug() == null || details.getSlug().trim().isEmpty()) {
+        // Auto Slug Generation & Uniqueness
+        String targetSlug = details.getSlug();
+        if (targetSlug == null || targetSlug.trim().isEmpty()) {
             String titleBase = details.getTitle() != null ? details.getTitle() : details.getTittle();
             if (titleBase != null && !titleBase.trim().isEmpty()) {
-                String cleanTitle = (titleBase + (details.getYear() != null ? " " + details.getYear() : ""))
+                targetSlug = (titleBase + (details.getYear() != null ? " " + details.getYear() : ""))
                     .toLowerCase()
                     .replaceAll("[^a-z0-9\\s-]", "")
                     .replaceAll("\\s+", "-");
-                
-                String generatedSlug = cleanTitle;
-                int count = 1;
-                while (true) {
-                    Optional<ConferenceDetails> existing = conferenceDetailsRepo.findBySlug(generatedSlug);
-                    if (existing.isEmpty() || (details.getId() != null && existing.get().getId().equals(details.getId()))) {
-                        break;
-                    }
-                    generatedSlug = cleanTitle + "-" + count++;
-                }
-                details.setSlug(generatedSlug);
+            } else {
+                targetSlug = "conference";
             }
+        } else {
+            targetSlug = targetSlug.trim().toLowerCase().replaceAll("[^a-z0-9-]", "-").replaceAll("-+", "-");
         }
+
+        String uniqueSlug = targetSlug;
+        int count = 1;
+        while (true) {
+            Optional<ConferenceDetails> existing = conferenceDetailsRepo.findBySlug(uniqueSlug);
+            if (existing.isEmpty() || (details.getId() != null && existing.get().getId().equals(details.getId()))) {
+                break;
+            }
+            uniqueSlug = targetSlug + "-" + count++;
+        }
+        details.setSlug(uniqueSlug);
 
         ConferenceDetails saved = conferenceDetailsRepo.save(details);
         if (saved != null && saved.getId() != null) {

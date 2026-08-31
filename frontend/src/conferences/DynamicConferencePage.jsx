@@ -141,8 +141,10 @@ const DynamicConferencePage = () => {
               </Link>
               {conference?.brochureFileName && (
                 <a 
-                  href={`/uploads/brochures/${conference.brochureFileName}`} 
+                  href={`${BASE_URL}/uploads/brochures/${conference.brochureFileName}`} 
                   download 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="sidebar-btn sidebar-btn-secondary"
                 >
                   Download Brochure
