@@ -93,7 +93,6 @@ const Contact = () => {
         <div className="hero-overlay"></div>
         <div className="hero-content container">
           <div className="contact-brand-header">
-            <img src="/logo.svg" alt="Intelevo Research Logo" className="contact-hero-logo" />
             <h1 className="contact-company-name">Intelevo Research</h1>
             <p className="contact-company-tagline">Intelligence Evolved</p>
           </div>

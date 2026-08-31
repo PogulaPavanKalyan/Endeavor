@@ -70,7 +70,6 @@ function AboutPage() {
         <div className="abt-container">
           <div className="abt-hero-new-content">
             <div className="abt-hero-brand-top" style={{ textAlign: "center", marginBottom: "16px" }}>
-              <img src="/logo.svg" alt="Intelevo Research Logo" style={{ height: "64px", width: "auto", marginBottom: "8px", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }} />
               <div style={{ fontSize: "13px", fontWeight: "700", letterSpacing: "3px", textTransform: "uppercase", color: "#60A5FA" }}>Intelligence Evolved</div>
             </div>
             <div className="abt-new-breadcrumbs">
