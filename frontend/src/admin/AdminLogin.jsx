@@ -51,10 +51,12 @@ const AdminLogin = () => {
       <div className="login-overlay"></div>
       <div className="login-card">
         <div className="login-header">
-          <img src="/logo.svg" alt="Intelevo Research" className="login-logo" style={{ height: "54px", marginBottom: "12px" }} />
-          <h2 style={{ margin: "0 0 4px 0", fontSize: "1.6rem", fontWeight: "700" }}>Intelevo Research</h2>
-          <div style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "2px", color: "#60A5FA", textTransform: "uppercase", marginBottom: "12px" }}>Intelligence Evolved</div>
-          <p>Sign in to administrative console.</p>
+          <div className="login-logo-wrapper">
+            <img src="/logo.svg" alt="Intelevo Research" className="login-logo" />
+          </div>
+          <h2 className="login-title">Intelevo Research</h2>
+          <div className="login-subtitle">Intelligence Evolved</div>
+          <p className="login-desc">Sign in to administrative console</p>
         </div>
 
         {error && <div className="login-error-alert">{error}</div>}

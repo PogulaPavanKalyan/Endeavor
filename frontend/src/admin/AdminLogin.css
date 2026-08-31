@@ -45,28 +45,54 @@
 }
 
 .login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 28px;
+}
+
+.login-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 16px auto;
+  width: 100%;
 }
 
 .login-logo {
-  height: 55px;
+  height: 52px;
   width: auto;
-  margin-bottom: 20px;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  max-width: 210px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: block;
+  margin: 0 auto;
 }
 
-.login-header h2 {
-  font-size: 1.8rem;
+.login-title {
+  margin: 0 0 4px 0;
+  font-size: 1.65rem;
   font-weight: 800;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.02em;
+  color: #ffffff;
 }
 
-.login-header p {
-  font-size: 13px;
+.login-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.login-desc {
+  margin: 0;
+  font-size: 13.5px;
   color: #94a3b8;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 /* Form Styles */
