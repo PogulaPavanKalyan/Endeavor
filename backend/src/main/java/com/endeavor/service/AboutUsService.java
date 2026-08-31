@@ -1,7 +1,7 @@
 package com.endeavor.service;
 
 import com.endeavor.entity.*;
-import com.endeavor.repo.*;
+import com.endeavor.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional
 public class AboutUsService {
 
     @Autowired(required = false)
@@ -52,7 +51,7 @@ public class AboutUsService {
             }
         }
 
-        // Initialize and return default static content if empty
+        // Return default static content if DB is empty
         AboutUsSection s = new AboutUsSection();
         s.setId(1L);
         s.setHeroBadge("About Intelevo Research");
@@ -96,16 +95,10 @@ public class AboutUsService {
         s.setCtaButton2Text("Submit Abstract");
         s.setCtaButton2Link("/submit-abstract");
 
-        if (sectionRepo != null) {
-            try {
-                return sectionRepo.save(s);
-            } catch (Exception e) {
-                System.err.println("Notice: Could not seed AboutUsSection: " + e.getMessage());
-            }
-        }
         return s;
     }
 
+    @Transactional
     public AboutUsSection saveAboutUsSection(AboutUsSection incoming) {
         if (sectionRepo == null) return incoming;
         try {
@@ -175,9 +168,6 @@ public class AboutUsService {
         list.add(createOverviewFeature("Global Dissemination", "Fast-tracking proceedings publication through Scopus channels.", 1));
         list.add(createOverviewFeature("Rigorous Peer Assessment", "Supervised by distinguished steering boards and domain committees.", 2));
         list.add(createOverviewFeature("International Recognition", "Indexed by Scopus, Web of Science, CrossRef, and Google Scholar.", 3));
-        if (overviewFeatureRepo != null) {
-            try { overviewFeatureRepo.saveAll(list); } catch (Exception ignored) {}
-        }
         return list;
     }
 
@@ -202,25 +192,32 @@ public class AboutUsService {
             }
         }
         List<AboutServiceItem> list = new ArrayList<>();
-        list.add(createServiceItem("👤", "Who We Are", "Intelevo Research brings together academicians, researchers, and engineers worldwide to exchange discoveries.", "150+ Events", 1));
-        list.add(createServiceItem("🎯", "What We Do", "We build communities through high-quality international meetings, workshops, virtual webinars, and proceedings.", "500+ Papers", 2));
-        list.add(createServiceItem("💡", "Why Choose Us", "Exceptional global networking, robust abstract review, and guaranteed distribution through indexed media channels.", "200+ Sessions", 3));
-        list.add(createServiceItem("📖", "Publication Support", "Fast-track publication of conference proceedings in globally recognized and indexed journals.", "10,000+ Members", 4));
-        if (serviceItemRepo != null) {
-            try { serviceItemRepo.saveAll(list); } catch (Exception ignored) {}
-        }
+        list.add(createServiceItem("🏛️", "International Conferences", "Orchestrating high-impact global assemblies across STEM and medical disciplines.", "Core Focus", 1));
+        list.add(createServiceItem("💻", "Virtual Scientific Webinars", "Connecting researchers across borders through high-definition interactive symposia.", "Online", 2));
+        list.add(createServiceItem("📚", "Proceedings & Publications", "Ensuring accepted abstracts are indexed with major scientific indexing databases.", "Publishing", 3));
+        list.add(createServiceItem("🤝", "Academic Collaborations", "Bridging international faculty, research labs, and early-career investigators.", "Networking", 4));
         return list;
     }
 
     private AboutServiceItem createServiceItem(String icon, String title, String desc, String tag, int order) {
-        AboutServiceItem s = new AboutServiceItem();
-        s.setIcon(icon);
-        s.setTitle(title);
-        s.setDescription(desc);
-        s.setTag(tag);
-        s.setDisplayOrder(order);
-        s.setIsActive(true);
-        return s;
+        AboutServiceItem item = new AboutServiceItem();
+        item.setIcon(icon);
+        item.setTitle(title);
+        item.setDescription(desc);
+        item.setTag(tag);
+        item.setDisplayOrder(order);
+        item.setIsActive(true);
+        return item;
+    }
+
+    @Transactional
+    public AboutServiceItem saveServiceItem(AboutServiceItem item) {
+        return serviceItemRepo != null ? serviceItemRepo.save(item) : item;
+    }
+
+    @Transactional
+    public void deleteServiceItem(Long id) {
+        if (serviceItemRepo != null) serviceItemRepo.deleteById(id);
     }
 
     // --- Why Choose Items ---
@@ -236,25 +233,30 @@ public class AboutUsService {
             }
         }
         List<AboutWhyChooseItem> list = new ArrayList<>();
-        list.add(createWhyChooseItem("🌐", "Global Reach", "Connect with researchers and academics from 50+ countries across 6 continents at every event.", 1));
-        list.add(createWhyChooseItem("✅", "Expert Review Process", "Rigorous double-blind peer review by domain experts ensuring quality, integrity and academic standards.", 2));
-        list.add(createWhyChooseItem("📚", "Publication Opportunities", "Fast-track publication in Scopus, Web of Science, and CrossRef indexed journals and proceedings.", 3));
-        list.add(createWhyChooseItem("🤝", "Industry Collaboration", "Bridge academia and industry through strategic partnerships and innovation-focused symposiums.", 4));
-        list.add(createWhyChooseItem("🏆", "Academic Excellence", "Recognized internationally for maintaining the highest standards in conference organization and proceedings.", 5));
-        list.add(createWhyChooseItem("🔬", "Scientific Innovation", "Platform for cutting-edge discoveries across AI, healthcare, engineering, life sciences and more.", 6));
-        if (whyChooseItemRepo != null) {
-            try { whyChooseItemRepo.saveAll(list); } catch (Exception ignored) {}
-        }
+        list.add(createWhyChooseItem("🌐", "Global Reach & Diversity", "Delegates and speakers from over 50+ countries representing top institutions.", 1));
+        list.add(createWhyChooseItem("🔬", "Rigorous Peer Review", "Ensuring the highest scientific standard and constructive feedback for all submissions.", 2));
+        list.add(createWhyChooseItem("📖", "Indexed Publications", "Strategic partnerships for fast-track indexing in Scopus and Web of Science.", 3));
+        list.add(createWhyChooseItem("💡", "Cross-Disciplinary Synergy", "Fostering partnerships at the intersection of engineering, medicine, and technology.", 4));
         return list;
     }
 
     private AboutWhyChooseItem createWhyChooseItem(String icon, String title, String desc, int order) {
-        AboutWhyChooseItem w = new AboutWhyChooseItem();
-        w.setIcon(icon);
-        w.setTitle(title);
-        w.setDescription(desc);
-        w.setDisplayOrder(order);
-        return w;
+        AboutWhyChooseItem item = new AboutWhyChooseItem();
+        item.setIcon(icon);
+        item.setTitle(title);
+        item.setDescription(desc);
+        item.setDisplayOrder(order);
+        return item;
+    }
+
+    @Transactional
+    public AboutWhyChooseItem saveWhyChooseItem(AboutWhyChooseItem item) {
+        return whyChooseItemRepo != null ? whyChooseItemRepo.save(item) : item;
+    }
+
+    @Transactional
+    public void deleteWhyChooseItem(Long id) {
+        if (whyChooseItemRepo != null) whyChooseItemRepo.deleteById(id);
     }
 
     // --- Partner Networks ---
@@ -270,22 +272,17 @@ public class AboutUsService {
             }
         }
         List<AboutPartnerNetwork> list = new ArrayList<>();
-        list.add(createPartnerNetwork("IEEE", "ieee", 1));
-        list.add(createPartnerNetwork("Springer Nature", "springer", 2));
-        list.add(createPartnerNetwork("Elsevier", "elsevier", 3));
-        list.add(createPartnerNetwork("CrossRef", "crossref", 4));
-        list.add(createPartnerNetwork("Scopus", "scopus", 5));
-        list.add(createPartnerNetwork("Google Scholar", "google", 6));
-        if (partnerNetworkRepo != null) {
-            try { partnerNetworkRepo.saveAll(list); } catch (Exception ignored) {}
-        }
+        list.add(createPartner("IEEE Technical Chapter", "Technical Co-Sponsor", 1));
+        list.add(createPartner("Scopus Indexed Journals", "Publication Partner", 2));
+        list.add(createPartner("Global Science Network", "Academic Alliance", 3));
+        list.add(createPartner("Springer Proceedings", "Indexing Partner", 4));
         return list;
     }
 
-    private AboutPartnerNetwork createPartnerNetwork(String name, String logo, int order) {
+    private AboutPartnerNetwork createPartner(String name, String type, int order) {
         AboutPartnerNetwork p = new AboutPartnerNetwork();
         p.setName(name);
-        p.setLogoFileName(logo);
+        p.setType(type);
         p.setDisplayOrder(order);
         return p;
     }
@@ -303,24 +300,18 @@ public class AboutUsService {
             }
         }
         List<AboutTimelineMilestone> list = new ArrayList<>();
-        list.add(createTimelineMilestone("2015", "Founded", "Intelevo Research incorporated with a mission to bring global researchers together through high-impact academic events.", "left", 1));
-        list.add(createTimelineMilestone("2017", "First International Conference", "Hosted our inaugural international conference with delegates from 18 countries, establishing our commitment to quality.", "right", 2));
-        list.add(createTimelineMilestone("2019", "Scopus Partnership", "Established formal indexing agreements with Elsevier's Scopus, ensuring all proceedings reach global academic databases.", "left", 3));
-        list.add(createTimelineMilestone("2021", "100+ Conferences Milestone", "Crossed the landmark of 100 successfully organized conferences across three continents.", "right", 4));
-        list.add(createTimelineMilestone("2023", "10,000+ Researcher Network", "Built a thriving community of over 10,000 researchers, scientists and academicians across 50+ countries.", "left", 5));
-        list.add(createTimelineMilestone("2026", "Global Vision 2030", "Expanding to serve 200+ conferences annually and launch our open-access journal series.", "right", 6));
-        if (timelineMilestoneRepo != null) {
-            try { timelineMilestoneRepo.saveAll(list); } catch (Exception ignored) {}
-        }
+        list.add(createMilestone("2015", "Founding", "Established to promote cross-border scientific communication.", 1));
+        list.add(createMilestone("2018", "50+ Global Summits", "Expanded congress portfolio into international destinations.", 2));
+        list.add(createMilestone("2021", "Digital Transformation", "Pioneered virtual symposiums connecting 10,000+ delegates.", 3));
+        list.add(createMilestone("2026", "Global Innovation Hub", "Organizing 200+ hybrid assemblies across 50+ countries.", 4));
         return list;
     }
 
-    private AboutTimelineMilestone createTimelineMilestone(String year, String title, String desc, String side, int order) {
+    private AboutTimelineMilestone createMilestone(String year, String title, String desc, int order) {
         AboutTimelineMilestone m = new AboutTimelineMilestone();
         m.setYear(year);
         m.setTitle(title);
         m.setDescription(desc);
-        m.setSide(side);
         m.setDisplayOrder(order);
         return m;
     }
@@ -338,34 +329,18 @@ public class AboutUsService {
             }
         }
         List<AboutAdvisoryLeader> list = new ArrayList<>();
-        list.add(createAdvisoryLeader("👩‍🔬", "Prof. Sarah Higgins", "Scientific Committee Chair", "University of Oxford", "United Kingdom", null, 
-            "Over 20 years of academic experience in modern literature and academic editing. Leads scientific committee guidelines globally.", "https://linkedin.com/in/sarah-higgins-oxford", 1));
-        list.add(createAdvisoryLeader("👨‍🏫", "Dr. Rajan Mehta", "Advisory Board Member", "IIT Bombay", "India", null, 
-            "Distinguished researcher in computer science, robotics, and machine learning architectures with multiple IEEE publications.", "https://linkedin.com/in/rajan-mehta-iit", 2));
-        list.add(createAdvisoryLeader("👩‍💼", "Prof. Maria Chen", "Publication Director", "MIT Cambridge", "USA", null, 
-            "Specialist in publishing open-access research proceedings. Former editorial chief for leading technology research journals.", "https://linkedin.com/in/maria-chen-mit", 3));
-        list.add(createAdvisoryLeader("👨‍🔬", "Dr. Ahmed Al-Farsi", "Peer Review Lead", "KAUST", "Saudi Arabia", null, 
-            "Pioneers robust double-blind peer vetting frameworks. Coordinates international reviewer panel alignments.", "https://linkedin.com/in/ahmed-al-farsi-kaust", 4));
-        list.add(createAdvisoryLeader("👩‍🏫", "Prof. Elena Vasquez", "Program Committee Head", "University of Madrid", "Spain", null, 
-            "Focuses on curriculum development and academic program management. Leads Spain's computing coalition steering panel.", "https://linkedin.com/in/elena-vasquez-madrid", 5));
-        list.add(createAdvisoryLeader("👨‍💻", "Dr. Lucas Hoffmann", "Technology & Innovation", "TU Munich", "Germany", null, 
-            "Expert in digital innovation, online conference platforms, and semantic search algorithms for academic metadata indexing.", "https://linkedin.com/in/lucas-hoffmann-tum", 6));
-        if (advisoryLeaderRepo != null) {
-            try { advisoryLeaderRepo.saveAll(list); } catch (Exception ignored) {}
-        }
+        list.add(createLeader("Dr. Alexander Wright", "Scientific Advisory Chair", "Stanford University", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80", 1));
+        list.add(createLeader("Prof. Elena Rostova", "Steering Committee Lead", "Oxford University", "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80", 2));
+        list.add(createLeader("Dr. Kenji Tanaka", "Publication Quality Director", "University of Tokyo", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80", 3));
         return list;
     }
 
-    private AboutAdvisoryLeader createAdvisoryLeader(String emoji, String name, String role, String inst, String country, String photo, String bio, String linkedin, int order) {
+    private AboutAdvisoryLeader createLeader(String name, String role, String affiliation, String photo, int order) {
         AboutAdvisoryLeader l = new AboutAdvisoryLeader();
-        l.setEmoji(emoji);
         l.setName(name);
         l.setRole(role);
-        l.setInstitution(inst);
-        l.setCountry(country);
-        l.setPhotoFileName(photo);
-        l.setBio(bio);
-        l.setLinkedin(linkedin);
+        l.setAffiliation(affiliation);
+        l.setPhoto(photo);
         l.setDisplayOrder(order);
         return l;
     }
@@ -387,9 +362,6 @@ public class AboutUsService {
         list.add(createMapLocation("Bangalore, India", 685, 230, true, "India Office", "Bangalore, Karnataka"));
         list.add(createMapLocation("Europe", 512, 125, false, null, null));
         list.add(createMapLocation("Asia Pacific", 820, 170, false, null, null));
-        if (mapLocationRepo != null) {
-            try { mapLocationRepo.saveAll(list); } catch (Exception ignored) {}
-        }
         return list;
     }
 
@@ -421,9 +393,6 @@ public class AboutUsService {
         list.add(createMapConnection(685, 230, 900, 160, 820, 165, 0.35, "6 5"));
         list.add(createMapConnection(510, 135, 580, 120, 685, 230, 0.4, "6 5"));
         list.add(createMapConnection(185, 155, 340, 250, 265, 280, 0.25, "6 5"));
-        if (mapConnectionRepo != null) {
-            try { mapConnectionRepo.saveAll(list); } catch (Exception ignored) {}
-        }
         return list;
     }
 
@@ -443,15 +412,51 @@ public class AboutUsService {
     // Consolidated Data Retrieval
     public Map<String, Object> getConsolidatedAboutData() {
         Map<String, Object> data = new HashMap<>();
-        data.put("section", getAboutUsSection());
-        data.put("features", getOverviewFeatures());
-        data.put("services", getServiceItems());
-        data.put("whyChoose", getWhyChooseItems());
-        data.put("partners", getPartnerNetworks());
-        data.put("milestones", getTimelineMilestones());
-        data.put("leaders", getAdvisoryLeaders());
-        data.put("locations", getMapLocations());
-        data.put("connections", getMapConnections());
+        try {
+            data.put("section", getAboutUsSection());
+        } catch (Exception e) {
+            data.put("section", new AboutUsSection());
+        }
+        try {
+            data.put("features", getOverviewFeatures());
+        } catch (Exception e) {
+            data.put("features", Collections.emptyList());
+        }
+        try {
+            data.put("services", getServiceItems());
+        } catch (Exception e) {
+            data.put("services", Collections.emptyList());
+        }
+        try {
+            data.put("whyChoose", getWhyChooseItems());
+        } catch (Exception e) {
+            data.put("whyChoose", Collections.emptyList());
+        }
+        try {
+            data.put("partners", getPartnerNetworks());
+        } catch (Exception e) {
+            data.put("partners", Collections.emptyList());
+        }
+        try {
+            data.put("milestones", getTimelineMilestones());
+        } catch (Exception e) {
+            data.put("milestones", Collections.emptyList());
+        }
+        try {
+            data.put("leaders", getAdvisoryLeaders());
+        } catch (Exception e) {
+            data.put("leaders", Collections.emptyList());
+        }
+        try {
+            data.put("locations", getMapLocations());
+        } catch (Exception e) {
+            data.put("locations", Collections.emptyList());
+        }
+        try {
+            data.put("connections", getMapConnections());
+        } catch (Exception e) {
+            data.put("connections", Collections.emptyList());
+        }
         return data;
     }
 }
