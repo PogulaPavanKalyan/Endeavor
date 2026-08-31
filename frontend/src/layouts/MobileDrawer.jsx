@@ -122,7 +122,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
         {/* ── Premium Header ── */}
         <div className="drawer-header-premium">
           <div className="drawer-header-top">
-            <Link to="/" onClick={handleNavClick} tabIndex={open ? 0 : -1}>
+            <Link to="/" onClick={handleNavClick} tabIndex={open ? 0 : -1} style={{ display: 'inline-block' }}>
               <img src="/logo.svg" alt="Intelevo Research" className="drawer-logo-premium" />
             </Link>
             <button
@@ -136,13 +136,7 @@ const MobileDrawer = ({ open, onClose, isActive, onSubscribeOpen }) => {
           </div>
           <div className="drawer-brand-details">
              <h2 className="drawer-conf-name">Intelevo Research</h2>
-             <p className="drawer-conf-theme">Intelligence Evolved</p>
-             <div className="drawer-conf-meta">
-               <span className="drawer-conf-year">2027</span>
-               <span className="drawer-conf-dot">•</span>
-               <span className="drawer-conf-location">Hyderabad, India</span>
-             </div>
-             <div className="drawer-conf-badge">Upcoming</div>
+             <p className="drawer-conf-theme">Intelligence Evolved · Global Academic Conferences</p>
           </div>
         </div>
 

@@ -5,32 +5,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --nav-bg: rgba(10, 10, 15, 0.75);
-  --nav-blur: blur(24px);
+  --nav-bg: #0b0f19;
+  --nav-blur: none;
   --nav-text-primary: #FFFFFF;
-  --nav-text-secondary: rgba(255, 255, 255, 0.6);
+  --nav-text-secondary: rgba(255, 255, 255, 0.7);
   --nav-accent: #3B82F6;
   --nav-accent-glow: rgba(59, 130, 246, 0.4);
   --nav-gradient: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
-  --nav-card-bg: rgba(255, 255, 255, 0.03);
-  --nav-card-hover: rgba(255, 255, 255, 0.08);
-  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-card-bg: #131b2e;
+  --nav-card-hover: #1c2640;
+  --nav-border: rgba(255, 255, 255, 0.1);
   --nav-font: 'Outfit', 'Inter', sans-serif;
   --nav-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-width: min(400px, 88vw);
+  --nav-width: min(380px, 88vw);
 }
 
 /* ─── Overlay ──────────────────────────────────────── */
 .mobile-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 10000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s var(--nav-ease);
+  transition: opacity 0.4s var(--nav-ease);
 }
 .mobile-drawer-overlay.open {
   opacity: 1;
@@ -45,18 +45,16 @@
   width: var(--nav-width);
   height: 100vh;
   height: 100dvh;
-  background: var(--nav-bg);
-  backdrop-filter: var(--nav-blur);
-  -webkit-backdrop-filter: var(--nav-blur);
-  border-right: 1px solid var(--nav-border);
-  border-radius: 0 32px 32px 0;
-  box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5), inset 1px 0 0 rgba(255, 255, 255, 0.1);
+  background: #0b0f19;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0 24px 24px 0;
+  box-shadow: 24px 0 80px rgba(0, 0, 0, 0.8), inset 1px 0 0 rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   z-index: 10001;
-  transform: translateX(-100%) scale(0.95);
+  transform: translateX(-100%);
   opacity: 0;
-  transition: transform 0.6s var(--nav-ease), opacity 0.6s var(--nav-ease);
+  transition: transform 0.4s var(--nav-ease), opacity 0.4s var(--nav-ease);
   font-family: var(--nav-font);
   overflow: hidden;
   will-change: transform, opacity;
@@ -81,14 +79,11 @@
   margin-bottom: 20px;
 }
 .drawer-logo-premium {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  height: 42px;
+  width: auto;
+  max-width: 170px;
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px;
-  border: 1px solid var(--nav-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: block;
 }
 .drawer-close-btn-premium {
   width: 44px;
