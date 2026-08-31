@@ -1005,10 +1005,10 @@ const Homepage = () => {
               <div className="about-service-grid max-md:grid max-md:grid-cols-1 max-sm:gap-4 max-md:w-full max-md:text-left">
                 {(aboutData?.pillars || FALLBACK_ABOUT.pillars).slice(0, 4).map((pillar, i) => (
                   <div className="about-svc-card" key={i}>
-                    <span className="about-svc-icon">{pillar.icon}</span>
+                    <span className="about-svc-icon">{pillar.icon || "✨"}</span>
                     <div className="about-svc-body">
                       <h4>{pillar.title}</h4>
-                      <p>{pillar.desc}</p>
+                      <p>{pillar.desc || pillar.description}</p>
                     </div>
                   </div>
                 ))}
@@ -1035,6 +1035,7 @@ const Homepage = () => {
                 <div className="about-photo-main">
                   <OptimizedImage
                     src={
+                      (aboutData?.overviewImage1) ||
                       (aboutData?.tabs?.about?.images?.[0]) ||
                       "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
                     }
@@ -1045,6 +1046,7 @@ const Homepage = () => {
                 <div className="about-photo-secondary">
                   <OptimizedImage
                     src={
+                      (aboutData?.overviewImage2) ||
                       (aboutData?.tabs?.about?.images?.[1]) ||
                       "https://images.unsplash.com/photo-1560439514-4e9645039924?auto=format&fit=crop&w=600&q=80"
                     }

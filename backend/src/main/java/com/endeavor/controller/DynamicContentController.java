@@ -70,9 +70,8 @@ public class DynamicContentController {
                 ? section.getOverviewImage1() : "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80";
         String img2 = (section != null && section.getOverviewImage2() != null && !section.getOverviewImage2().isEmpty()) 
                 ? section.getOverviewImage2() : "https://images.unsplash.com/photo-1560439514-4e9645039924?auto=format&fit=crop&w=600&q=80";
-        tabs.put("about", createTab("About Company", 
-            section != null && section.getOverviewBody() != null ? section.getOverviewBody() : "Intelevo Research connects researchers, academicians, industry experts and innovators through international conferences.", 
-            List.of(img1, img2)));
+        about.put("overviewImage1", img1);
+        about.put("overviewImage2", img2);
         about.put("tabs", tabs);
         data.put("about", about);
 
