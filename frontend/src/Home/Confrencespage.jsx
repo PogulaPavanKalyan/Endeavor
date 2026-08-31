@@ -70,7 +70,9 @@ const Confrencespage = () => {
       <section className="conf-hero">
         <div className="hero-overlay"></div>
         <div className="container conf-hero-content">
-          <h1>Conferences</h1>
+          <span className="conf-hero-pill">International Research Assemblies</span>
+          <h1>International Conferences</h1>
+          <p className="conf-hero-subtext">Connecting pioneer researchers, scientists, and academicians across 50+ countries worldwide</p>
           <div className="breadcrumb-box">
             <Link to="/">Home</Link> &gt; <span>Conferences</span>
           </div>
