@@ -106,9 +106,57 @@ public class AboutUsService {
         return s;
     }
 
-    public AboutUsSection saveAboutUsSection(AboutUsSection section) {
-        section.setId(1L);
-        return sectionRepo != null ? sectionRepo.save(section) : section;
+    public AboutUsSection saveAboutUsSection(AboutUsSection incoming) {
+        if (sectionRepo == null) return incoming;
+        try {
+            AboutUsSection target = sectionRepo.findById(1L).orElse(new AboutUsSection());
+            target.setId(1L);
+            if (incoming.getHeroBadge() != null) target.setHeroBadge(incoming.getHeroBadge());
+            if (incoming.getHeroTitle() != null) target.setHeroTitle(incoming.getHeroTitle());
+            if (incoming.getHeroDescription() != null) target.setHeroDescription(incoming.getHeroDescription());
+            if (incoming.getHeroCtaText1() != null) target.setHeroCtaText1(incoming.getHeroCtaText1());
+            if (incoming.getHeroCtaLink1() != null) target.setHeroCtaLink1(incoming.getHeroCtaLink1());
+            if (incoming.getHeroCtaText2() != null) target.setHeroCtaText2(incoming.getHeroCtaText2());
+            if (incoming.getHeroCtaLink2() != null) target.setHeroCtaLink2(incoming.getHeroCtaLink2());
+            if (incoming.getHeroBgImage() != null) target.setHeroBgImage(incoming.getHeroBgImage());
+
+            if (incoming.getOverviewLabel() != null) target.setOverviewLabel(incoming.getOverviewLabel());
+            if (incoming.getOverviewTitle() != null) target.setOverviewTitle(incoming.getOverviewTitle());
+            if (incoming.getOverviewLead() != null) target.setOverviewLead(incoming.getOverviewLead());
+            if (incoming.getOverviewBody() != null) target.setOverviewBody(incoming.getOverviewBody());
+            if (incoming.getOverviewImage1() != null) target.setOverviewImage1(incoming.getOverviewImage1());
+            if (incoming.getOverviewImage2() != null) target.setOverviewImage2(incoming.getOverviewImage2());
+            if (incoming.getOverviewBadgeIcon() != null) target.setOverviewBadgeIcon(incoming.getOverviewBadgeIcon());
+            if (incoming.getOverviewBadgeTitle() != null) target.setOverviewBadgeTitle(incoming.getOverviewBadgeTitle());
+            if (incoming.getOverviewBadgeText() != null) target.setOverviewBadgeText(incoming.getOverviewBadgeText());
+
+            if (incoming.getMissionTitle() != null) target.setMissionTitle(incoming.getMissionTitle());
+            if (incoming.getMissionDesc() != null) target.setMissionDesc(incoming.getMissionDesc());
+            if (incoming.getMissionPoints() != null) target.setMissionPoints(incoming.getMissionPoints());
+            if (incoming.getVisionTitle() != null) target.setVisionTitle(incoming.getVisionTitle());
+            if (incoming.getVisionDesc() != null) target.setVisionDesc(incoming.getVisionDesc());
+            if (incoming.getVisionPoints() != null) target.setVisionPoints(incoming.getVisionPoints());
+
+            if (incoming.getStatConferences() != null) target.setStatConferences(incoming.getStatConferences());
+            if (incoming.getStatResearchers() != null) target.setStatResearchers(incoming.getStatResearchers());
+            if (incoming.getStatCountries() != null) target.setStatCountries(incoming.getStatCountries());
+            if (incoming.getStatPublications() != null) target.setStatPublications(incoming.getStatPublications());
+            if (incoming.getStatSpeakers() != null) target.setStatSpeakers(incoming.getStatSpeakers());
+            if (incoming.getStatSatisfaction() != null) target.setStatSatisfaction(incoming.getStatSatisfaction());
+
+            if (incoming.getCtaTitle() != null) target.setCtaTitle(incoming.getCtaTitle());
+            if (incoming.getCtaDesc() != null) target.setCtaDesc(incoming.getCtaDesc());
+            if (incoming.getCtaButton1Text() != null) target.setCtaButton1Text(incoming.getCtaButton1Text());
+            if (incoming.getCtaButton1Link() != null) target.setCtaButton1Link(incoming.getCtaButton1Link());
+            if (incoming.getCtaButton2Text() != null) target.setCtaButton2Text(incoming.getCtaButton2Text());
+            if (incoming.getCtaButton2Link() != null) target.setCtaButton2Link(incoming.getCtaButton2Link());
+
+            return sectionRepo.save(target);
+        } catch (Exception e) {
+            System.err.println("Error saving AboutUsSection: " + e.getMessage());
+            e.printStackTrace();
+            return incoming;
+        }
     }
 
     // --- Overview Features ---

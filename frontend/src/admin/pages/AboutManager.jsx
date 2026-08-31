@@ -94,12 +94,20 @@ const AboutManager = () => {
     if (e) e.preventDefault();
     setSaving(true);
     try {
-      const saved = await api.put('/api/admin/about/section', section);
-      setSection(prev => ({ ...prev, ...saved }));
-      toast.success('✓ About Us settings updated successfully!');
+      // Ensure clean payload
+      const payload = {
+        ...section,
+        id: 1,
+        statCountries: Number(section.statCountries) || 50,
+      };
+      const saved = await api.put('/api/admin/about/section', payload);
+      if (saved) {
+        setSection(prev => ({ ...prev, ...saved }));
+      }
+      toast.success('✓ About Us settings saved successfully!');
     } catch (err) {
       console.error(err);
-      toast.error('Failed to save About Us settings.');
+      toast.error('Failed to save settings. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -165,22 +173,22 @@ const AboutManager = () => {
       if (editingService) {
         const updated = await api.put(`/api/admin/about/services/${editingService.id}`, serviceForm);
         setServices(prev => prev.map(s => s.id === editingService.id ? updated : s));
-        toast.success('✓ Service card updated.');
+        toast.success('✓ Activity card updated.');
       } else {
         const created = await api.post('/api/admin/about/services', serviceForm);
         setServices(prev => [...prev, created]);
-        toast.success('✓ Service card added.');
+        toast.success('✓ Activity card added.');
       }
       setShowServiceModal(false);
     } catch (err) {
       console.error(err);
-      toast.error('Failed to save service card.');
+      toast.error('Failed to save activity card.');
     }
   };
 
   const handleDeleteService = async (id) => {
     const confirmed = await confirmDialog({
-      title: 'Delete Service Card',
+      title: 'Delete Activity Card',
       message: 'Are you sure you want to delete this activity card?',
       confirmText: 'Delete',
       variant: 'danger',
@@ -190,9 +198,9 @@ const AboutManager = () => {
     try {
       await api.delete(`/api/admin/about/services/${id}`);
       setServices(prev => prev.filter(s => s.id !== id));
-      toast.success('✓ Service card deleted.');
+      toast.success('✓ Activity card deleted.');
     } catch (err) {
-      toast.error('Failed to delete service card.');
+      toast.error('Failed to delete card.');
     }
   };
 
@@ -259,23 +267,93 @@ const AboutManager = () => {
   };
 
   return (
-    <div className="admin-page-container">
+    <div className="about-admin-wrapper" style={{ padding: '16px', maxWidth: '1200px', margin: '0 auto' }}>
+      
+      {/* Mobile Responsive Injected Styles */}
+      <style>{`
+        .about-admin-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 20px;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .about-admin-actions {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .about-tabs-scroll {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 8px;
+          margin-bottom: 20px;
+          border-bottom: 2px solid #e2e8f0;
+          scrollbar-width: none;
+        }
+        .about-tabs-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .about-tab-item {
+          flex-shrink: 0;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 13.5px;
+          font-weight: 600;
+          border: 1px solid transparent;
+          background: #f8fafc;
+          color: #64748b;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .about-tab-item.active {
+          background: #2563eb;
+          color: #ffffff;
+          box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+        }
+        .about-form-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 20px;
+        }
+        @media (max-width: 640px) {
+          .about-admin-header {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .about-admin-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+          .about-form-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+
       {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">🏢 About Us Page Management</h1>
-          <p className="admin-page-subtitle">
-            Customize and manage all content on the dedicated About Us page (<code>/about</code>) including Hero banner, Who We Are, What We Do, Why Choose Us, and Call To Action.
+      <div className="about-admin-header">
+        <div style={{ flex: 1 }}>
+          <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', margin: '0 0 6px 0' }}>
+            🏢 About Us Page Management
+          </h1>
+          <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0, lineHeight: '1.4' }}>
+            Customize dynamic content across the About Us page (<code>/about</code>) and the Homepage About section.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="about-admin-actions">
           <button 
             type="button" 
             onClick={fetchAboutData} 
             className="btn btn-outline"
             disabled={loading}
+            style={{ padding: '9px 14px', fontSize: '13px', borderRadius: '8px', cursor: 'pointer', border: '1px solid #cbd5e1', background: '#fff' }}
           >
-            {loading ? 'Refreshing...' : '🔄 Refresh'}
+            {loading ? '...' : '🔄 Refresh'}
           </button>
           <button
             type="button"
@@ -283,13 +361,15 @@ const AboutManager = () => {
             className="btn btn-primary"
             disabled={saving}
             style={{
-              padding: '10px 24px',
+              padding: '9px 18px',
               background: '#2563eb',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',
               fontWeight: '700',
-              cursor: 'pointer'
+              fontSize: '13.5px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(37,99,235,0.25)'
             }}
           >
             {saving ? 'Saving...' : '💾 Save Page Settings'}
@@ -297,85 +377,35 @@ const AboutManager = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="admin-tabs-nav" style={{ display: 'flex', gap: '8px', borderBottom: '1px solid #e2e8f0', marginBottom: '24px', flexWrap: 'wrap' }}>
+      {/* Horizontal Scrollable Tabs Navigation (Mobile Responsive) */}
+      <div className="about-tabs-scroll">
         <button
-          className={`admin-tab-btn ${activeTab === 'hero' ? 'active' : ''}`}
+          className={`about-tab-item ${activeTab === 'hero' ? 'active' : ''}`}
           onClick={() => setActiveTab('hero')}
-          style={{
-            padding: '10px 18px',
-            fontWeight: '600',
-            fontSize: '14px',
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'hero' ? '3px solid #2563eb' : '3px solid transparent',
-            color: activeTab === 'hero' ? '#2563eb' : '#64748b'
-          }}
         >
           🌟 Hero & Banner
         </button>
         <button
-          className={`admin-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
+          className={`about-tab-item ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
-          style={{
-            padding: '10px 18px',
-            fontWeight: '600',
-            fontSize: '14px',
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'overview' ? '3px solid #2563eb' : '3px solid transparent',
-            color: activeTab === 'overview' ? '#2563eb' : '#64748b'
-          }}
         >
           🏢 Who We Are
         </button>
         <button
-          className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
+          className={`about-tab-item ${activeTab === 'services' ? 'active' : ''}`}
           onClick={() => setActiveTab('services')}
-          style={{
-            padding: '10px 18px',
-            fontWeight: '600',
-            fontSize: '14px',
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'services' ? '3px solid #2563eb' : '3px solid transparent',
-            color: activeTab === 'services' ? '#2563eb' : '#64748b'
-          }}
         >
           🎯 What We Do ({services.length})
         </button>
         <button
-          className={`admin-tab-btn ${activeTab === 'whyChoose' ? 'active' : ''}`}
+          className={`about-tab-item ${activeTab === 'whyChoose' ? 'active' : ''}`}
           onClick={() => setActiveTab('whyChoose')}
-          style={{
-            padding: '10px 18px',
-            fontWeight: '600',
-            fontSize: '14px',
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'whyChoose' ? '3px solid #2563eb' : '3px solid transparent',
-            color: activeTab === 'whyChoose' ? '#2563eb' : '#64748b'
-          }}
         >
           💡 Why Choose Us ({whyChoose.length})
         </button>
         <button
-          className={`admin-tab-btn ${activeTab === 'cta' ? 'active' : ''}`}
+          className={`about-tab-item ${activeTab === 'cta' ? 'active' : ''}`}
           onClick={() => setActiveTab('cta')}
-          style={{
-            padding: '10px 18px',
-            fontWeight: '600',
-            fontSize: '14px',
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-            borderBottom: activeTab === 'cta' ? '3px solid #2563eb' : '3px solid transparent',
-            color: activeTab === 'cta' ? '#2563eb' : '#64748b'
-          }}
         >
           🚀 Bottom CTA
         </button>
@@ -383,59 +413,59 @@ const AboutManager = () => {
 
       {/* TAB 1: HERO & BANNER */}
       {activeTab === 'hero' && (
-        <div className="admin-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>🌟 Hero Banner Settings</h3>
+        <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700', color: '#0f172a' }}>🌟 Hero Banner Settings</h3>
           
-          <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Top Tag / Subtitle</label>
             <input
               type="text"
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
               value={section.heroBadge || ''}
               onChange={e => setSection({ ...section, heroBadge: e.target.value })}
               placeholder="Intelligence Evolved"
             />
           </div>
 
-          <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Main Title</label>
             <input
               type="text"
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
               value={section.heroTitle || ''}
               onChange={e => setSection({ ...section, heroTitle: e.target.value })}
               placeholder="About Intelevo Research"
             />
           </div>
 
-          <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Hero Description</label>
             <textarea
               rows={3}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
               value={section.heroDescription || ''}
               onChange={e => setSection({ ...section, heroDescription: e.target.value })}
               placeholder="Description displayed below the main heading..."
             />
           </div>
 
-          <div className="admin-form-group">
+          <div>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Background Image URL</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <input
                 type="text"
-                style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ flex: 1, padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.heroBgImage || ''}
                 onChange={e => setSection({ ...section, heroBgImage: e.target.value })}
                 placeholder="https://images.unsplash.com/..."
               />
-              <label className="btn btn-outline" style={{ cursor: 'pointer', padding: '10px 16px', borderRadius: '8px', fontSize: '13px' }}>
-                {uploadingHeroBg ? 'Uploading...' : '📁 Upload'}
+              <label style={{ cursor: 'pointer', padding: '9px 14px', borderRadius: '8px', fontSize: '13px', background: '#f1f5f9', border: '1px solid #cbd5e1', flexShrink: 0 }}>
+                {uploadingHeroBg ? '...' : '📁 Upload'}
                 <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleImageUpload(e, 'heroBgImage')} />
               </label>
             </div>
             {section.heroBgImage && (
-              <div style={{ marginTop: '10px', height: '120px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+              <div style={{ marginTop: '10px', height: '110px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
                 <img src={section.heroBgImage} alt="Hero Banner Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             )}
@@ -445,75 +475,107 @@ const AboutManager = () => {
 
       {/* TAB 2: WHO WE ARE (OVERVIEW) */}
       {activeTab === 'overview' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
-          <div className="admin-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>✍️ Text & Story</h3>
+        <div className="about-form-grid">
+          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700', color: '#0f172a' }}>✍️ Text & Story</h3>
             
-            <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Pill Tag</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.overviewLabel || ''}
                 onChange={e => setSection({ ...section, overviewLabel: e.target.value })}
                 placeholder="Organization Overview"
               />
             </div>
 
-            <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Heading</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.overviewTitle || ''}
                 onChange={e => setSection({ ...section, overviewTitle: e.target.value })}
                 placeholder="Who We Are"
               />
             </div>
 
-            <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Primary Lead Paragraph</label>
               <textarea
                 rows={3}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
                 value={section.overviewLead || ''}
                 onChange={e => setSection({ ...section, overviewLead: e.target.value })}
               />
             </div>
 
-            <div className="admin-form-group">
+            <div>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Secondary Body Paragraph</label>
               <textarea
                 rows={4}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
                 value={section.overviewBody || ''}
                 onChange={e => setSection({ ...section, overviewBody: e.target.value })}
               />
             </div>
           </div>
 
-          <div className="admin-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>📸 Feature Image</h3>
+          <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700', color: '#0f172a' }}>📸 Overview Photo & Badges</h3>
             
-            <div className="admin-form-group" style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Primary Image</label>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Feature Image</label>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
                   type="text"
-                  style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ flex: 1, padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                   value={section.overviewImage1 || ''}
                   onChange={e => setSection({ ...section, overviewImage1: e.target.value })}
                 />
-                <label className="btn btn-outline" style={{ cursor: 'pointer', padding: '8px 14px', borderRadius: '8px', fontSize: '13px' }}>
-                  {uploadingImg1 ? 'Uploading...' : '📁 Upload'}
+                <label style={{ cursor: 'pointer', padding: '9px 14px', borderRadius: '8px', fontSize: '13px', background: '#f1f5f9', border: '1px solid #cbd5e1', flexShrink: 0 }}>
+                  {uploadingImg1 ? '...' : '📁 Upload'}
                   <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleImageUpload(e, 'overviewImage1')} />
                 </label>
               </div>
               {section.overviewImage1 && (
-                <div style={{ marginTop: '10px', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                <div style={{ marginTop: '10px', height: '110px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
                   <img src={section.overviewImage1} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               )}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '70px 1fr 1fr', gap: '10px' }}>
+              <div>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Icon</label>
+                <input
+                  type="text"
+                  style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #cbd5e1', textAlign: 'center', boxSizing: 'border-box' }}
+                  value={section.overviewBadgeIcon || '🏆'}
+                  onChange={e => setSection({ ...section, overviewBadgeIcon: e.target.value })}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Badge Title</label>
+                <input
+                  type="text"
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
+                  value={section.overviewBadgeTitle || ''}
+                  onChange={e => setSection({ ...section, overviewBadgeTitle: e.target.value })}
+                  placeholder="Est. 2015"
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Badge Text</label>
+                <input
+                  type="text"
+                  style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
+                  value={section.overviewBadgeText || ''}
+                  onChange={e => setSection({ ...section, overviewBadgeText: e.target.value })}
+                  placeholder="10+ Years"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -522,21 +584,22 @@ const AboutManager = () => {
       {/* TAB 3: WHAT WE DO (SERVICES) */}
       {activeTab === 'services' && (
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>
-              These cards appear in the <strong>What We Do</strong> section on the About Us page and the dynamic 2×2 grid on the Homepage.
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '13.5px' }}>
+              These cards appear in the <strong>What We Do</strong> section on the About Us page.
             </p>
             <button
               type="button"
               className="btn btn-primary"
               onClick={() => handleOpenServiceModal()}
               style={{
-                padding: '10px 20px',
+                padding: '8px 16px',
                 background: '#2563eb',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '8px',
                 fontWeight: '600',
+                fontSize: '13px',
                 cursor: 'pointer'
               }}
             >
@@ -544,7 +607,7 @@ const AboutManager = () => {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '16px' }}>
             {services.map((svc, idx) => (
               <div 
                 key={svc.id || idx}
@@ -552,42 +615,42 @@ const AboutManager = () => {
                   background: '#fff',
                   border: '1px solid #e2e8f0',
                   borderRadius: '12px',
-                  padding: '20px',
+                  padding: '16px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                 }}
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <span style={{ fontSize: '28px', background: '#f1f5f9', padding: '6px 12px', borderRadius: '8px' }}>
+                    <span style={{ fontSize: '24px', background: '#f1f5f9', padding: '4px 10px', borderRadius: '8px' }}>
                       {svc.icon || '✨'}
                     </span>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: svc.isActive !== false ? '#16a34a' : '#dc2626' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '700', color: svc.isActive !== false ? '#16a34a' : '#dc2626' }}>
                       {svc.isActive !== false ? '● ACTIVE' : '○ HIDDEN'}
                     </span>
                   </div>
-                  <h4 style={{ margin: '0 0 6px 0', fontSize: '16px', color: '#0f172a', fontWeight: '700' }}>
+                  <h4 style={{ margin: '0 0 6px 0', fontSize: '15px', color: '#0f172a', fontWeight: '700' }}>
                     {svc.title}
                   </h4>
-                  <p style={{ margin: 0, color: '#64748b', fontSize: '13px', lineHeight: '1.5' }}>
+                  <p style={{ margin: 0, color: '#64748b', fontSize: '13px', lineHeight: '1.4' }}>
                     {svc.description}
                   </p>
                 </div>
 
-                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
                   <button
                     type="button"
                     onClick={() => handleOpenServiceModal(svc)}
-                    style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
+                    style={{ padding: '5px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
                   >
                     ✏️ Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteService(svc.id)}
-                    style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
+                    style={{ padding: '5px 10px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
                   >
                     🗑️ Delete
                   </button>
@@ -601,21 +664,22 @@ const AboutManager = () => {
       {/* TAB 4: WHY CHOOSE US */}
       {activeTab === 'whyChoose' && (
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>
-              These value proposition items appear in the <strong>Why Choose Us</strong> grid on the About Us page.
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '13.5px' }}>
+              These value proposition items appear in the <strong>Why Choose Us</strong> section on the About Us page.
             </p>
             <button
               type="button"
               className="btn btn-primary"
               onClick={() => handleOpenWhyChooseModal()}
               style={{
-                padding: '10px 20px',
+                padding: '8px 16px',
                 background: '#2563eb',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '8px',
                 fontWeight: '600',
+                fontSize: '13px',
                 cursor: 'pointer'
               }}
             >
@@ -623,7 +687,7 @@ const AboutManager = () => {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
             {whyChoose.map((item, idx) => (
               <div 
                 key={item.id || idx}
@@ -631,37 +695,37 @@ const AboutManager = () => {
                   background: '#fff',
                   border: '1px solid #e2e8f0',
                   borderRadius: '12px',
-                  padding: '20px',
+                  padding: '16px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                 }}
               >
                 <div>
-                  <span style={{ fontSize: '28px', background: '#f1f5f9', padding: '6px 12px', borderRadius: '8px', display: 'inline-block', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '24px', background: '#f1f5f9', padding: '4px 10px', borderRadius: '8px', display: 'inline-block', marginBottom: '10px' }}>
                     {item.icon || '🌟'}
                   </span>
-                  <h4 style={{ margin: '0 0 6px 0', fontSize: '16px', color: '#0f172a', fontWeight: '700' }}>
+                  <h4 style={{ margin: '0 0 6px 0', fontSize: '15px', color: '#0f172a', fontWeight: '700' }}>
                     {item.title}
                   </h4>
-                  <p style={{ margin: 0, color: '#64748b', fontSize: '13px', lineHeight: '1.5' }}>
+                  <p style={{ margin: 0, color: '#64748b', fontSize: '13px', lineHeight: '1.4' }}>
                     {item.description}
                   </p>
                 </div>
 
-                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
                   <button
                     type="button"
                     onClick={() => handleOpenWhyChooseModal(item)}
-                    style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
+                    style={{ padding: '5px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
                   >
                     ✏️ Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteWhyChoose(item.id)}
-                    style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
+                    style={{ padding: '5px 10px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
                   >
                     🗑️ Delete
                   </button>
@@ -674,36 +738,36 @@ const AboutManager = () => {
 
       {/* TAB 5: CALL TO ACTION */}
       {activeTab === 'cta' && (
-        <div className="admin-card" style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>🚀 Call To Action Card</h3>
+        <div style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700', color: '#0f172a' }}>🚀 Call To Action Card</h3>
           
-          <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>CTA Heading</label>
             <input
               type="text"
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
               value={section.ctaTitle || ''}
               onChange={e => setSection({ ...section, ctaTitle: e.target.value })}
               placeholder="Join Our Global Research Community"
             />
           </div>
 
-          <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>CTA Description</label>
             <textarea
               rows={3}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
               value={section.ctaDesc || ''}
               onChange={e => setSection({ ...section, ctaDesc: e.target.value })}
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
             <div>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Button 1 Label</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.ctaButton1Text || ''}
                 onChange={e => setSection({ ...section, ctaButton1Text: e.target.value })}
               />
@@ -712,7 +776,7 @@ const AboutManager = () => {
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Button 1 Link</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.ctaButton1Link || ''}
                 onChange={e => setSection({ ...section, ctaButton1Link: e.target.value })}
               />
@@ -721,7 +785,7 @@ const AboutManager = () => {
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Button 2 Label</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.ctaButton2Text || ''}
                 onChange={e => setSection({ ...section, ctaButton2Text: e.target.value })}
               />
@@ -730,7 +794,7 @@ const AboutManager = () => {
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Button 2 Link</label>
               <input
                 type="text"
-                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                 value={section.ctaButton2Link || ''}
                 onChange={e => setSection({ ...section, ctaButton2Link: e.target.value })}
               />
@@ -741,29 +805,29 @@ const AboutManager = () => {
 
       {/* Service Modal */}
       {showServiceModal && (
-        <div className="admin-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div className="admin-modal-card" style={{ background: '#fff', padding: '24px', borderRadius: '16px', width: '90%', maxWidth: '480px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>
-              {editingService ? '✏️ Edit Card' : '✨ Add Activity Card'}
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '16px' }}>
+          <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', width: '100%', maxWidth: '440px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700' }}>
+              {editingService ? '✏️ Edit Activity Card' : '✨ Add Activity Card'}
             </h3>
 
             <form onSubmit={handleSaveService}>
-              <div style={{ display: 'grid', gridTemplateColumns: '70px 1fr', gap: '12px', marginBottom: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: '10px', marginBottom: '12px' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Icon</label>
+                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Icon</label>
                   <input
                     type="text"
-                    style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', textAlign: 'center', fontSize: '18px' }}
+                    style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #cbd5e1', textAlign: 'center', fontSize: '16px', boxSizing: 'border-box' }}
                     value={serviceForm.icon}
                     onChange={e => setServiceForm({ ...serviceForm, icon: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Card Title</label>
+                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Title</label>
                   <input
                     type="text"
                     required
-                    style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                     value={serviceForm.title}
                     onChange={e => setServiceForm({ ...serviceForm, title: e.target.value })}
                   />
@@ -771,11 +835,11 @@ const AboutManager = () => {
               </div>
 
               <div style={{ marginBottom: '14px' }}>
-                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Description</label>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Description</label>
                 <textarea
                   rows={3}
                   required
-                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
                   value={serviceForm.description}
                   onChange={e => setServiceForm({ ...serviceForm, description: e.target.value })}
                 />
@@ -803,29 +867,29 @@ const AboutManager = () => {
 
       {/* Why Choose Us Modal */}
       {showWhyChooseModal && (
-        <div className="admin-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div className="admin-modal-card" style={{ background: '#fff', padding: '24px', borderRadius: '16px', width: '90%', maxWidth: '480px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '700' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '16px' }}>
+          <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', width: '100%', maxWidth: '440px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '17px', fontWeight: '700' }}>
               {editingWhyChoose ? '✏️ Edit Value Proposition' : '💡 Add Value Proposition'}
             </h3>
 
             <form onSubmit={handleSaveWhyChoose}>
-              <div style={{ display: 'grid', gridTemplateColumns: '70px 1fr', gap: '12px', marginBottom: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: '10px', marginBottom: '12px' }}>
                 <div>
-                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Icon</label>
+                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Icon</label>
                   <input
                     type="text"
-                    style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', textAlign: 'center', fontSize: '18px' }}
+                    style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #cbd5e1', textAlign: 'center', fontSize: '16px', boxSizing: 'border-box' }}
                     value={whyChooseForm.icon}
                     onChange={e => setWhyChooseForm({ ...whyChooseForm, icon: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Title</label>
+                  <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Title</label>
                   <input
                     type="text"
                     required
-                    style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                    style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }}
                     value={whyChooseForm.title}
                     onChange={e => setWhyChooseForm({ ...whyChooseForm, title: e.target.value })}
                   />
@@ -833,11 +897,11 @@ const AboutManager = () => {
               </div>
 
               <div style={{ marginBottom: '14px' }}>
-                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '13px' }}>Description</label>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '6px', fontSize: '12px' }}>Description</label>
                 <textarea
                   rows={3}
                   required
-                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', resize: 'vertical', boxSizing: 'border-box' }}
                   value={whyChooseForm.description}
                   onChange={e => setWhyChooseForm({ ...whyChooseForm, description: e.target.value })}
                 />

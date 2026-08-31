@@ -64,7 +64,12 @@ public class AboutUsController {
     // --- Admin: Section Settings ---
     @PutMapping("/admin/about/section")
     public ResponseEntity<AboutUsSection> updateSection(@RequestBody AboutUsSection section) {
-        return ResponseEntity.ok(aboutUsService.saveAboutUsSection(section));
+        try {
+            return ResponseEntity.ok(aboutUsService.saveAboutUsSection(section));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(section);
+        }
     }
 
     // --- Admin: Image Upload ---
