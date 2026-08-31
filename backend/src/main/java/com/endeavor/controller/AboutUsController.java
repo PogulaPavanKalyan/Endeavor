@@ -53,7 +53,12 @@ public class AboutUsController {
     // --- Public API ---
     @GetMapping("/about")
     public ResponseEntity<Map<String, Object>> getAboutData() {
-        return ResponseEntity.ok(aboutUsService.getConsolidatedAboutData());
+        try {
+            return ResponseEntity.ok(aboutUsService.getConsolidatedAboutData());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(Collections.emptyMap());
+        }
     }
 
     // --- Admin: Section Settings ---
