@@ -774,7 +774,7 @@ const getEventStatus = (dateStr) => {
         structuredData={eventStructuredData}
       />
       {/* Hero Section */}
-      <section className="conf-home-hero anim-section mob-anim-section max-md:min-h-[100svh]">
+      <section className="conf-home-hero anim-section mob-anim-section">
         <div className="conf-home-hero-slider">
           {heroImages.map((imgUrl, idx) => (
             <div
@@ -807,37 +807,54 @@ const getEventStatus = (dateStr) => {
           </>
         )}
 
-        <div className="conf-home-hero-content max-md:px-4">
-          <h1 className="max-md:text-4xl max-md:mb-4" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
+        <div className="conf-home-hero-content">
+          <h1 className="conf-hero-title" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
             {conference.title}
           </h1>
-          <div className="conf-home-hero-meta max-md:flex max-md:flex-col max-md:gap-2 max-md:p-3 max-md:bg-black/40 max-md:rounded-lg">
-            <span className="conf-meta-item max-md:text-sm">
+          <div className="conf-home-hero-meta">
+            <span className="conf-meta-item">
               <span className="meta-icon">📅</span> {formattedDate}
             </span>
-            <span className="conf-meta-separator max-md:hidden"> @ </span>
-            <span className="conf-meta-item max-md:text-sm max-md:text-center">
+            <span className="conf-meta-separator"> @ </span>
+            <span className="conf-meta-item">
               <span className="meta-icon">📍</span> {venue}
             </span>
           </div>
+
           {/* Countdown circles */}
-          <div className="conf-countdown max-md:flex max-md:flex-wrap max-md:justify-center max-md:gap-3 max-md:mt-6">
-            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
-              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.days)}</span>
-              <span className="conf-countdown-label max-md:text-[10px]">Days</span>
+          <div className="conf-countdown">
+            <div className="conf-countdown-item">
+              <span className="conf-countdown-number">{formatNum(timeLeft.days)}</span>
+              <span className="conf-countdown-label">Days</span>
             </div>
-            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
-              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.hours)}</span>
-              <span className="conf-countdown-label max-md:text-[10px]">Hours</span>
+            <div className="conf-countdown-item">
+              <span className="conf-countdown-number">{formatNum(timeLeft.hours)}</span>
+              <span className="conf-countdown-label">Hours</span>
             </div>
-            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
-              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.minutes)}</span>
-              <span className="conf-countdown-label max-md:text-[10px]">Mins</span>
+            <div className="conf-countdown-item">
+              <span className="conf-countdown-number">{formatNum(timeLeft.minutes)}</span>
+              <span className="conf-countdown-label">Mins</span>
             </div>
-            <div className="conf-countdown-item max-md:flex max-md:flex-col max-md:items-center max-md:justify-center max-md:w-20 max-md:h-20 max-md:border-2 max-md:border-rose-500 max-md:rounded-full max-md:bg-black/50 max-md:backdrop-blur-sm max-md:shadow-lg">
-              <span className="conf-countdown-number max-md:text-2xl">{formatNum(timeLeft.seconds)}</span>
-              <span className="conf-countdown-label max-md:text-[10px]">Secs</span>
+            <div className="conf-countdown-item">
+              <span className="conf-countdown-number">{formatNum(timeLeft.seconds)}</span>
+              <span className="conf-countdown-label">Secs</span>
             </div>
+          </div>
+
+          {/* Action CTA Buttons */}
+          <div className="conf-hero-actions">
+            <Link
+              to={getSubRoutePath ? getSubRoutePath("register") : "register"}
+              className="btn-hero-primary"
+            >
+              Register Now
+            </Link>
+            <Link
+              to={getSubRoutePath ? getSubRoutePath("submit-abstract") : "submit-abstract"}
+              className="btn-hero-secondary"
+            >
+              Submit Abstract
+            </Link>
           </div>
         </div>
       </section>

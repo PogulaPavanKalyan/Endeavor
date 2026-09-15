@@ -10,7 +10,8 @@
 /* Page Hero Banner */
 .dynamic-hero-banner {
   position: relative;
-  height: 280px;
+  height: clamp(180px, 30vw, 280px);
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,6 +20,7 @@
   background-position: center;
   overflow: hidden;
   border-bottom: 3px solid var(--conf-primary, #e74c3c);
+  padding: 20px 16px;
 }
 
 .dynamic-hero-overlay {
@@ -32,17 +34,19 @@
   position: relative;
   z-index: 2;
   max-width: 800px;
-  padding: 0 20px;
+  padding: 0 16px;
+  width: 100%;
 }
 
 .dynamic-hero-title {
-  font-size: 38px;
+  font-size: clamp(22px, 6vw, 36px);
   font-weight: 800;
   color: #ffffff;
   margin: 0 0 10px 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.25;
 }
 
 /* Breadcrumbs */
