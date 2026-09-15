@@ -115,7 +115,7 @@ const Confrencespage = () => {
                   </div>
                   
                   <div className="card-info">
-                    <h3 className="conference-card-title">
+                    <h3 className="conference-card-title" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
                       {conf.title} | {conf.venue}
                     </h3>
                     <a 

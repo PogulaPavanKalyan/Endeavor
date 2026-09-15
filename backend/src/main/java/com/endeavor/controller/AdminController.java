@@ -230,6 +230,15 @@ public class AdminController {
             speaker.setIsFeatured(speakerDetails.getIsFeatured());
             speaker.setIsActive(speakerDetails.getIsActive());
             speaker.setDisplayOrder(speakerDetails.getDisplayOrder());
+            if (speakerDetails.getConferenceId() != null) {
+                speaker.setConferenceId(speakerDetails.getConferenceId());
+            }
+            if (speakerDetails.getCategoryId() != null) {
+                speaker.setCategoryId(speakerDetails.getCategoryId());
+            }
+            if (speakerDetails.getSpeakerAbstract() != null) {
+                speaker.setSpeakerAbstract(speakerDetails.getSpeakerAbstract());
+            }
             if (speakerDetails.getPhoto() != null) {
                 speaker.setPhoto(speakerDetails.getPhoto());
             }

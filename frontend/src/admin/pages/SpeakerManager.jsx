@@ -158,7 +158,11 @@ const SpeakerManager = () => {
     }
     setLoadingSpeakers(true);
     try {
-      const payload = { ...speakerFormData, conferenceId: parseInt(activeConferenceId) };
+      const payload = {
+        ...speakerFormData,
+        conferenceId: parseInt(activeConferenceId),
+        categoryId: speakerFormData.categoryId ? parseInt(speakerFormData.categoryId) : null
+      };
       let savedSpeaker;
       if (editingSpeaker) {
         savedSpeaker = await api.put(`/api/admin/speakers/${editingSpeaker.id}`, payload);
@@ -166,7 +170,7 @@ const SpeakerManager = () => {
         savedSpeaker = await api.post("/api/admin/speakers", payload);
       }
 
-      if (photoFile && savedSpeaker.id) {
+      if (photoFile && savedSpeaker && savedSpeaker.id) {
         const fileData = new FormData();
         fileData.append("file", photoFile);
         await api.postMultipart(`/api/admin/speakers/${savedSpeaker.id}/photo`, fileData);
@@ -417,8 +421,29 @@ const SpeakerManager = () => {
               </div>
 
               <div>
+                <label>Research Areas / Topics (Comma separated)</label>
+                <input type="text" placeholder="e.g. Artificial Intelligence, Machine Learning, Neural Networks" value={speakerFormData.researchAreas} onChange={e => setSpeakerFormData({...speakerFormData, researchAreas: e.target.value})} className="admin-form-input" />
+              </div>
+
+              <div>
+                <label>Biography</label>
+                <textarea rows={3} placeholder="Speaker background and achievements..." value={speakerFormData.bio} onChange={e => setSpeakerFormData({...speakerFormData, bio: e.target.value})} className="admin-form-input" style={{resize: 'vertical'}} />
+              </div>
+
+              <div>
                 <label>Photo</label>
                 <input type="file" accept="image/*" onChange={e => setPhotoFile(e.target.files[0])} className="admin-form-input" />
+              </div>
+
+              <div style={{display: 'flex', gap: '20px', alignItems: 'center'}}>
+                <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
+                  <input type="checkbox" checked={speakerFormData.isFeatured} onChange={e => setSpeakerFormData({...speakerFormData, isFeatured: e.target.checked})} />
+                  Featured Speaker (Display badge)
+                </label>
+                <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
+                  <input type="checkbox" checked={speakerFormData.isActive} onChange={e => setSpeakerFormData({...speakerFormData, isActive: e.target.checked})} />
+                  Active
+                </label>
               </div>
 
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '15px'}}>

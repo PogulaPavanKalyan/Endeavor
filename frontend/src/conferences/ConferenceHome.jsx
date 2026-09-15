@@ -818,7 +818,9 @@ const getEventStatus = (dateStr) => {
         )}
 
         <div className="conf-home-hero-content max-md:px-4">
-          <h1 className="max-md:text-4xl max-md:mb-4">{conference.title}</h1>
+          <h1 className="max-md:text-4xl max-md:mb-4" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
+            {conference.title}
+          </h1>
           <div className="conf-home-hero-meta max-md:flex max-md:flex-col max-md:gap-2 max-md:p-3 max-md:bg-black/40 max-md:rounded-lg">
             <span className="conf-meta-item max-md:text-sm">
               <span className="meta-icon">📅</span> {formattedDate}
@@ -888,23 +890,42 @@ const getEventStatus = (dateStr) => {
             <img
               src={
                 conference.aboutImage
-                  ? (conference.aboutImage.startsWith('http') ? conference.aboutImage : `${BASE_URL}/uploads/conference/${conference.aboutImage}`)
-                  : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"
+                  ? (conference.aboutImage.startsWith("http")
+                      ? conference.aboutImage
+                      : `${BASE_URL}/uploads/conference/${conference.aboutImage}`)
+                  : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80"
               }
-              alt="About the Congress"
-              style={{ width: "100%", borderRadius: "12px", boxShadow: "0 15px 40px rgba(15, 23, 42, 0.08)" }}
+              alt="About Congress"
+              style={{ width: "100%", borderRadius: "12px", boxShadow: "0 10px 25px rgba(0,0,0,0.08)", objectFit: "cover", maxHeight: "450px" }}
+              onError={(e) => {
+                e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80";
+              }}
             />
           </div>
         </div>
       </section>
 
-      {/* Scientific Sessions Grid */}
+      {/* Scientific Sessions & Tracks Grid */}
       {(() => {
-        if (!tracks || tracks.length === 0) {
-          return null;
+        let tracksList = [];
+        if (tracks && tracks.length > 0) {
+          tracksList = tracks.map(t => t.name || t.title || t);
+        } else if (conference.scientificSessions && conference.scientificSessions.length > 0) {
+          tracksList = conference.scientificSessions;
+        } else if (conference.sessions && conference.sessions.length > 0) {
+          tracksList = conference.sessions.map(s => s.title || s.name || s);
         }
 
-        const tracksList = tracks.map(t => t.name);
+        if (tracksList.length === 0) {
+          tracksList = [
+            "Advanced Research Topics & Emerging Trends",
+            "Keynote Speeches & Global Panel Discussions",
+            "Oral & Abstract Presentations",
+            "Innovative Methodologies & Technical Applications",
+            "Interactive Workshops & Practical Demonstrations",
+            "Young Research Forum & Poster Presentations"
+          ];
+        }
 
         const midPoint = Math.ceil(tracksList.length / 2);
         const leftColumnTracks = tracksList.slice(0, midPoint);
@@ -1124,88 +1145,69 @@ const getEventStatus = (dateStr) => {
         );
       })()}
 
-      {/* 1. Keynote & Invited Speakers Section */}
-      {/* 2. International Advisory Board Section */}
-      <section className="conf-advisory-section-redesigned anim-section mob-anim-section" id="advisory-board">
-        <div className="container">
-          <div className="conf-section-header">
-            <span className="sponsors-tag-pill">Academic Guidance</span>
-            <h2>International Advisory Board</h2>
-            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Our distinguished advisory board members provide academic guidance and strategic direction.
-            </p>
-          </div>
+      {/* 1. Organizing Committee Section (Moved above Keynote & Event Speakers) */}
+      {conference.showCommittee !== false && (
+        <section className="conf-committee-section-redesigned anim-section mob-anim-section" id="organizing-committee">
+          <div className="container">
+            <div className="conf-section-header">
+              <span className="sponsors-tag-pill">Committee</span>
+              <h2>Organizing Committee</h2>
+              <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+                Meet the coordinators, track chairs, and reviewers organizing the event.
+              </p>
+            </div>
 
-          {advisoryBoard && advisoryBoard.filter(m => m.isActive !== false).length > 0 ? (
-            <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-              {advisoryBoard.filter(m => m.isActive !== false).map((member) => (
-                <div key={member.id} className="advisory-card-premium">
-                  <div 
-                    className="advisory-avatar-wrap-premium"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      setSelectedBioSpeaker({
-                        name: member.name,
-                        designation: member.designation,
-                        org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
-                        photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                        bio: member.bio || member.description || "Biography details are currently pending publication.",
-                        research: member.researchExpertise
-                      });
-                    }}
-                  >
-                    <img
-                      src={member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
-                      alt={member.name}
-                      onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                    />
-                  </div>
-                  <div className="advisory-info-premium">
-                    <h3
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        setSelectedBioSpeaker({
-                          name: member.name,
-                          designation: member.designation,
-                          org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
-                          photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                          bio: member.bio || member.description || "Biography details are currently pending publication.",
-                          research: member.researchExpertise
-                        });
-                      }}
-                    >
-                      {member.name}
-                    </h3>
-                    <p className="advisory-role-premium">{member.designation}</p>
-                    <p className="advisory-org-premium">{member.organization}{member.country ? `, ${member.country}` : ''}</p>
-                    {member.researchExpertise && (
-                      <div className="advisory-expertise-premium">
-                        <strong>Expertise:</strong> {member.researchExpertise}
+            {committee && committee.filter(c => c.isActive !== false).length > 0 ? (
+              <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                {(() => {
+                  const roleOrder = [
+                    "Chair",
+                    "Co-Chair",
+                    "Conference Secretary",
+                    "Scientific Committee",
+                    "Technical Committee",
+                    "Publication Committee",
+                    "Registration Committee",
+                    "Finance Committee",
+                    "Local Organizing Committee"
+                  ];
+
+                  const getRoleRank = (role) => {
+                    const idx = roleOrder.indexOf(role);
+                    return idx === -1 ? 999 : idx;
+                  };
+
+                  return [...committee.filter(c => c.isActive !== false)]
+                    .sort((a, b) => getRoleRank(a.role || "Local Organizing Committee") - getRoleRank(b.role || "Local Organizing Committee"))
+                    .map((cm) => (
+                      <div key={cm.id} className="advisory-card-premium">
+                        <div className="advisory-avatar-wrap-premium">
+                          <img
+                            src={cm.photo?.fileName ? `${BASE_URL}/uploads/committee/${cm.photo.fileName}` : (cm.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
+                            alt={cm.name}
+                            onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                          />
+                        </div>
+                        <div className="advisory-info-premium">
+                          <h3>{cm.academicTitle && !cm.name.trim().startsWith(cm.academicTitle.trim()) ? `${cm.academicTitle} ` : ''}{cm.name}</h3>
+                          <p className="advisory-role-premium">{cm.role || "Local Organizing Committee"}</p>
+                          <p className="advisory-org-premium">{cm.affiliation}{cm.country ? `, ${cm.country}` : ""}</p>
+                        </div>
                       </div>
-                    )}
-                    <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
-                      name: member.name,
-                      designation: member.designation,
-                      org: `${member.organization}${member.country ? ', ' + member.country : ''}`,
-                      photoUrl: member.imagePath ? (member.imagePath.startsWith('http') ? member.imagePath : `${BASE_URL}${member.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                      bio: member.bio || member.description || "Biography details are currently pending publication.",
-                      research: member.researchExpertise
-                    })}>
-                      Read Biography
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: "60px 20px", background: "#ffffff", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
-              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Advisory Board to be Announced</h3>
-              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The advisory board members are currently being finalized. Please check back later.</p>
-            </div>
-          )}
-        </div>
-      </section>
+                    ));
+                })()}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+                <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Committee Members to be Announced</h3>
+                <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The organizing committee is currently being formed. Information will be updated shortly.</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
+      {/* 2. Keynote & Invited Event Speakers Section */}
       <section className="conf-speakers-section anim-section mob-anim-section" id="keynote-speakers">
         <div className="container">
           <div className="conf-section-header">
@@ -1293,68 +1295,6 @@ const getEventStatus = (dateStr) => {
           )}
         </div>
       </section>
-
-      {/* 3. Organizing Committee Section */}
-      {conference.showCommittee !== false && (
-      <section className="conf-committee-section-redesigned anim-section mob-anim-section" id="organizing-committee">
-        <div className="container">
-          <div className="conf-section-header">
-            <span className="sponsors-tag-pill">Committee</span>
-            <h2>Organizing Committee</h2>
-            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Meet the coordinators, track chairs, and reviewers organizing the event.
-            </p>
-          </div>
-
-          {committee && committee.filter(c => c.isActive !== false).length > 0 ? (
-            <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-              {(() => {
-                const roleOrder = [
-                  "Chair",
-                  "Co-Chair",
-                  "Conference Secretary",
-                  "Scientific Committee",
-                  "Technical Committee",
-                  "Publication Committee",
-                  "Registration Committee",
-                  "Finance Committee",
-                  "Local Organizing Committee"
-                ];
-
-                const getRoleRank = (role) => {
-                  const idx = roleOrder.indexOf(role);
-                  return idx === -1 ? 999 : idx;
-                };
-
-                return [...committee.filter(c => c.isActive !== false)]
-                  .sort((a, b) => getRoleRank(a.role || "Local Organizing Committee") - getRoleRank(b.role || "Local Organizing Committee"))
-                  .map((cm) => (
-                    <div key={cm.id} className="advisory-card-premium">
-                      <div className="advisory-avatar-wrap-premium">
-                        <img
-                          src={cm.photo?.fileName ? `${BASE_URL}/uploads/committee/${cm.photo.fileName}` : (cm.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
-                          alt={cm.name}
-                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                        />
-                      </div>
-                      <div className="advisory-info-premium">
-                        <h3>{cm.academicTitle && !cm.name.trim().startsWith(cm.academicTitle.trim()) ? `${cm.academicTitle} ` : ''}{cm.name}</h3>
-                        <p className="advisory-role-premium">{cm.role || "Local Organizing Committee"}</p>
-                        <p className="advisory-org-premium">{cm.affiliation}{cm.country ? `, ${cm.country}` : ""}</p>
-                      </div>
-                    </div>
-                  ));
-              })()}
-            </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
-              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Committee Members to be Announced</h3>
-              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>The organizing committee is currently being formed. Information will be updated shortly.</p>
-            </div>
-          )}
-        </div>
-      </section>
-      )}
 
       {/* Dynamic Tabs Section */}
       {sections && sections.filter(sec => sec.isVisible !== false).length > 0 && (
@@ -1688,7 +1628,16 @@ const getEventStatus = (dateStr) => {
                 groups[tier].push(s);
               });
 
-              const tierOrder = ["PLATINUM", "GOLD", "SILVER", "BRONZE", "PARTNER"];
+              const knownTiers = ["MEDIA_PARTNER", "PLATINUM", "GOLD", "SILVER", "BRONZE", "EXHIBITOR", "PARTNER"];
+              const dynamicTiers = Object.keys(groups).filter(t => !knownTiers.includes(t));
+              const tierOrder = [...knownTiers, ...dynamicTiers];
+
+              const getTierLabel = (tier) => {
+                if (tier === "MEDIA_PARTNER") return "Official Media Partners";
+                if (tier === "EXHIBITOR") return "Featured Exhibitors";
+                if (tier === "PARTNER") return "Academic & Institutional Partners";
+                return `${tier.charAt(0) + tier.slice(1).toLowerCase()} Sponsors`;
+              };
 
               return (
                 <div className="sponsors-tiers-container">
@@ -1696,19 +1645,19 @@ const getEventStatus = (dateStr) => {
                     const list = groups[tier];
                     if (!list || list.length === 0) return null;
 
-                    const label = tier.charAt(0) + tier.slice(1).toLowerCase();
+                    const label = getTierLabel(tier);
 
                     return (
-                      <div key={tier} className={`sponsor-tier-group tier-${tier.toLowerCase()}`}>
+                      <div key={tier} className={`sponsor-tier-group tier-${tier.toLowerCase().replace(/_/g, '-')}`}>
                         <div className="tier-badge-header">
-                          <span className="tier-badge-label">{label} Partners</span>
+                          <span className="tier-badge-label">{label}</span>
                         </div>
                         <div className="sponsor-logos-grid max-md:grid max-md:grid-cols-2 max-[480px]:grid-cols-1 max-md:gap-4">
                           {list.map(sp => {
                             const logoUrl = (sp.image?.filePath && sp.image.filePath.startsWith("http"))
                               ? sp.image.filePath
                               : (sp.image?.fileName
-                                  ? `/uploads/sponsors/${sp.image.fileName}`
+                                  ? `${BASE_URL}/uploads/sponsors/${sp.image.fileName}`
                                   : null);
 
                             return (

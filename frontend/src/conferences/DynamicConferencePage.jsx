@@ -101,7 +101,7 @@ const DynamicConferencePage = () => {
       <div className="dynamic-hero-banner" style={heroStyle}>
         <div className="dynamic-hero-overlay" />
         <div className="dynamic-hero-content">
-          <h1 className="dynamic-hero-title">{pageTitle || title}</h1>
+          <h1 className="dynamic-hero-title" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>{pageTitle || title}</h1>
           <div className="dynamic-breadcrumbs">
             <Link to={getSubRoutePath("")}>Home</Link>
             <span>/</span>

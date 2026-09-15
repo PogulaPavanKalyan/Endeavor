@@ -81,21 +81,42 @@ const ConferenceAdminLayout = () => {
         <NavLink to={`/admin/dashboard${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           📊 Dashboard
         </NavLink>
+        <NavLink to={`/admin/about-congress${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🏢 About Congress
+        </NavLink>
+        <NavLink to={`/admin/important-dates${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📅 Important Dates
+        </NavLink>
         <NavLink to={`/admin/speakers${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🎙️ Keynote Speakers
+          🎙️ Keynote & Event Speakers
         </NavLink>
-        <NavLink to={`/admin/agenda${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📅 Conference Agenda
+        <NavLink to={`/admin/committee${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          👥 Committee
         </NavLink>
-        <NavLink to={`/admin/sections${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🗂️ Dynamic Tabs
+        <NavLink to={`/admin/tracks${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📑 Scientific Tracks
         </NavLink>
         <NavLink to={`/admin/sessions${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           📋 Sessions & Program
         </NavLink>
+        <NavLink to={`/admin/program${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🔬 Scientific Schedule
+        </NavLink>
+        <NavLink to={`/admin/agenda${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📅 Conference Timetable
+        </NavLink>
         <NavLink to={`/admin/registrations${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🎟️ Registrations
+          🎟️ Registrations & Pricing
           {metrics.registrations > 0 && <span style={{ background: '#2ecc71', color: 'white', padding: '0 6px', borderRadius: '10px', fontSize: '0.75rem', marginLeft: '4px' }}>{metrics.registrations}</span>}
+        </NavLink>
+        <NavLink to={`/admin/brochures${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📁 Brochure Upload
+        </NavLink>
+        <NavLink to={`/admin/sponsors${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🤝 Sponsors & Media Partners
+        </NavLink>
+        <NavLink to={`/admin/venue${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          📍 Venue & Hotel
         </NavLink>
         <NavLink to={`/admin/abstracts${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           📄 Abstracts
@@ -103,35 +124,14 @@ const ConferenceAdminLayout = () => {
         <NavLink to={`/admin/contacts${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           ✉️ Contact Requests
         </NavLink>
-        <NavLink to={`/admin/advisory-board${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🎓 Advisory Board
-        </NavLink>
-        <NavLink to={`/admin/tracks${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📑 Scientific Tracks
-        </NavLink>
-        <NavLink to={`/admin/committee${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          👥 Committee
-        </NavLink>
-        <NavLink to={`/admin/venue${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📍 Venue
+        <NavLink to={`/admin/sections${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
+          🗂️ Dynamic Tabs
         </NavLink>
         <NavLink to={`/admin/navbar${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           📖 Pages Menu
         </NavLink>
         <NavLink to={`/admin/gallery${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           🖼️ Photo Gallery
-        </NavLink>
-        <NavLink to={`/admin/brochures${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          📁 Brochures
-        </NavLink>
-        <NavLink to={`/admin/sponsors${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🤝 Sponsors
-        </NavLink>
-        <NavLink to={`/admin/webinars${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🌐 Webinars
-        </NavLink>
-        <NavLink to={`/admin/program${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
-          🔬 Scientific Program
         </NavLink>
         <NavLink to={`/admin/footer${window.location.search}`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => setIsMobileMenuOpen(false)}>
           🦶 Footer Management

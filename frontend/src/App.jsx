@@ -45,6 +45,8 @@ import ProgramManager from "./admin/pages/ProgramManager";
 import AdminUsersManager from "./admin/pages/AdminUsersManager";
 import FooterManager from "./admin/pages/FooterManager";
 import AboutManager from "./admin/pages/AboutManager";
+import ConferenceAboutManager from "./admin/pages/ConferenceAboutManager";
+import ImportantDatesManager from "./admin/pages/ImportantDatesManager";
 
 import ConferenceLayout from "./conferences/ConferenceLayout";
 import ConferenceHome from "./conferences/ConferenceHome";
@@ -98,6 +100,8 @@ function App() {
           <Route path="/admin" element={<AdminProvider><ConferenceAdminLayout /></AdminProvider>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="about-congress" element={<ConferenceAboutManager />} />
+            <Route path="important-dates" element={<ImportantDatesManager />} />
             <Route path="speakers" element={<SpeakerManager />} />
             <Route path="advisory-board" element={<AdvisoryBoardManager />} />
             <Route path="agenda" element={<AgendaManager />} />
@@ -168,6 +172,8 @@ function App() {
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="conferences" element={<ConferenceManager />} />
+            <Route path="about-congress" element={<ConferenceAboutManager />} />
+            <Route path="important-dates" element={<ImportantDatesManager />} />
             <Route path="speakers" element={<SpeakerManager />} />
             <Route path="advisory-board" element={<AdvisoryBoardManager />} />
             <Route path="agenda" element={<AgendaManager />} />

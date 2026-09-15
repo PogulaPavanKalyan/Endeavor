@@ -55,20 +55,22 @@ const ConferenceSpeakers = () => {
     { id: 3, name: "Prof. Sarah Higgins", designation: "Director of Nutritional Biochemistry", affiliation: "Oxford University", country: "UK", type: "oral", photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956" }
   ];
 
-  const activeSpeakers = speakers.length > 0 ? speakers : mockSpeakers;
+  const activeSpeakers = speakers.filter(s => s.isActive !== false).length > 0
+    ? speakers.filter(s => s.isActive !== false)
+    : mockSpeakers;
 
   return (
     <section className="conf-subpage-section">
       <SEOHead
-        title={`${categoryName ? categoryName : "Scientific Committee & Speakers"} | ${conference?.title || "Conference"}`}
-        description={`Explore the distinguished keynote speakers, advisory committee, and paper presenters for ${conference?.title || "our conference"}.`}
-        keywords={`speakers, keynote, committee, advisory board, ${conference?.title || ""}`}
-        ogTitle={`${categoryName ? categoryName : "Speakers & Committee"} | ${conference?.title || "Conference"}`}
-        ogDescription={`Discover featured keynote speakers for ${conference?.title || "our conference"}.`}
+        title={`${categoryName ? categoryName : "Event Speakers & Keynotes"} | ${conference?.title || "Conference"}`}
+        description={`Explore the distinguished keynote speakers, oral presenters, and session leaders for ${conference?.title || "our conference"}.`}
+        keywords={`speakers, keynote, presentations, conference speakers, ${conference?.title || ""}`}
+        ogTitle={`${categoryName ? categoryName : "Event Speakers"} | ${conference?.title || "Conference"}`}
+        ogDescription={`Discover featured keynote and event speakers for ${conference?.title || "our conference"}.`}
       />
       <div className="conf-subpage-container">
         <h2 className="conf-page-title">
-          {categoryName ? categoryName : "Scientific Committee & Speakers"}
+          {categoryName ? categoryName : "Event Speakers & Keynotes"}
         </h2>
         {loading ? (
           <p>Loading speakers...</p>
@@ -90,7 +92,7 @@ const ConferenceSpeakers = () => {
                   </div>
                 </div>
                 <div className="speaker-info">
-                  <h3 className="speaker-name">{spk.name}</h3>
+                  <h3 className="speaker-name">{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
                   <p className="speaker-designation-affiliation">
                     {spk.designation}{spk.affiliation ? `, ${spk.affiliation}` : ''}{spk.country ? ` - ${spk.country}` : ''}
                   </p>
@@ -115,11 +117,9 @@ const ConferenceSpeakers = () => {
                 />
               </div>
               <div className="conf-modal-text-wrap">
-                <h2>{selectedSpeaker.name}</h2>
+                <h2>{selectedSpeaker.academicTitle && !selectedSpeaker.name.trim().startsWith(selectedSpeaker.academicTitle.trim()) ? `${selectedSpeaker.academicTitle} ` : ''}{selectedSpeaker.name}</h2>
                 <p className="modal-role">
-                  {(selectedSpeaker.type || "").toLowerCase().includes("advisory") 
-                    ? "Advisory Board Member" 
-                    : "Featured Speaker"}
+                  {selectedSpeaker.isFeatured ? "Featured Keynote Speaker" : "Event Speaker"}
                 </p>
                 <p className="modal-designation"><strong>{selectedSpeaker.designation}</strong></p>
                 <p className="modal-affiliation">{selectedSpeaker.affiliation}{selectedSpeaker.country ? `, ${selectedSpeaker.country}` : ''}</p>
