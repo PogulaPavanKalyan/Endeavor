@@ -798,7 +798,7 @@ const Homepage = () => {
           <div className="hero-light-glow blue-glow" />
           <div className="hero-light-glow pink-glow" />
 
-          <div className="hero-inner container max-xl:gap-8 max-md:flex-col max-md:items-center max-md:justify-center max-md:min-h-[100svh] max-md:pt-16 max-md:pb-12 max-[480px]:px-4">
+          <div className="hero-inner container max-xl:gap-8 max-md:flex-col max-md:items-center max-md:justify-start max-md:py-6 max-[480px]:py-4 max-[480px]:px-4">
             {/* Left Column: Text Content */}
             <div className="hero-left animate-fade-in-left max-md:w-full max-md:text-center max-md:items-center max-lg:flex-1">
               <div className="hero-content-wrapper max-md:items-center">
@@ -808,21 +808,35 @@ const Homepage = () => {
                 </span>
 
                 {/* Headline */}
-                <h1 className="hero-title max-xl:text-5xl max-lg:text-4xl max-md:text-4xl max-[480px]:text-3xl max-[375px]:text-2xl max-md:leading-tight">
+                <h1 className="hero-title max-xl:text-5xl max-lg:text-4xl max-md:text-3xl max-[480px]:text-2xl max-md:leading-tight">
                   {heroData?.title || "Advancing Global Research Through Innovation"}
                 </h1>
 
                 {/* Description */}
-                <p className="hero-desc max-xl:text-base max-md:text-base max-[480px]:text-sm max-md:px-4">
+                <p className="hero-desc max-xl:text-base max-md:text-sm max-[480px]:text-xs max-md:px-2">
                   {heroData?.description || "Join researchers, scientists, and industry leaders from 50+ countries to share knowledge, publish innovations and build global partnerships."}
                 </p>
 
-                
+                {/* CTA Buttons */}
+                <div className="hero-cta-buttons">
+                  <Link
+                    to={heroData?.button1Link || "/conferences"}
+                    className="btn-premium-primary"
+                  >
+                    {heroData?.button1Text || "Explore Conferences"} →
+                  </Link>
+                  <Link
+                    to={heroData?.button2Link || "/webinars"}
+                    className="btn-premium-secondary"
+                  >
+                    {heroData?.button2Text || "View Webinars"}
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Right Column: 3-Image Collage */}
-            <div className="hero-right animate-fade-in-right max-md:w-full max-md:mt-12 max-lg:flex-1 max-[480px]:mt-8">
+            <div className="hero-right animate-fade-in-right max-md:w-full max-md:mt-4 max-lg:flex-1 max-[480px]:mt-2">
               <div className="hero-collage-wrap max-md:w-[90%] max-md:mx-auto">
                 <div className="collage-container">
                   {/* Main image */}
