@@ -695,25 +695,15 @@ const getEventStatus = (dateStr) => {
     {
       id: "mock-1",
       name: "Prof. Sarah Higgins",
-      designation: "Scientific Committee Chair",
+      designation: "Distinguished Professor",
       affiliation: "University of Oxford",
       country: "UK",
-      type: "ADVISORY_BOARD",
+      type: "KEYNOTE",
       bio: "Prof. Higgins is a leading scholar in biochemical adaptation and has published over 120 papers in highly-indexed journals.",
       photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&h=300&q=80"
     },
     {
       id: "mock-2",
-      name: "Dr. Kenji Sato",
-      designation: "Plenary Chair",
-      affiliation: "Tokyo Institute of Technology",
-      country: "Japan",
-      type: "ADVISORY_BOARD",
-      bio: "Dr. Sato specializes in nanotechnology integrations and has collaborated on several international research projects.",
-      photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&h=300&q=80"
-    },
-    {
-      id: "mock-3",
       name: "Dr. Andrea Miller",
       designation: "Invited Keynote Presenter",
       affiliation: "University of Valencia",
@@ -723,9 +713,9 @@ const getEventStatus = (dateStr) => {
       photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&h=300&q=80"
     },
     {
-      id: "mock-4",
+      id: "mock-3",
       name: "Prof. Alan Vance",
-      designation: "Technical Lead",
+      designation: "Technical Session Chair",
       affiliation: "CERN Particle Accelerator",
       country: "Switzerland",
       type: "KEYNOTE",
@@ -1297,32 +1287,67 @@ const getEventStatus = (dateStr) => {
       </section>
 
       {/* Dynamic Tabs Section */}
-      {sections && sections.filter(sec => sec.isVisible !== false).length > 0 && (
-        <section className="conf-dynamic-tabs-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
-          <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
-            <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
-              {sections.filter(sec => sec.isVisible !== false).map((sec) => (
-                <button
-                  type="button"
-                  key={sec.id}
-                  className={`classic-tab-btn ${activeSection?.id === sec.id ? "active" : ""}`}
-                  onClick={() => setActiveSection(sec)}
-                >
-                  {sec.sectionName}
-                </button>
-              ))}
-            </div>
+      {(() => {
+        const visibleSections = (sections || []).filter(sec => 
+          sec.isVisible !== false && 
+          !sec.sectionName?.toLowerCase().includes("advisory") && 
+          !sec.sectionSlug?.toLowerCase().includes("advisory")
+        );
 
-            {activeSection && activeSection.items && activeSection.items.filter(item => item.isVisible !== false).length > 0 ? (
-              <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                {activeSection.items.filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)).map(item => (
-                  <div key={item.id} className="advisory-card-premium">
-                    <div 
-                      className="advisory-avatar-wrap-premium"
-                      style={{ cursor: item.description ? 'pointer' : 'default' }}
-                      onClick={() => {
-                        if (item.description) {
-                          setSelectedBioSpeaker({
+        if (visibleSections.length === 0) return null;
+
+        const effectiveActiveSection = (activeSection && visibleSections.some(s => s.id === activeSection.id))
+          ? activeSection
+          : visibleSections[0];
+
+        return (
+          <section className="conf-dynamic-tabs-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
+            <div className="container" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+              <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
+                {visibleSections.map((sec) => (
+                  <button
+                    type="button"
+                    key={sec.id}
+                    className={`classic-tab-btn ${effectiveActiveSection?.id === sec.id ? "active" : ""}`}
+                    onClick={() => setActiveSection(sec)}
+                  >
+                    {sec.sectionName}
+                  </button>
+                ))}
+              </div>
+
+              {effectiveActiveSection && effectiveActiveSection.items && effectiveActiveSection.items.filter(item => item.isVisible !== false).length > 0 ? (
+                <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                  {effectiveActiveSection.items.filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)).map(item => (
+                    <div key={item.id} className="advisory-card-premium">
+                      <div 
+                        className="advisory-avatar-wrap-premium"
+                        style={{ cursor: item.description ? 'pointer' : 'default' }}
+                        onClick={() => {
+                          if (item.description) {
+                            setSelectedBioSpeaker({
+                              name: item.name,
+                              designation: item.designation,
+                              org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
+                              photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                              bio: item.description,
+                              website: item.websiteUrl,
+                              linkedin: item.linkedinUrl
+                            });
+                          }
+                        }}
+                      >
+                        <img
+                          src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                          alt={item.name}
+                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                        />
+                      </div>
+                      <div className="advisory-info-premium">
+                        <h3>{item.name}</h3>
+                        <p className="advisory-role-premium">{item.designation}</p>
+                        {item.description && (
+                          <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
                             name: item.name,
                             designation: item.designation,
                             org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
@@ -1330,45 +1355,23 @@ const getEventStatus = (dateStr) => {
                             bio: item.description,
                             website: item.websiteUrl,
                             linkedin: item.linkedinUrl
-                          });
-                        }
-                      }}
-                    >
-                      <img
-                        src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
-                        alt={item.name}
-                        onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                      />
+                          })}>
+                            Read Details
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="advisory-info-premium">
-                      <h3>{item.name}</h3>
-                      <p className="advisory-role-premium">{item.designation}</p>
-                      <p className="advisory-org-premium">{item.organization}{item.country ? `, ${item.country}` : ''}</p>
-                      {item.description && (
-                        <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
-                          name: item.name,
-                          designation: item.designation,
-                          org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
-                          photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                          bio: item.description,
-                          website: item.websiteUrl,
-                          linkedin: item.linkedinUrl
-                        })}>
-                          Read Details
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
-                No active entries found for this tab.
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                  No active entries found for this tab.
+                </div>
+              )}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* 4. Conference Agenda Section */}
       <section className="conf-agenda-section-redesigned anim-section mob-anim-section" id="agenda-schedule">

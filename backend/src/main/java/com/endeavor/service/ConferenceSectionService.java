@@ -29,7 +29,10 @@ public class ConferenceSectionService {
         if (sections.isEmpty()) {
             return migrateAndSeedFromSpeakers(conferenceId);
         }
-        return sections;
+        return sections.stream()
+                .filter(s -> s.getSectionName() == null || !s.getSectionName().toLowerCase().contains("advisory"))
+                .filter(s -> s.getSectionSlug() == null || !s.getSectionSlug().toLowerCase().contains("advisory"))
+                .toList();
     }
 
     public Optional<ConferenceSection> getSectionById(Long id) {
@@ -108,20 +111,9 @@ public class ConferenceSectionService {
         speakersSection = sectionRepo.save(speakersSection);
         seededSections.add(speakersSection);
 
-        // Create Section 2: Advisory Board
-        ConferenceSection advisorySection = new ConferenceSection();
-        advisorySection.setConferenceId(conferenceId);
-        advisorySection.setSectionName("Advisory Board");
-        advisorySection.setSectionSlug("advisory-board");
-        advisorySection.setDisplayOrder(2);
-        advisorySection.setIsVisible(true);
-        advisorySection = sectionRepo.save(advisorySection);
-        seededSections.add(advisorySection);
-
         // Fetch existing speakers for this conference
         List<Speaker> speakers = speakerService.getByConferenceId(conferenceId);
         int speakersOrder = 1;
-        int advisoryOrder = 1;
 
         for (Speaker s : speakers) {
             ConferenceSectionItem item = new ConferenceSectionItem();
@@ -136,26 +128,20 @@ public class ConferenceSectionService {
                 item.setImagePath("/uploads/speakers/" + s.getPhoto().getFileName());
             }
 
-            String type = s.getType() != null ? s.getType().toLowerCase() : "";
-            if (type.contains("advisory") || type.contains("board") || type.contains("committee")) {
-                item.setSectionId(advisorySection.getId());
-                item.setDisplayOrder(advisoryOrder++);
-            } else {
-                item.setSectionId(speakersSection.getId());
-                item.setDisplayOrder(speakersOrder++);
-            }
+            item.setSectionId(speakersSection.getId());
+            item.setDisplayOrder(speakersOrder++);
             itemRepo.save(item);
         }
 
         // If no speakers existed, seed some placeholder items so tabs are not completely empty
         if (speakers.isEmpty()) {
-            seedPlaceholderItems(speakersSection.getId(), advisorySection.getId());
+            seedPlaceholderItems(speakersSection.getId());
         }
 
         return seededSections;
     }
 
-    private void seedPlaceholderItems(Long speakersSecId, Long advisorySecId) {
+    private void seedPlaceholderItems(Long speakersSecId) {
         // Speaker placeholders
         ConferenceSectionItem sp1 = new ConferenceSectionItem();
         sp1.setSectionId(speakersSecId);
@@ -178,18 +164,6 @@ public class ConferenceSectionService {
         sp2.setDisplayOrder(2);
         sp2.setIsVisible(true);
         itemRepo.save(sp2);
-
-        // Advisory placeholders
-        ConferenceSectionItem adv1 = new ConferenceSectionItem();
-        adv1.setSectionId(advisorySecId);
-        adv1.setName("Dr. Kenji Sato");
-        adv1.setDesignation("Advisory Committee Chair");
-        adv1.setOrganization("Tokyo Institute of Technology");
-        adv1.setCountry("Japan");
-        adv1.setDescription("Specialist in molecular engineering and nanotechnology collaborations.");
-        adv1.setDisplayOrder(1);
-        adv1.setIsVisible(true);
-        itemRepo.save(adv1);
     }
 
     private String generateSlug(String text) {
