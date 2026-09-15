@@ -41,7 +41,8 @@ const TrackManager = () => {
   const fetchTracks = async () => {
     setLoading(true);
     try {
-      const data = await api.get(`/api/admin/tracks?conferenceId=${activeConferenceId}`);
+      const url = activeConferenceId ? `/api/tracks?conferenceId=${activeConferenceId}` : '/api/tracks';
+      const data = await api.get(url);
       setTracks(data || []);
     } catch (err) {
       toast.error("Failed to fetch tracks.");

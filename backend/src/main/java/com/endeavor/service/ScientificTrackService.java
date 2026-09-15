@@ -19,6 +19,10 @@ public class ScientificTrackService {
         return trackRepo.findByConferenceIdOrderByDisplayOrderAsc(conferenceId);
     }
 
+    public List<ScientificTrack> getAllTracks() {
+        return trackRepo.findAll();
+    }
+
     public Optional<ScientificTrack> getTrackById(Long id) {
         return trackRepo.findById(id);
     }

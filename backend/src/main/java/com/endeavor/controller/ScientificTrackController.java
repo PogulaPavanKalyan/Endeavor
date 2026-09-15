@@ -18,10 +18,13 @@ public class ScientificTrackController {
     @Autowired
     private ScientificTrackService trackService;
 
-    // Public API
-    @GetMapping("/tracks")
-    public ResponseEntity<List<ScientificTrack>> getTracks(@RequestParam Long conferenceId) {
-        return ResponseEntity.ok(trackService.getTracksByConferenceId(conferenceId));
+    // Public & Admin API
+    @GetMapping({"/tracks", "/admin/tracks"})
+    public ResponseEntity<List<ScientificTrack>> getTracks(@RequestParam(value = "conferenceId", required = false) Long conferenceId) {
+        if (conferenceId != null) {
+            return ResponseEntity.ok(trackService.getTracksByConferenceId(conferenceId));
+        }
+        return ResponseEntity.ok(trackService.getAllTracks());
     }
 
     @GetMapping("/tracks/{id}")
