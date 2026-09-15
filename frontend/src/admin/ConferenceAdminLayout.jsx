@@ -9,13 +9,16 @@ const navGroups = [
     id: 'dashboard',
     label: 'Dashboard',
     icon: '📊',
-    path: '/admin/dashboard',
-    isDirect: true
+    defaultPath: '/admin/dashboard',
+    items: [
+      { path: '/admin/dashboard', label: 'Dashboard Overview', icon: '📊', desc: 'Conference stats, quick actions & overview' }
+    ]
   },
   {
     id: 'congress-info',
     label: 'Congress Info',
     icon: '🏢',
+    defaultPath: '/admin/about-congress',
     items: [
       { path: '/admin/about-congress', label: 'About Congress & Theme', icon: '📝', desc: 'Title, summary, theme colors, and about content' },
       { path: '/admin/important-dates', label: 'Important Dates', icon: '📅', desc: 'Deadlines, milestones, and notification dates' },
@@ -27,6 +30,7 @@ const navGroups = [
     id: 'speakers-committee',
     label: 'Speakers & Committee',
     icon: '🎙️',
+    defaultPath: '/admin/speakers',
     items: [
       { path: '/admin/speakers', label: 'Keynote & Event Speakers', icon: '🎙️', desc: 'Manage featured speakers, bios, and categories' },
       { path: '/admin/committee', label: 'Organizing Committee', icon: '👥', desc: 'Committee members, affiliations, and roles' }
@@ -36,6 +40,7 @@ const navGroups = [
     id: 'scientific-program',
     label: 'Scientific Program',
     icon: '🔬',
+    defaultPath: '/admin/tracks',
     items: [
       { path: '/admin/tracks', label: 'Scientific Tracks', icon: '📑', desc: 'Research tracks, subject areas, and categories' },
       { path: '/admin/sessions', label: 'Sessions & Topics', icon: '📋', desc: 'Congress sessions, session chairs, and topics' },
@@ -47,6 +52,7 @@ const navGroups = [
     id: 'registrations-abstracts',
     label: 'Registrations & Papers',
     icon: '🎟️',
+    defaultPath: '/admin/registrations',
     items: [
       { path: '/admin/registrations', label: 'Registrations & Pricing', icon: '🎟️', desc: 'Pricing packages, ticket tiers & registered attendees', metricKey: 'registrations' },
       { path: '/admin/abstracts', label: 'Abstract Submissions', icon: '📄', desc: 'Submitted papers, reviews, and approval status' },
@@ -57,13 +63,16 @@ const navGroups = [
     id: 'sponsors',
     label: 'Sponsors & Media',
     icon: '🤝',
-    path: '/admin/sponsors',
-    isDirect: true
+    defaultPath: '/admin/sponsors',
+    items: [
+      { path: '/admin/sponsors', label: 'Sponsors & Media Partners', icon: '🤝', desc: 'Manage corporate sponsors, exhibitors, and media partners' }
+    ]
   },
   {
     id: 'website-cms',
     label: 'Website CMS',
     icon: '🎨',
+    defaultPath: '/admin/sections',
     items: [
       { path: '/admin/sections', label: 'Dynamic Content Tabs', icon: '🗂️', desc: 'Custom tab sections and content blocks' },
       { path: '/admin/navbar', label: 'Pages & Navigation Menu', icon: '📖', desc: 'Custom navigation links and sub-pages' },
@@ -74,7 +83,7 @@ const navGroups = [
 ];
 
 const ConferenceAdminLayout = () => {
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [hoveredDropdown, setHoveredDropdown] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileGroup, setExpandedMobileGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,20 +104,9 @@ const ConferenceAdminLayout = () => {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState(false);
 
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setOpenDropdown(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   // Close menus on route change
   useEffect(() => {
-    setOpenDropdown(null);
+    setHoveredDropdown(null);
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
@@ -145,33 +143,30 @@ const ConferenceAdminLayout = () => {
   const activeConf = conferences.find(c => c.id?.toString() === activeConferenceId);
   const searchStr = location.search || '';
 
-  // Helper to determine if a group contains the active route
-  const isGroupActive = (group) => {
-    if (group.isDirect) {
-      return location.pathname.startsWith(group.path);
-    }
-    return group.items.some(item => location.pathname.startsWith(item.path));
-  };
+  // Determine which group is currently active based on current path
+  const activeGroup = navGroups.find(group => 
+    group.items.some(item => location.pathname === item.path || location.pathname.startsWith(item.path))
+  ) || navGroups[0];
 
-  // Find current active item for breadcrumb
-  let activePageInfo = { title: 'Dashboard', icon: '📊', groupLabel: 'Overview' };
+  // Find active sub-item info for header context
+  let activeItemInfo = activeGroup.items[0];
   for (const group of navGroups) {
-    if (group.isDirect && location.pathname.startsWith(group.path)) {
-      activePageInfo = { title: group.label, icon: group.icon, groupLabel: 'Main' };
+    const found = group.items.find(item => location.pathname === item.path || location.pathname.startsWith(item.path));
+    if (found) {
+      activeItemInfo = found;
       break;
-    }
-    if (group.items) {
-      const found = group.items.find(item => location.pathname.startsWith(item.path));
-      if (found) {
-        activePageInfo = { title: found.label, icon: found.icon, groupLabel: group.label };
-        break;
-      }
     }
   }
 
+  // Handle direct click on top primary tab
+  const handlePrimaryTabClick = (group) => {
+    setHoveredDropdown(null);
+    navigate(`${group.defaultPath}${searchStr}`);
+  };
+
   // All flat items for search palette
   const allNavItems = navGroups.flatMap(g => 
-    g.isDirect ? [{ ...g, groupLabel: 'Direct' }] : g.items.map(i => ({ ...i, groupLabel: g.label }))
+    g.items.map(i => ({ ...i, groupLabel: g.label }))
   );
 
   const filteredItems = searchQuery.trim() 
@@ -208,6 +203,7 @@ const ConferenceAdminLayout = () => {
           <div className="conf-topbar-right">
             {/* Quick Search Palette Trigger */}
             <button 
+              type="button"
               className="conf-search-trigger"
               onClick={() => setShowSearchModal(true)}
               title="Quick jump to section (Ctrl+K)"
@@ -248,7 +244,7 @@ const ConferenceAdminLayout = () => {
             </div>
 
             {/* Logout Button */}
-            <button onClick={logout} className="conf-logout-btn" title="Sign out of conference workspace">
+            <button type="button" onClick={logout} className="conf-logout-btn" title="Sign out of conference workspace">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
@@ -259,6 +255,7 @@ const ConferenceAdminLayout = () => {
 
             {/* Mobile Hamburger Toggle */}
             <button 
+              type="button"
               className="conf-mobile-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Navigation"
@@ -268,55 +265,45 @@ const ConferenceAdminLayout = () => {
           </div>
         </header>
 
-        {/* Organized Navigation Bar */}
+        {/* Tier 1: Main Category Tab Bar */}
         <nav className="conference-admin-navstrip" ref={navRef}>
           <div className="conf-nav-container">
             {navGroups.map((group) => {
-              if (group.isDirect) {
-                return (
-                  <NavLink
-                    key={group.id}
-                    to={`${group.path}${searchStr}`}
-                    className={({ isActive }) => `conf-nav-item conf-nav-direct ${isActive ? 'active' : ''}`}
-                    onClick={() => setOpenDropdown(null)}
-                  >
-                    <span className="conf-nav-icon">{group.icon}</span>
-                    <span className="conf-nav-label">{group.label}</span>
-                  </NavLink>
-                );
-              }
-
-              const isCurrentGroupActive = isGroupActive(group);
-              const isOpen = openDropdown === group.id;
+              const isCurrentActive = activeGroup.id === group.id;
+              const hasMultiple = group.items.length > 1;
+              const isHovered = hoveredDropdown === group.id;
 
               return (
-                <div key={group.id} className={`conf-nav-dropdown-wrapper ${isOpen ? 'open' : ''}`}>
+                <div 
+                  key={group.id} 
+                  className="conf-nav-dropdown-wrapper"
+                  onMouseEnter={() => hasMultiple && setHoveredDropdown(group.id)}
+                  onMouseLeave={() => setHoveredDropdown(null)}
+                >
                   <button
                     type="button"
-                    className={`conf-nav-item conf-nav-dropdown-btn ${isCurrentGroupActive ? 'active' : ''} ${isOpen ? 'dropdown-active' : ''}`}
-                    onClick={() => setOpenDropdown(isOpen ? null : group.id)}
-                    onMouseEnter={() => setOpenDropdown(group.id)}
+                    className={`conf-nav-item ${isCurrentActive ? 'active' : ''}`}
+                    onClick={() => handlePrimaryTabClick(group)}
                   >
                     <span className="conf-nav-icon">{group.icon}</span>
                     <span className="conf-nav-label">{group.label}</span>
-                    <svg className={`conf-chevron ${isOpen ? 'rotate' : ''}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
+                    {hasMultiple && (
+                      <svg className={`conf-chevron ${isHovered ? 'rotate' : ''}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    )}
                   </button>
 
-                  {/* Dropdown Flyout Menu */}
-                  {isOpen && (
-                    <div 
-                      className="conf-dropdown-menu"
-                      onMouseLeave={() => setOpenDropdown(null)}
-                    >
+                  {/* Fast Hover Dropdown */}
+                  {hasMultiple && isHovered && (
+                    <div className="conf-dropdown-menu">
                       <div className="conf-dropdown-header">
                         <span className="conf-dropdown-group-icon">{group.icon}</span>
                         <span className="conf-dropdown-group-title">{group.label}</span>
                       </div>
                       <div className="conf-dropdown-items">
                         {group.items.map((subItem) => {
-                          const isSubActive = location.pathname.startsWith(subItem.path);
+                          const isSubActive = location.pathname === subItem.path || location.pathname.startsWith(subItem.path);
                           const metricVal = subItem.metricKey ? metrics[subItem.metricKey] : null;
 
                           return (
@@ -324,7 +311,7 @@ const ConferenceAdminLayout = () => {
                               key={subItem.path}
                               to={`${subItem.path}${searchStr}`}
                               className={`conf-dropdown-item ${isSubActive ? 'active' : ''}`}
-                              onClick={() => setOpenDropdown(null)}
+                              onClick={() => setHoveredDropdown(null)}
                             >
                               <div className="conf-subitem-icon">{subItem.icon}</div>
                               <div className="conf-subitem-content">
@@ -338,9 +325,6 @@ const ConferenceAdminLayout = () => {
                                   <span className="conf-subitem-desc">{subItem.desc}</span>
                                 )}
                               </div>
-                              <svg className="conf-subitem-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                              </svg>
                             </NavLink>
                           );
                         })}
@@ -353,23 +337,54 @@ const ConferenceAdminLayout = () => {
           </div>
         </nav>
 
+        {/* Tier 2: Active Sub-Navigation Pills (Directly Clickable Strip) */}
+        {activeGroup && activeGroup.items && activeGroup.items.length > 1 && (
+          <div className="conf-subnav-strip">
+            <div className="conf-subnav-container">
+              <span className="conf-subnav-tag">
+                {activeGroup.icon} {activeGroup.label}:
+              </span>
+              <div className="conf-subnav-pills">
+                {activeGroup.items.map((subItem) => {
+                  const isSubActive = location.pathname === subItem.path || location.pathname.startsWith(subItem.path);
+                  const metricVal = subItem.metricKey ? metrics[subItem.metricKey] : null;
+
+                  return (
+                    <NavLink
+                      key={subItem.path}
+                      to={`${subItem.path}${searchStr}`}
+                      className={`conf-subnav-pill ${isSubActive ? 'active' : ''}`}
+                    >
+                      <span className="conf-subnav-pill-icon">{subItem.icon}</span>
+                      <span className="conf-subnav-pill-label">{subItem.label}</span>
+                      {metricVal > 0 && (
+                        <span className="conf-subnav-pill-badge">{metricVal}</span>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Elegant Context & Breadcrumb Bar */}
         <div className="conf-context-bar">
           <div className="conf-context-container">
             <div className="conf-breadcrumb">
               <span className="conf-bc-root" onClick={() => navigate(`/admin/dashboard${searchStr}`)}>Workspace</span>
               <span className="conf-bc-sep">/</span>
-              <span className="conf-bc-group">{activePageInfo.groupLabel}</span>
+              <span className="conf-bc-group" onClick={() => handlePrimaryTabClick(activeGroup)}>{activeGroup.label}</span>
               <span className="conf-bc-sep">/</span>
               <span className="conf-bc-current">
-                <span className="conf-bc-icon">{activePageInfo.icon}</span>
-                {activePageInfo.title}
+                <span className="conf-bc-icon">{activeItemInfo.icon}</span>
+                {activeItemInfo.label}
               </span>
             </div>
 
             <div className="conf-context-hint">
               <span className="conf-status-indicator"></span>
-              <span>All changes automatically sync to live website</span>
+              <span>Live synchronized with website</span>
             </div>
           </div>
         </div>
@@ -383,56 +398,75 @@ const ConferenceAdminLayout = () => {
                   <span className="conf-mobile-logo-icon">🏛️</span>
                   <span>Navigation Menu</span>
                 </div>
-                <button className="conf-mobile-close" onClick={() => setIsMobileMenuOpen(false)}>✕</button>
+                <button type="button" className="conf-mobile-close" onClick={() => setIsMobileMenuOpen(false)}>✕</button>
               </div>
 
               <div className="conf-mobile-drawer-content">
                 {navGroups.map((group) => {
-                  if (group.isDirect) {
+                  const hasMultiple = group.items.length > 1;
+                  const isExpanded = expandedMobileGroup === group.id || activeGroup.id === group.id;
+
+                  if (!hasMultiple) {
+                    const single = group.items[0];
+                    const isActive = location.pathname === single.path || location.pathname.startsWith(single.path);
                     return (
                       <NavLink
                         key={group.id}
-                        to={`${group.path}${searchStr}`}
-                        className={({ isActive }) => `conf-mobile-item ${isActive ? 'active' : ''}`}
+                        to={`${single.path}${searchStr}`}
+                        className={`conf-mobile-item ${isActive ? 'active' : ''}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <span className="conf-mobile-icon">{group.icon}</span>
+                        <span className="conf-mobile-icon">{single.icon}</span>
                         <span className="conf-mobile-label">{group.label}</span>
                       </NavLink>
                     );
                   }
 
-                  const isExpanded = expandedMobileGroup === group.id;
-                  const isCurrentActive = isGroupActive(group);
+                  const isCurrentActive = activeGroup.id === group.id;
 
                   return (
                     <div key={group.id} className="conf-mobile-accordion">
-                      <button
-                        className={`conf-mobile-accordion-header ${isCurrentActive ? 'has-active' : ''}`}
-                        onClick={() => setExpandedMobileGroup(isExpanded ? null : group.id)}
-                      >
-                        <div className="conf-mobile-accordion-left">
+                      <div className={`conf-mobile-accordion-header ${isCurrentActive ? 'has-active' : ''}`}>
+                        <div 
+                          className="conf-mobile-accordion-left"
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            handlePrimaryTabClick(group);
+                          }}
+                        >
                           <span className="conf-mobile-icon">{group.icon}</span>
                           <span className="conf-mobile-label">{group.label}</span>
                         </div>
-                        <svg className={`conf-chevron ${isExpanded ? 'rotate' : ''}`} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                      </button>
+                        <button
+                          type="button"
+                          className="conf-mobile-chevron-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedMobileGroup(isExpanded ? null : group.id);
+                          }}
+                        >
+                          <svg className={`conf-chevron ${isExpanded ? 'rotate' : ''}`} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </button>
+                      </div>
 
                       {isExpanded && (
                         <div className="conf-mobile-accordion-body">
-                          {group.items.map((subItem) => (
-                            <NavLink
-                              key={subItem.path}
-                              to={`${subItem.path}${searchStr}`}
-                              className={({ isActive }) => `conf-mobile-subitem ${isActive ? 'active' : ''}`}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                              <span className="conf-mobile-subicon">{subItem.icon}</span>
-                              <span className="conf-mobile-sublabel">{subItem.label}</span>
-                            </NavLink>
-                          ))}
+                          {group.items.map((subItem) => {
+                            const isSubActive = location.pathname === subItem.path || location.pathname.startsWith(subItem.path);
+                            return (
+                              <NavLink
+                                key={subItem.path}
+                                to={`${subItem.path}${searchStr}`}
+                                className={`conf-mobile-subitem ${isSubActive ? 'active' : ''}`}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                <span className="conf-mobile-subicon">{subItem.icon}</span>
+                                <span className="conf-mobile-sublabel">{subItem.label}</span>
+                              </NavLink>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -441,7 +475,7 @@ const ConferenceAdminLayout = () => {
               </div>
 
               <div className="conf-mobile-drawer-footer">
-                <button onClick={logout} className="conf-mobile-logout-btn">
+                <button type="button" onClick={logout} className="conf-mobile-logout-btn">
                   Logout
                 </button>
               </div>
@@ -466,7 +500,7 @@ const ConferenceAdminLayout = () => {
                   autoFocus
                   className="conf-palette-input"
                 />
-                <button className="conf-palette-close" onClick={() => setShowSearchModal(false)}>ESC</button>
+                <button type="button" className="conf-palette-close" onClick={() => setShowSearchModal(false)}>ESC</button>
               </div>
 
               <div className="conf-palette-results">
