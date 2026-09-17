@@ -733,6 +733,14 @@ const getEventStatus = (dateStr) => {
 
   const renderAboutText = (text) => {
     if (!text) return null;
+    if (/<[a-z][\s\S]*>/i.test(text)) {
+      return (
+        <div 
+          className="conf-about-html-content"
+          dangerouslySetInnerHTML={{ __html: text }}
+        />
+      );
+    }
     return text.split(/\n+/).map((para, idx) => (
       <p key={idx} className="conf-about-para" style={{ whiteSpace: "pre-line", marginBottom: "15px", fontSize: "15.5px", lineHeight: "1.6", color: "#4a5568" }}>
         {para.trim()}

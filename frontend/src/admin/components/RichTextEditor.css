@@ -1,0 +1,278 @@
+.rich-text-editor-container {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rich-text-editor-container:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Toolbar Header */
+.rich-text-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  user-select: none;
+}
+
+.rich-text-toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 6px;
+  margin-right: 6px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.rich-text-toolbar-group:last-child {
+  border-right: none;
+  padding-right: 0;
+  margin-right: 0;
+}
+
+/* Toolbar Buttons & Controls */
+.rte-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rte-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.rte-btn.active {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.rte-select {
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.rte-select:hover,
+.rte-select:focus {
+  border-color: #3b82f6;
+}
+
+/* Color Dropdown Popovers */
+.rte-color-picker-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.rte-color-btn-indicator {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-left: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.rte-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  z-index: 100;
+  width: 210px;
+}
+
+.rte-popover-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.rte-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.rte-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.rte-color-swatch:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.rte-custom-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.rte-custom-color-input {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.rte-custom-color-label {
+  font-size: 12px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Editor Body Area */
+.rich-text-editor-content {
+  padding: 16px 20px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #1e293b;
+  outline: none;
+  overflow-y: auto;
+  min-height: 240px;
+  word-break: break-word;
+}
+
+.rich-text-editor-content:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* HTML Source Code Mode Area */
+.rich-text-source-editor {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #0f172a;
+  background: #f8fafc;
+  border: none;
+  outline: none;
+  resize: vertical;
+  min-height: 240px;
+}
+
+/* Typography styles inside Editor */
+.rich-text-editor-content h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 16px 0 10px 0;
+}
+
+.rich-text-editor-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 14px 0 8px 0;
+}
+
+.rich-text-editor-content h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #334155;
+  margin: 12px 0 6px 0;
+}
+
+.rich-text-editor-content p {
+  margin: 0 0 12px 0;
+}
+
+.rich-text-editor-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text-editor-content ul,
+.rich-text-editor-content ol {
+  padding-left: 24px;
+  margin: 8px 0 14px 0;
+}
+
+.rich-text-editor-content li {
+  margin-bottom: 4px;
+}
+
+.rich-text-editor-content blockquote {
+  border-left: 4px solid #3b82f6;
+  background: #f8fafc;
+  padding: 10px 16px;
+  margin: 12px 0;
+  color: #475569;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+
+.rich-text-editor-content hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 16px 0;
+}
+
+/* Footer / Word count bar */
+.rich-text-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 14px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../AdminContext';
 import { useAdminDialog } from '../components/AdminDialogContext';
 import { api, BASE_URL } from '../../utils/api';
+import RichTextEditor from '../components/RichTextEditor';
 
 const ConferenceAboutManager = () => {
   const { activeConferenceId, refreshConferences } = useAdmin();
@@ -270,24 +271,13 @@ const ConferenceAboutManager = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '24px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '13px', color: '#334155' }}>
-                About Congress Description (Multi-Paragraph)
+                About Congress Description (Multi-Paragraph & Formatting)
               </label>
-              <textarea
-                rows={10}
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(val) => setFormData({ ...formData, description: val })}
                 placeholder="Provide a thorough overview of the congress, mission, themes, and what delegates can expect..."
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
-                  fontSize: '14px',
-                  lineHeight: '1.6',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  resize: 'vertical'
-                }}
+                minHeight="280px"
               />
             </div>
 
