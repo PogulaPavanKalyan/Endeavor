@@ -102,6 +102,8 @@ const ConferenceHome = () => {
   const [activeTab, setActiveTab] = useState("");
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
   const [speakersList, setSpeakersList] = useState([]);
+  const [speakerCategories, setSpeakerCategories] = useState([]);
+  const [activeSpeakerCategory, setActiveSpeakerCategory] = useState("all");
   const [advisoryBoard, setAdvisoryBoard] = useState([]);
   const [committee, setCommittee] = useState([]);
   const [agendaDays, setAgendaDays] = useState([]);
@@ -506,7 +508,8 @@ const getEventStatus = (dateStr) => {
           boardData,
           committeeData,
           agendaData,
-          galleryData
+          galleryData,
+          speakerCategoriesData
         ] = await Promise.all([
           api.get(`/api/sessions?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/conference-sections?conferenceId=${conference.id}`).catch(() => []),
@@ -517,7 +520,8 @@ const getEventStatus = (dateStr) => {
           api.get(`/api/advisory-board?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/committee?conferenceId=${conference.id}`).catch(() => []),
           api.get(`/api/agenda/days?conferenceId=${conference.id}`).catch(() => []),
-          api.get(`/api/gallery?conferenceId=${conference.id}`).catch(() => [])
+          api.get(`/api/gallery?conferenceId=${conference.id}`).catch(() => []),
+          api.get(`/api/speaker-categories?conferenceId=${conference.id}`).catch(() => [])
         ]);
         if (Array.isArray(sessionsData)) {
           setSessions(sessionsData);
@@ -540,6 +544,9 @@ const getEventStatus = (dateStr) => {
         }
         if (Array.isArray(speakersData)) {
           setSpeakersList(speakersData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)));
+        }
+        if (Array.isArray(speakerCategoriesData)) {
+          setSpeakerCategories(speakerCategoriesData);
         }
         if (Array.isArray(boardData)) {
           setAdvisoryBoard(boardData.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)));
@@ -1232,98 +1239,127 @@ const getEventStatus = (dateStr) => {
       <section className="conf-speakers-section anim-section mob-anim-section" id="keynote-speakers">
         <div className="container">
           <div className="conf-section-header">
-            <span className="sponsors-tag-pill">Presentations</span>
-            <h2>Keynote & Invited Speakers</h2>
+            <span className="sponsors-tag-pill">Event Speakers</span>
+            <h2>Keynote & Event Speakers</h2>
             <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Meet the internationally recognized experts presenting at the conference.
+              Meet the distinguished keynote and event speakers presenting at the conference.
             </p>
           </div>
 
-          {speakersList && speakersList.filter(s => s.isActive !== false).length > 0 ? (
-            <>
-              <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => {
-                  const speakerPhotoSrc = spk.photo?.fileName
-                    ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
-                    : (spk.photo?.filePath
-                        ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
-                        : (spk.photoUrl
-                            ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
-                            : "https://randomuser.me/api/portraits/men/32.jpg"));
-
-                  return (
-                    <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
-                      <div 
-                        className="speaker-image-wrapper-premium"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setSelectedBioSpeaker({
-                          name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
-                          designation: spk.designation,
-                          org: `${spk.affiliation}, ${spk.country}`,
-                          photoUrl: speakerPhotoSrc,
-                          bio: spk.bio,
-                          linkedin: spk.linkedin,
-                          orcid: spk.orcid,
-                          website: spk.website,
-                          research: spk.researchAreas
-                        })}
-                      >
-                        <img
-                          src={speakerPhotoSrc}
-                          alt={spk.name}
-                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                        />
-                        {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
-                      </div>
-                      <div className="speaker-info-premium">
-                        <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
-                        <p className="speaker-designation-premium">{spk.designation}</p>
-                        <p className="speaker-org-premium">{spk.affiliation}, {spk.country}</p>
-                        {spk.researchAreas && (
-                          <div className="speaker-research-areas-premium">
-                          {spk.researchAreas.split(',').map((area, aIdx) => (
-                            <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
-                          ))}
-                        </div>
-                      )}
-
-
-                      <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
-                        name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
-                        designation: spk.designation,
-                        org: `${spk.affiliation}, ${spk.country}`,
-                        photoUrl: speakerPhotoSrc,
-                        bio: spk.bio,
-                        linkedin: spk.linkedin,
-                        orcid: spk.orcid,
-                        website: spk.website,
-                        research: spk.researchAreas
-                      })}>
-                        View Profile & Bio →
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-              </div>
-              {speakersList.filter(s => s.isActive !== false).length > 8 && (
-                <div style={{ textAlign: "center", marginTop: "40px" }}>
-                  <button
-                    onClick={() => setShowAllSpeakers(!showAllSpeakers)}
-                    className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
-                    style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
-                  >
-                    {showAllSpeakers ? "View Less" : "View All Speakers"}
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
-              <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Speakers to be Announced</h3>
-              <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>We are currently curating an exceptional lineup of experts and keynote speakers for this conference. Please check back soon for updates.</p>
+          {/* Speaker Category Tabs */}
+          {speakerCategories && speakerCategories.length > 0 && (
+            <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
+              <button
+                type="button"
+                className={`classic-tab-btn ${activeSpeakerCategory === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveSpeakerCategory('all')}
+              >
+                All Speakers
+              </button>
+              {speakerCategories.map((cat) => (
+                <button
+                  type="button"
+                  key={cat.id}
+                  className={`classic-tab-btn ${activeSpeakerCategory === cat.id.toString() ? 'active' : ''}`}
+                  onClick={() => setActiveSpeakerCategory(cat.id.toString())}
+                >
+                  {cat.categoryName}
+                </button>
+              ))}
             </div>
           )}
+
+          {(() => {
+            const activeSpeakers = (speakersList || []).filter(s => s.isActive !== false);
+            const filteredSpeakers = activeSpeakerCategory === 'all'
+              ? activeSpeakers
+              : activeSpeakers.filter(s => s.categoryId && s.categoryId.toString() === activeSpeakerCategory.toString());
+
+            return filteredSpeakers.length > 0 ? (
+              <>
+                <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                  {(showAllSpeakers ? filteredSpeakers : filteredSpeakers.slice(0, 8)).map((spk) => {
+                    const speakerPhotoSrc = spk.photo?.fileName
+                      ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                      : (spk.photo?.filePath
+                          ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                          : (spk.photoUrl
+                              ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                              : "https://randomuser.me/api/portraits/men/32.jpg"));
+
+                    return (
+                      <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
+                        <div 
+                          className="speaker-image-wrapper-premium"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setSelectedBioSpeaker({
+                            name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                            designation: spk.designation,
+                            org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                            photoUrl: speakerPhotoSrc,
+                            bio: spk.bio,
+                            linkedin: spk.linkedin,
+                            orcid: spk.orcid,
+                            website: spk.website,
+                            research: spk.researchAreas
+                          })}
+                        >
+                          <img
+                            src={speakerPhotoSrc}
+                            alt={spk.name}
+                            onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                          />
+                          {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
+                        </div>
+                        <div className="speaker-info-premium">
+                          <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
+                          <p className="speaker-designation-premium">{spk.designation}</p>
+                          <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
+                          {spk.researchAreas && (
+                            <div className="speaker-research-areas-premium">
+                              {spk.researchAreas.split(',').map((area, aIdx) => (
+                                <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
+                              ))}
+                            </div>
+                          )}
+
+                          <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
+                            name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                            designation: spk.designation,
+                            org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                            photoUrl: speakerPhotoSrc,
+                            bio: spk.bio,
+                            linkedin: spk.linkedin,
+                            orcid: spk.orcid,
+                            website: spk.website,
+                            research: spk.researchAreas
+                          })}>
+                            View Profile & Bio →
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {filteredSpeakers.length > 8 && (
+                  <div style={{ textAlign: "center", marginTop: "40px" }}>
+                    <button
+                      onClick={() => setShowAllSpeakers(!showAllSpeakers)}
+                      className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
+                      style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
+                    >
+                      {showAllSpeakers ? "View Less" : "View All Speakers"}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
+                <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Speakers to be Announced</h3>
+                <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>We are currently curating an exceptional lineup of experts and keynote speakers for this conference. Please check back soon for updates.</p>
+              </div>
+            );
+          })()}
         </div>
       </section>
 
@@ -1332,7 +1368,9 @@ const getEventStatus = (dateStr) => {
         const visibleSections = (sections || []).filter(sec => 
           sec.isVisible !== false && 
           !sec.sectionName?.toLowerCase().includes("advisory") && 
-          !sec.sectionSlug?.toLowerCase().includes("advisory")
+          !sec.sectionSlug?.toLowerCase().includes("advisory") &&
+          !sec.sectionName?.toLowerCase().includes("speaker") && 
+          !sec.sectionSlug?.toLowerCase().includes("speaker")
         );
 
         if (visibleSections.length === 0) return null;

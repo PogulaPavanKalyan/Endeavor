@@ -30,8 +30,8 @@ public class ConferenceSectionService {
             return migrateAndSeedFromSpeakers(conferenceId);
         }
         return sections.stream()
-                .filter(s -> s.getSectionName() == null || !s.getSectionName().toLowerCase().contains("advisory"))
-                .filter(s -> s.getSectionSlug() == null || !s.getSectionSlug().toLowerCase().contains("advisory"))
+                .filter(s -> s.getSectionName() == null || (!s.getSectionName().toLowerCase().contains("advisory") && !s.getSectionName().toLowerCase().contains("speaker")))
+                .filter(s -> s.getSectionSlug() == null || (!s.getSectionSlug().toLowerCase().contains("advisory") && !s.getSectionSlug().toLowerCase().contains("speaker")))
                 .toList();
     }
 
