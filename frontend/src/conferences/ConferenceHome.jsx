@@ -1235,189 +1235,141 @@ const getEventStatus = (dateStr) => {
         </section>
       )}
 
-      {/* 2. Keynote & Invited Event Speakers Section */}
-      <section className="conf-speakers-section anim-section mob-anim-section" id="keynote-speakers">
-        <div className="container">
-          <div className="conf-section-header">
-            <span className="sponsors-tag-pill">Event Speakers</span>
-            <h2>Keynote & Event Speakers</h2>
-            <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
-              Meet the distinguished keynote and event speakers presenting at the conference.
-            </p>
-          </div>
-
-          {/* Speaker Category Tabs */}
-          {(() => {
-            const availableCategories = [];
-            const catMap = new Map();
-
-            (speakerCategories || []).forEach(c => {
-              if (c && c.id) {
-                catMap.set(c.id.toString(), c.categoryName);
-                availableCategories.push({ id: c.id.toString(), name: c.categoryName });
-              }
-            });
-
-            // Also include any types present on speakers if not in categories
-            (speakersList || []).forEach(s => {
-              if (s.type && !Array.from(catMap.values()).some(name => name.toLowerCase() === s.type.replace(/_/g, ' ').toLowerCase())) {
-                const normName = s.type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-                if (!catMap.has(s.type)) {
-                  catMap.set(s.type, normName);
-                  availableCategories.push({ id: s.type, name: normName });
-                }
-              }
-            });
-
-            if (availableCategories.length === 0) return null;
-
-            return (
-              <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
-                <button
-                  type="button"
-                  className={`classic-tab-btn ${activeSpeakerCategory === 'all' ? 'active' : ''}`}
-                  onClick={() => setActiveSpeakerCategory('all')}
-                >
-                  All Speakers
-                </button>
-                {availableCategories.map((cat) => (
-                  <button
-                    type="button"
-                    key={cat.id}
-                    className={`classic-tab-btn ${activeSpeakerCategory === cat.id ? 'active' : ''}`}
-                    onClick={() => setActiveSpeakerCategory(cat.id)}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
-              </div>
-            );
-          })()}
-
-          {(() => {
-            const formatSpeakerName = (academicTitle, name) => {
-              if (!name) return "";
-              const trimmed = name.trim();
-              if (!academicTitle || !academicTitle.trim()) return trimmed;
-              const title = academicTitle.trim();
-              const regex = new RegExp(`^${title.replace('.', '\\.')}\\s*`, 'i');
-              if (regex.test(trimmed)) return trimmed;
-              return `${title} ${trimmed}`;
-            };
-
-            const activeSpeakers = (speakersList || []).filter(s => s.isActive !== false);
-            const filteredSpeakers = activeSpeakerCategory === 'all'
-              ? activeSpeakers
-              : activeSpeakers.filter(s => {
-                  if (s.categoryId && s.categoryId.toString() === activeSpeakerCategory.toString()) return true;
-                  if (s.type && s.type.toString() === activeSpeakerCategory.toString()) return true;
-                  const catObj = (speakerCategories || []).find(c => c.id.toString() === activeSpeakerCategory.toString());
-                  if (catObj && s.type) {
-                    const cNorm = catObj.categoryName.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    const tNorm = s.type.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    if (cNorm.includes(tNorm) || tNorm.includes(cNorm)) return true;
-                  }
-                  return false;
-                });
-
-            return filteredSpeakers.length > 0 ? (
-              <>
-                <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                  {(showAllSpeakers ? filteredSpeakers : filteredSpeakers.slice(0, 8)).map((spk) => {
-                    const speakerPhotoSrc = spk.photo?.fileName
-                      ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
-                      : (spk.photo?.filePath
-                          ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
-                          : (spk.photoUrl
-                              ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
-                              : "https://randomuser.me/api/portraits/men/32.jpg"));
-
-                    const fullSpeakerName = formatSpeakerName(spk.academicTitle, spk.name);
-
-                    return (
-                      <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
-                        <div 
-                          className="speaker-image-wrapper-premium"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => setSelectedBioSpeaker({
-                            name: fullSpeakerName,
-                            designation: spk.designation,
-                            org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
-                            photoUrl: speakerPhotoSrc,
-                            bio: spk.bio,
-                            linkedin: spk.linkedin,
-                            orcid: spk.orcid,
-                            website: spk.website,
-                            research: spk.researchAreas
-                          })}
-                        >
-                          <img
-                            src={speakerPhotoSrc}
-                            alt={spk.name}
-                            onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                          />
-                          {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
-                        </div>
-                        <div className="speaker-info-premium">
-                          <h3>{fullSpeakerName}</h3>
-                          <p className="speaker-designation-premium">{spk.designation}</p>
-                          <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
-                          {spk.researchAreas && (
-                            <div className="speaker-research-areas-premium">
-                              {spk.researchAreas.split(',').map((area, aIdx) => (
-                                <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
-                              ))}
-                            </div>
-                          )}
-
-                          <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
-                            name: fullSpeakerName,
-                            designation: spk.designation,
-                            org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
-                            photoUrl: speakerPhotoSrc,
-                            bio: spk.bio,
-                            linkedin: spk.linkedin,
-                            orcid: spk.orcid,
-                            website: spk.website,
-                            research: spk.researchAreas
-                          })}>
-                            View Profile & Bio →
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                {filteredSpeakers.length > 8 && (
-                  <div style={{ textAlign: "center", marginTop: "40px" }}>
-                    <button
-                      onClick={() => setShowAllSpeakers(!showAllSpeakers)}
-                      className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
-                      style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
-                    >
-                      {showAllSpeakers ? "View Less" : "View All Speakers"}
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div style={{ textAlign: "center", padding: "60px 20px", background: "#f8fafc", borderRadius: "12px", border: "1px dashed #cbd5e1" }}>
-                <h3 style={{ fontSize: "20px", color: "#334155", marginBottom: "12px" }}>Speakers to be Announced</h3>
-                <p style={{ color: "#64748b", maxWidth: "500px", margin: "0 auto" }}>We are currently curating an exceptional lineup of experts and keynote speakers for this conference. Please check back soon for updates.</p>
-              </div>
-            );
-          })()}
-        </div>
-      </section>
-
-      {/* Dynamic Tabs Section */}
+      {/* 2. Keynote & Invited Speakers Section */}
       {(() => {
+        const formatSpeakerName = (academicTitle, name) => {
+          if (!name) return "";
+          const trimmed = name.trim();
+          if (!academicTitle || !academicTitle.trim()) return trimmed;
+          const title = academicTitle.trim();
+          const regex = new RegExp(`^${title.replace('.', '\\.')}\\s*`, 'i');
+          if (regex.test(trimmed)) return trimmed;
+          return `${title} ${trimmed}`;
+        };
+
+        const keynoteAndInvited = (speakersList || []).filter(s => {
+          if (s.isActive === false) return false;
+          const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
+          if (cat && cat.categoryName?.toLowerCase().includes("event")) return false;
+          if (s.type && s.type.toLowerCase().includes("event")) return false;
+          return true;
+        });
+
+        const speakersToRender = keynoteAndInvited.length > 0 
+          ? keynoteAndInvited 
+          : (speakersList || []).filter(s => s.isActive !== false);
+
+        if (speakersToRender.length === 0) return null;
+
+        return (
+          <section className="conf-speakers-section anim-section mob-anim-section" id="keynote-speakers">
+            <div className="container">
+              <div className="conf-section-header">
+                <span className="sponsors-tag-pill">Keynote Presentations</span>
+                <h2>Keynote & Invited Speakers</h2>
+                <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+                  Meet the distinguished keynote and plenary experts presenting at the conference.
+                </p>
+              </div>
+
+              <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                {(showAllSpeakers ? speakersToRender : speakersToRender.slice(0, 8)).map((spk) => {
+                  const speakerPhotoSrc = spk.photo?.fileName
+                    ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                    : (spk.photo?.filePath
+                        ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                        : (spk.photoUrl
+                            ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                            : "https://randomuser.me/api/portraits/men/32.jpg"));
+
+                  const fullSpeakerName = formatSpeakerName(spk.academicTitle, spk.name);
+
+                  return (
+                    <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
+                      <div 
+                        className="speaker-image-wrapper-premium"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setSelectedBioSpeaker({
+                          name: fullSpeakerName,
+                          designation: spk.designation,
+                          org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                          photoUrl: speakerPhotoSrc,
+                          bio: spk.bio,
+                          linkedin: spk.linkedin,
+                          orcid: spk.orcid,
+                          website: spk.website,
+                          research: spk.researchAreas
+                        })}
+                      >
+                        <img
+                          src={speakerPhotoSrc}
+                          alt={spk.name}
+                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                        />
+                        {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
+                      </div>
+                      <div className="speaker-info-premium">
+                        <h3>{fullSpeakerName}</h3>
+                        <p className="speaker-designation-premium">{spk.designation}</p>
+                        <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
+                        {spk.researchAreas && (
+                          <div className="speaker-research-areas-premium">
+                            {spk.researchAreas.split(',').map((area, aIdx) => (
+                              <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
+                            ))}
+                          </div>
+                        )}
+
+                        <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
+                          name: fullSpeakerName,
+                          designation: spk.designation,
+                          org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                          photoUrl: speakerPhotoSrc,
+                          bio: spk.bio,
+                          linkedin: spk.linkedin,
+                          orcid: spk.orcid,
+                          website: spk.website,
+                          research: spk.researchAreas
+                        })}>
+                          View Profile & Bio →
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {speakersToRender.length > 8 && (
+                <div style={{ textAlign: "center", marginTop: "40px" }}>
+                  <button
+                    onClick={() => setShowAllSpeakers(!showAllSpeakers)}
+                    className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
+                    style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
+                  >
+                    {showAllSpeakers ? "View Less" : "View All Speakers"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* Dynamic Tabs & Event Speakers Section */}
+      {(() => {
+        const formatSpeakerName = (academicTitle, name) => {
+          if (!name) return "";
+          const trimmed = name.trim();
+          if (!academicTitle || !academicTitle.trim()) return trimmed;
+          const title = academicTitle.trim();
+          const regex = new RegExp(`^${title.replace('.', '\\.')}\\s*`, 'i');
+          if (regex.test(trimmed)) return trimmed;
+          return `${title} ${trimmed}`;
+        };
+
         const visibleSections = (sections || []).filter(sec => 
           sec.isVisible !== false && 
           !sec.sectionName?.toLowerCase().includes("advisory") && 
-          !sec.sectionSlug?.toLowerCase().includes("advisory") &&
-          !sec.sectionName?.toLowerCase().includes("speaker") && 
-          !sec.sectionSlug?.toLowerCase().includes("speaker")
+          !sec.sectionSlug?.toLowerCase().includes("advisory")
         );
 
         if (visibleSections.length === 0) return null;
@@ -1425,6 +1377,46 @@ const getEventStatus = (dateStr) => {
         const effectiveActiveSection = (activeSection && visibleSections.some(s => s.id === activeSection.id))
           ? activeSection
           : visibleSections[0];
+
+        const isSpeakerTab = effectiveActiveSection?.sectionSlug === 'event-speakers' || 
+                             effectiveActiveSection?.sectionName?.toLowerCase().includes("speaker");
+
+        let itemsToRender = [];
+        if (isSpeakerTab) {
+          const eventSpeakers = (speakersList || []).filter(s => {
+            if (s.isActive === false) return false;
+            const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
+            if (cat && cat.categoryName?.toLowerCase().includes("event")) return true;
+            if (s.type && s.type.toLowerCase().includes("event")) return true;
+            return false;
+          });
+
+          const speakersSource = eventSpeakers.length > 0
+            ? eventSpeakers
+            : (speakersList || []).filter(s => s.isActive !== false);
+
+          itemsToRender = speakersSource.map(spk => ({
+            id: spk.id,
+            name: formatSpeakerName(spk.academicTitle, spk.name),
+            designation: spk.designation || "Event Speaker",
+            organization: spk.affiliation,
+            country: spk.country,
+            imagePath: spk.photo?.fileName
+              ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+              : (spk.photo?.filePath
+                  ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                  : (spk.photoUrl
+                      ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                      : "https://randomuser.me/api/portraits/men/32.jpg")),
+            description: spk.bio,
+            websiteUrl: spk.website,
+            linkedinUrl: spk.linkedin,
+            orcid: spk.orcid,
+            researchAreas: spk.researchAreas
+          }));
+        } else {
+          itemsToRender = (effectiveActiveSection?.items || []).filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+        }
 
         return (
           <section className="conf-dynamic-tabs-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
@@ -1442,9 +1434,9 @@ const getEventStatus = (dateStr) => {
                 ))}
               </div>
 
-              {effectiveActiveSection && effectiveActiveSection.items && effectiveActiveSection.items.filter(item => item.isVisible !== false).length > 0 ? (
+              {itemsToRender && itemsToRender.length > 0 ? (
                 <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                  {effectiveActiveSection.items.filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)).map(item => (
+                  {itemsToRender.map(item => (
                     <div key={item.id} className="advisory-card-premium">
                       <div 
                         className="advisory-avatar-wrap-premium"
@@ -1454,17 +1446,19 @@ const getEventStatus = (dateStr) => {
                             setSelectedBioSpeaker({
                               name: item.name,
                               designation: item.designation,
-                              org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
-                              photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                              org: `${item.organization || ''}${item.country ? `, ${item.country}` : ''}`,
+                              photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
                               bio: item.description,
                               website: item.websiteUrl,
-                              linkedin: item.linkedinUrl
+                              linkedin: item.linkedinUrl,
+                              orcid: item.orcid,
+                              research: item.researchAreas
                             });
                           }
                         }}
                       >
                         <img
-                          src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                          src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
                           alt={item.name}
                           onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
                         />
@@ -1472,15 +1466,20 @@ const getEventStatus = (dateStr) => {
                       <div className="advisory-info-premium">
                         <h3>{item.name}</h3>
                         <p className="advisory-role-premium">{item.designation}</p>
+                        {item.organization && (
+                          <p className="advisory-org-premium">{item.organization}{item.country ? `, ${item.country}` : ''}</p>
+                        )}
                         {item.description && (
                           <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
                             name: item.name,
                             designation: item.designation,
-                            org: `${item.organization}${item.country ? `, ${item.country}` : ''}`,
-                            photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                            org: `${item.organization || ''}${item.country ? `, ${item.country}` : ''}`,
+                            photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
                             bio: item.description,
                             website: item.websiteUrl,
-                            linkedin: item.linkedinUrl
+                            linkedin: item.linkedinUrl,
+                            orcid: item.orcid,
+                            research: item.researchAreas
                           })}>
                             Read Details
                           </button>
