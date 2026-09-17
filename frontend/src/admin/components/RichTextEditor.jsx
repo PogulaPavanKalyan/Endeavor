@@ -1,4 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
+import {
+  FiBold,
+  FiItalic,
+  FiUnderline,
+  FiAlignLeft,
+  FiAlignCenter,
+  FiAlignRight,
+  FiAlignJustify,
+  FiList,
+  FiCode,
+  FiEye,
+  FiMinus,
+  FiDroplet
+} from 'react-icons/fi';
+import { MdFormatStrikethrough, MdFormatClear, MdFormatQuote, MdFormatListNumbered } from 'react-icons/md';
+import { FaHighlighter } from 'react-icons/fa6';
 import './RichTextEditor.css';
 
 const FONT_FAMILIES = [
@@ -54,6 +70,9 @@ const RichTextEditor = ({
   minHeight = '240px'
 }) => {
   const editorRef = useRef(null);
+  const colorPickerRef = useRef(null);
+  const highlightPickerRef = useRef(null);
+
   const [isSourceMode, setIsSourceMode] = useState(false);
   const [sourceCode, setSourceCode] = useState('');
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -74,6 +93,20 @@ const RichTextEditor = ({
       .map(p => p.trim() ? `<p>${p.trim()}</p>` : '')
       .join('');
   };
+
+  // Close color popovers when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(e.target)) {
+        setShowColorPicker(false);
+      }
+      if (highlightPickerRef.current && !highlightPickerRef.current.contains(e.target)) {
+        setShowHighlightPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Sync incoming value to editor content if changed externally
   useEffect(() => {
@@ -212,7 +245,7 @@ const RichTextEditor = ({
         <div className="rich-text-toolbar-group">
           <select
             className="rte-select"
-            style={{ maxWidth: '140px' }}
+            style={{ maxWidth: '145px' }}
             value={currentFont}
             onChange={(e) => handleFontFamilyChange(e.target.value)}
             title="Font Family"
@@ -228,7 +261,7 @@ const RichTextEditor = ({
         <div className="rich-text-toolbar-group">
           <select
             className="rte-select"
-            style={{ maxWidth: '110px' }}
+            style={{ maxWidth: '115px' }}
             value={currentSize}
             onChange={(e) => handleFontSizeChange(e.target.value)}
             title="Font Size"
@@ -249,7 +282,7 @@ const RichTextEditor = ({
             title="Bold (Ctrl+B)"
             disabled={isSourceMode}
           >
-            <strong>B</strong>
+            <FiBold size={15} />
           </button>
           <button
             type="button"
@@ -258,7 +291,7 @@ const RichTextEditor = ({
             title="Italic (Ctrl+I)"
             disabled={isSourceMode}
           >
-            <em>I</em>
+            <FiItalic size={15} />
           </button>
           <button
             type="button"
@@ -267,7 +300,7 @@ const RichTextEditor = ({
             title="Underline (Ctrl+U)"
             disabled={isSourceMode}
           >
-            <u>U</u>
+            <FiUnderline size={15} />
           </button>
           <button
             type="button"
@@ -276,14 +309,14 @@ const RichTextEditor = ({
             title="Strikethrough"
             disabled={isSourceMode}
           >
-            <s>S</s>
+            <MdFormatStrikethrough size={16} />
           </button>
         </div>
 
         {/* Font Colors & Font Highlights */}
         <div className="rich-text-toolbar-group">
           {/* Font Text Color */}
-          <div className="rte-color-picker-wrapper">
+          <div className="rte-color-picker-wrapper" ref={colorPickerRef}>
             <button
               type="button"
               className="rte-btn"
@@ -291,10 +324,10 @@ const RichTextEditor = ({
                 setShowColorPicker(!showColorPicker);
                 setShowHighlightPicker(false);
               }}
-              title="Font Color (Text)"
+              title="Font Text Color"
               disabled={isSourceMode}
             >
-              <span style={{ color: currentTextColor, fontWeight: '800' }}>A</span>
+              <FiDroplet size={14} style={{ color: currentTextColor }} />
               <span className="rte-color-btn-indicator" style={{ background: currentTextColor }}></span>
             </button>
 
@@ -326,7 +359,7 @@ const RichTextEditor = ({
           </div>
 
           {/* Font Highlight Color (Background) */}
-          <div className="rte-color-picker-wrapper">
+          <div className="rte-color-picker-wrapper" ref={highlightPickerRef}>
             <button
               type="button"
               className="rte-btn"
@@ -337,7 +370,7 @@ const RichTextEditor = ({
               title="Font Highlight (Background Color)"
               disabled={isSourceMode}
             >
-              <span style={{ background: '#fef08a', padding: '0 3px', borderRadius: '3px', fontWeight: '800' }}>🎨</span>
+              <FaHighlighter size={13} style={{ color: currentHighlightColor === 'transparent' ? '#64748b' : '#d97706' }} />
               <span className="rte-color-btn-indicator" style={{ background: currentHighlightColor === 'transparent' ? '#fff' : currentHighlightColor }}></span>
             </button>
 
@@ -356,7 +389,7 @@ const RichTextEditor = ({
                       onClick={() => handleHighlightColor(c.value)}
                       title={c.label}
                     >
-                      {c.value === 'transparent' && <span style={{ fontSize: '10px', color: '#ef4444' }}>✕</span>}
+                      {c.value === 'transparent' && <span style={{ fontSize: '11px', color: '#ef4444', fontWeight: 'bold' }}>✕</span>}
                     </div>
                   ))}
                 </div>
@@ -383,7 +416,7 @@ const RichTextEditor = ({
             title="Align Left"
             disabled={isSourceMode}
           >
-            ⇤
+            <FiAlignLeft size={14} />
           </button>
           <button
             type="button"
@@ -392,7 +425,7 @@ const RichTextEditor = ({
             title="Align Center"
             disabled={isSourceMode}
           >
-            ≡
+            <FiAlignCenter size={14} />
           </button>
           <button
             type="button"
@@ -401,7 +434,7 @@ const RichTextEditor = ({
             title="Align Right"
             disabled={isSourceMode}
           >
-            ⇥
+            <FiAlignRight size={14} />
           </button>
           <button
             type="button"
@@ -410,7 +443,7 @@ const RichTextEditor = ({
             title="Justify"
             disabled={isSourceMode}
           >
-            ☷
+            <FiAlignJustify size={14} />
           </button>
         </div>
 
@@ -423,7 +456,7 @@ const RichTextEditor = ({
             title="Bulleted List"
             disabled={isSourceMode}
           >
-            •≡
+            <FiList size={14} />
           </button>
           <button
             type="button"
@@ -432,7 +465,7 @@ const RichTextEditor = ({
             title="Numbered List"
             disabled={isSourceMode}
           >
-            1.≡
+            <MdFormatListNumbered size={16} />
           </button>
           <button
             type="button"
@@ -441,7 +474,7 @@ const RichTextEditor = ({
             title="Blockquote"
             disabled={isSourceMode}
           >
-            ❝
+            <MdFormatQuote size={16} />
           </button>
           <button
             type="button"
@@ -450,7 +483,7 @@ const RichTextEditor = ({
             title="Divider Line"
             disabled={isSourceMode}
           >
-            ―
+            <FiMinus size={14} />
           </button>
         </div>
 
@@ -463,7 +496,8 @@ const RichTextEditor = ({
             title="Clear Formatting (Remove Styles)"
             disabled={isSourceMode}
           >
-            🧹 Clear
+            <MdFormatClear size={15} style={{ marginRight: 3 }} />
+            <span>Clear</span>
           </button>
           <button
             type="button"
@@ -471,7 +505,17 @@ const RichTextEditor = ({
             onClick={handleToggleSourceMode}
             title={isSourceMode ? "Switch to Visual Editor" : "View / Edit HTML Source Code"}
           >
-            {isSourceMode ? '👁️ Visual' : '&lt;/&gt; HTML'}
+            {isSourceMode ? (
+              <>
+                <FiEye size={14} style={{ marginRight: 3 }} />
+                <span>Visual</span>
+              </>
+            ) : (
+              <>
+                <FiCode size={14} style={{ marginRight: 3 }} />
+                <span>HTML</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -499,7 +543,7 @@ const RichTextEditor = ({
 
       {/* Footer Word Count & Helper */}
       <div className="rich-text-footer">
-        <span>{isSourceMode ? 'HTML Source Mode' : 'WYSIWYG Rich Text Mode'}</span>
+        <span>{isSourceMode ? '📝 HTML Source Code Mode' : '✨ WYSIWYG Rich Text Mode'}</span>
         <span>{getWordCount()} words</span>
       </div>
     </div>
