@@ -1251,14 +1251,24 @@ const getEventStatus = (dateStr) => {
         const keynoteAndInvited = (speakersList || []).filter(s => {
           if (s.isActive === false) return false;
           const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
-          if (cat && cat.categoryName?.toLowerCase().includes("event")) return false;
-          if (s.type && s.type.toLowerCase().includes("event")) return false;
+          const catName = (cat?.categoryName || '').toLowerCase();
+          const spkType = (s.type || '').toLowerCase();
+          
+          if (catName.includes("event") || spkType.includes("event")) return false;
+          if (catName.includes("session") || catName.includes("oral") || catName.includes("workshop") || catName.includes("panel") || catName.includes("guest")) return false;
+          if (spkType.includes("session") || spkType.includes("oral") || spkType.includes("workshop") || spkType.includes("panel") || spkType.includes("guest")) return false;
+          
           return true;
         });
 
         const speakersToRender = keynoteAndInvited.length > 0 
           ? keynoteAndInvited 
-          : (speakersList || []).filter(s => s.isActive !== false);
+          : (speakersList || []).filter(s => {
+              if (s.isActive === false) return false;
+              const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
+              const catName = (cat?.categoryName || '').toLowerCase();
+              return !catName.includes("event") && !s.type?.toLowerCase().includes("event");
+            });
 
         if (speakersToRender.length === 0) return null;
 
@@ -1350,6 +1360,118 @@ const getEventStatus = (dateStr) => {
                   </button>
                 </div>
               )}
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* 3. Event Speakers Section */}
+      {(() => {
+        const formatSpeakerName = (academicTitle, name) => {
+          if (!name) return "";
+          const trimmed = name.trim();
+          if (!academicTitle || !academicTitle.trim()) return trimmed;
+          const title = academicTitle.trim();
+          const regex = new RegExp(`^${title.replace('.', '\\.')}\\s*`, 'i');
+          if (regex.test(trimmed)) return trimmed;
+          return `${title} ${trimmed}`;
+        };
+
+        const eventSpeakers = (speakersList || []).filter(s => {
+          if (s.isActive === false) return false;
+          const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
+          const catName = (cat?.categoryName || '').toLowerCase();
+          const spkType = (s.type || '').toLowerCase();
+          
+          if (catName.includes('event') || spkType.includes('event')) return true;
+          if (catName.includes('session') || catName.includes('oral') || catName.includes('workshop') || catName.includes('panel') || catName.includes('guest')) return true;
+          if (spkType.includes('session') || spkType.includes('oral') || spkType.includes('workshop') || spkType.includes('panel') || spkType.includes('guest')) return true;
+          
+          const isKeynote = catName.includes('keynote') || catName.includes('invited') || catName.includes('plenary') || spkType.includes('keynote') || spkType.includes('invited') || s.isFeatured;
+          return !isKeynote;
+        });
+
+        if (eventSpeakers.length === 0) return null;
+
+        return (
+          <section className="conf-speakers-section anim-section mob-anim-section" id="event-speakers" style={{ backgroundColor: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
+            <div className="container">
+              <div className="conf-section-header">
+                <span className="sponsors-tag-pill" style={{ background: "linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)", color: "#c2410c", borderColor: "#fdba74" }}>Event Presenters</span>
+                <h2>Event Speakers</h2>
+                <p style={{ color: "#718096", fontSize: "15px", maxWidth: "600px", margin: "0 auto" }}>
+                  Meet the distinguished session speakers, oral presenters, and contributing specialists participating in our conference sessions.
+                </p>
+              </div>
+
+              <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                {eventSpeakers.map((spk) => {
+                  const speakerPhotoSrc = spk.photo?.fileName
+                    ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                    : (spk.photo?.filePath
+                        ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                        : (spk.photoUrl
+                            ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                            : "https://randomuser.me/api/portraits/men/32.jpg"));
+
+                  const fullSpeakerName = formatSpeakerName(spk.academicTitle, spk.name);
+                  const cat = (speakerCategories || []).find(c => c.id?.toString() === spk.categoryId?.toString());
+                  const categoryBadge = cat?.categoryName || spk.type || "Event Speaker";
+
+                  return (
+                    <div key={spk.id} className="conf-speaker-card-premium">
+                      <div 
+                        className="speaker-image-wrapper-premium"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setSelectedBioSpeaker({
+                          name: fullSpeakerName,
+                          designation: spk.designation,
+                          org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                          photoUrl: speakerPhotoSrc,
+                          bio: spk.bio,
+                          linkedin: spk.linkedin,
+                          orcid: spk.orcid,
+                          website: spk.website,
+                          research: spk.researchAreas
+                        })}
+                      >
+                        <img
+                          src={speakerPhotoSrc}
+                          alt={spk.name}
+                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                        />
+                        <span className="featured-card-badge" style={{ background: "#ea580c" }}>{categoryBadge}</span>
+                      </div>
+                      <div className="speaker-info-premium">
+                        <h3>{fullSpeakerName}</h3>
+                        <p className="speaker-designation-premium">{spk.designation}</p>
+                        <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
+                        {spk.researchAreas && (
+                          <div className="speaker-research-areas-premium">
+                            {spk.researchAreas.split(',').map((area, aIdx) => (
+                              <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
+                            ))}
+                          </div>
+                        )}
+
+                        <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
+                          name: fullSpeakerName,
+                          designation: spk.designation,
+                          org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                          photoUrl: speakerPhotoSrc,
+                          bio: spk.bio,
+                          linkedin: spk.linkedin,
+                          orcid: spk.orcid,
+                          website: spk.website,
+                          research: spk.researchAreas
+                        })}>
+                          View Profile & Bio →
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </section>
         );
