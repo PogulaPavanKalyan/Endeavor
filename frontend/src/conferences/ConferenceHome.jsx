@@ -1247,33 +1247,78 @@ const getEventStatus = (dateStr) => {
           </div>
 
           {/* Speaker Category Tabs */}
-          {speakerCategories && speakerCategories.length > 0 && (
-            <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
-              <button
-                type="button"
-                className={`classic-tab-btn ${activeSpeakerCategory === 'all' ? 'active' : ''}`}
-                onClick={() => setActiveSpeakerCategory('all')}
-              >
-                All Speakers
-              </button>
-              {speakerCategories.map((cat) => (
+          {(() => {
+            const availableCategories = [];
+            const catMap = new Map();
+
+            (speakerCategories || []).forEach(c => {
+              if (c && c.id) {
+                catMap.set(c.id.toString(), c.categoryName);
+                availableCategories.push({ id: c.id.toString(), name: c.categoryName });
+              }
+            });
+
+            // Also include any types present on speakers if not in categories
+            (speakersList || []).forEach(s => {
+              if (s.type && !Array.from(catMap.values()).some(name => name.toLowerCase() === s.type.replace(/_/g, ' ').toLowerCase())) {
+                const normName = s.type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+                if (!catMap.has(s.type)) {
+                  catMap.set(s.type, normName);
+                  availableCategories.push({ id: s.type, name: normName });
+                }
+              }
+            });
+
+            if (availableCategories.length === 0) return null;
+
+            return (
+              <div className="classic-agenda-tabs max-md:flex max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:pb-2 scrollbar-hide" style={{ marginBottom: "30px", justifyContent: "center" }}>
                 <button
                   type="button"
-                  key={cat.id}
-                  className={`classic-tab-btn ${activeSpeakerCategory === cat.id.toString() ? 'active' : ''}`}
-                  onClick={() => setActiveSpeakerCategory(cat.id.toString())}
+                  className={`classic-tab-btn ${activeSpeakerCategory === 'all' ? 'active' : ''}`}
+                  onClick={() => setActiveSpeakerCategory('all')}
                 >
-                  {cat.categoryName}
+                  All Speakers
                 </button>
-              ))}
-            </div>
-          )}
+                {availableCategories.map((cat) => (
+                  <button
+                    type="button"
+                    key={cat.id}
+                    className={`classic-tab-btn ${activeSpeakerCategory === cat.id ? 'active' : ''}`}
+                    onClick={() => setActiveSpeakerCategory(cat.id)}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
 
           {(() => {
+            const formatSpeakerName = (academicTitle, name) => {
+              if (!name) return "";
+              const trimmed = name.trim();
+              if (!academicTitle || !academicTitle.trim()) return trimmed;
+              const title = academicTitle.trim();
+              const regex = new RegExp(`^${title.replace('.', '\\.')}\\s*`, 'i');
+              if (regex.test(trimmed)) return trimmed;
+              return `${title} ${trimmed}`;
+            };
+
             const activeSpeakers = (speakersList || []).filter(s => s.isActive !== false);
             const filteredSpeakers = activeSpeakerCategory === 'all'
               ? activeSpeakers
-              : activeSpeakers.filter(s => s.categoryId && s.categoryId.toString() === activeSpeakerCategory.toString());
+              : activeSpeakers.filter(s => {
+                  if (s.categoryId && s.categoryId.toString() === activeSpeakerCategory.toString()) return true;
+                  if (s.type && s.type.toString() === activeSpeakerCategory.toString()) return true;
+                  const catObj = (speakerCategories || []).find(c => c.id.toString() === activeSpeakerCategory.toString());
+                  if (catObj && s.type) {
+                    const cNorm = catObj.categoryName.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const tNorm = s.type.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (cNorm.includes(tNorm) || tNorm.includes(cNorm)) return true;
+                  }
+                  return false;
+                });
 
             return filteredSpeakers.length > 0 ? (
               <>
@@ -1287,13 +1332,15 @@ const getEventStatus = (dateStr) => {
                               ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
                               : "https://randomuser.me/api/portraits/men/32.jpg"));
 
+                    const fullSpeakerName = formatSpeakerName(spk.academicTitle, spk.name);
+
                     return (
                       <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
                         <div 
                           className="speaker-image-wrapper-premium"
                           style={{ cursor: 'pointer' }}
                           onClick={() => setSelectedBioSpeaker({
-                            name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                            name: fullSpeakerName,
                             designation: spk.designation,
                             org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
                             photoUrl: speakerPhotoSrc,
@@ -1312,7 +1359,7 @@ const getEventStatus = (dateStr) => {
                           {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
                         </div>
                         <div className="speaker-info-premium">
-                          <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
+                          <h3>{fullSpeakerName}</h3>
                           <p className="speaker-designation-premium">{spk.designation}</p>
                           <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
                           {spk.researchAreas && (
@@ -1324,7 +1371,7 @@ const getEventStatus = (dateStr) => {
                           )}
 
                           <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
-                            name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                            name: fullSpeakerName,
                             designation: spk.designation,
                             org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
                             photoUrl: speakerPhotoSrc,
