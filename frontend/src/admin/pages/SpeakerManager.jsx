@@ -314,23 +314,32 @@ const SpeakerManager = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedSpeakers.map((spk) => (
-                  <tr key={spk.id}>
-                    <td>
-                      <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                        {spk.photoUrl ? (
-                          <img src={`${BASE_URL}${spk.photoUrl}`} alt={spk.name} style={{width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover'}} />
-                        ) : (
-                          <div style={{width: '36px', height: '36px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'}}>
-                            {spk.name?.charAt(0)}
+                {paginatedSpeakers.map((spk) => {
+                  const speakerImg = spk.photo?.fileName
+                    ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                    : (spk.photo?.filePath
+                        ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                        : (spk.photoUrl
+                            ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                            : null));
+
+                  return (
+                    <tr key={spk.id}>
+                      <td>
+                        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                          {speakerImg ? (
+                            <img src={speakerImg} alt={spk.name} style={{width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover'}} onError={(e) => { e.target.style.display = 'none'; }} />
+                          ) : (
+                            <div style={{width: '36px', height: '36px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'}}>
+                              {spk.name?.charAt(0)}
+                            </div>
+                          )}
+                          <div>
+                            <strong>{spk.academicTitle} {spk.name}</strong>
+                            {spk.isFeatured && <span style={{fontSize: '10px', background: '#fef3c7', color: '#b45309', padding: '2px 4px', borderRadius: '4px', marginLeft: '6px'}}>Featured</span>}
                           </div>
-                        )}
-                        <div>
-                          <strong>{spk.academicTitle} {spk.name}</strong>
-                          {spk.isFeatured && <span style={{fontSize: '10px', background: '#fef3c7', color: '#b45309', padding: '2px 4px', borderRadius: '4px', marginLeft: '6px'}}>Featured</span>}
                         </div>
-                      </div>
-                    </td>
+                      </td>
                     <td>
                       <div>{spk.designation}</div>
                       <small style={{color: '#64748b'}}>{spk.affiliation}</small>
@@ -342,7 +351,8 @@ const SpeakerManager = () => {
                       <button onClick={() => handleDeleteSpeaker(spk.id)} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444'}}>Delete</button>
                     </td>
                   </tr>
-                ))}
+                );
+              })}
                 {paginatedSpeakers.length === 0 && (
                   <tr><td colSpan="5" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>No speakers found.</td></tr>
                 )}

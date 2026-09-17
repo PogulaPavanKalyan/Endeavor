@@ -1190,7 +1190,13 @@ const getEventStatus = (dateStr) => {
                       <div key={cm.id} className="advisory-card-premium">
                         <div className="advisory-avatar-wrap-premium">
                           <img
-                            src={cm.photo?.fileName ? `${BASE_URL}/uploads/committee/${cm.photo.fileName}` : (cm.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
+                            src={
+                              cm.photoUrl
+                                ? (cm.photoUrl.startsWith('http') ? cm.photoUrl : `${BASE_URL}${cm.photoUrl.startsWith('/') ? '' : '/'}${cm.photoUrl}`)
+                                : (cm.photo?.fileName
+                                    ? `${BASE_URL}/uploads/committee/${cm.photo.fileName}`
+                                    : (cm.photo?.filePath ? (cm.photo.filePath.startsWith('http') ? cm.photo.filePath : `${BASE_URL}${cm.photo.filePath.startsWith('/') ? '' : '/'}${cm.photo.filePath}`) : (cm.photo || "https://randomuser.me/api/portraits/men/32.jpg")))
+                            }
                             alt={cm.name}
                             onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
                           />
@@ -1228,36 +1234,45 @@ const getEventStatus = (dateStr) => {
           {speakersList && speakersList.filter(s => s.isActive !== false).length > 0 ? (
             <>
               <div className="conf-speakers-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => (
-                  <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
-                    <div 
-                      className="speaker-image-wrapper-premium"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => setSelectedBioSpeaker({
-                        name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
-                        designation: spk.designation,
-                        org: `${spk.affiliation}, ${spk.country}`,
-                        photoUrl: spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg"),
-                        bio: spk.bio,
-                        linkedin: spk.linkedin,
-                        orcid: spk.orcid,
-                        website: spk.website,
-                        research: spk.researchAreas
-                      })}
-                    >
-                      <img
-                        src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg")}
-                        alt={spk.name}
-                        onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                      />
-                      {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
-                    </div>
-                    <div className="speaker-info-premium">
-                      <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
-                      <p className="speaker-designation-premium">{spk.designation}</p>
-                      <p className="speaker-org-premium">{spk.affiliation}, {spk.country}</p>
-                      {spk.researchAreas && (
-                        <div className="speaker-research-areas-premium">
+                {(showAllSpeakers ? speakersList.filter(s => s.isActive !== false) : speakersList.filter(s => s.isActive !== false).slice(0, 8)).map((spk) => {
+                  const speakerPhotoSrc = spk.photo?.fileName
+                    ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                    : (spk.photo?.filePath
+                        ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                        : (spk.photoUrl
+                            ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                            : "https://randomuser.me/api/portraits/men/32.jpg"));
+
+                  return (
+                    <div key={spk.id} className={`conf-speaker-card-premium ${spk.isFeatured ? 'featured-card' : ''}`}>
+                      <div 
+                        className="speaker-image-wrapper-premium"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setSelectedBioSpeaker({
+                          name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
+                          designation: spk.designation,
+                          org: `${spk.affiliation}, ${spk.country}`,
+                          photoUrl: speakerPhotoSrc,
+                          bio: spk.bio,
+                          linkedin: spk.linkedin,
+                          orcid: spk.orcid,
+                          website: spk.website,
+                          research: spk.researchAreas
+                        })}
+                      >
+                        <img
+                          src={speakerPhotoSrc}
+                          alt={spk.name}
+                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                        />
+                        {spk.isFeatured && <span className="featured-card-badge">Featured</span>}
+                      </div>
+                      <div className="speaker-info-premium">
+                        <h3>{spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? `${spk.academicTitle} ` : ''}{spk.name}</h3>
+                        <p className="speaker-designation-premium">{spk.designation}</p>
+                        <p className="speaker-org-premium">{spk.affiliation}, {spk.country}</p>
+                        {spk.researchAreas && (
+                          <div className="speaker-research-areas-premium">
                           {spk.researchAreas.split(',').map((area, aIdx) => (
                             <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
                           ))}
@@ -1269,7 +1284,7 @@ const getEventStatus = (dateStr) => {
                         name: `${spk.academicTitle && !spk.name.trim().startsWith(spk.academicTitle.trim()) ? spk.academicTitle + ' ' : ''}${spk.name}`,
                         designation: spk.designation,
                         org: `${spk.affiliation}, ${spk.country}`,
-                        photoUrl: spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photo?.filePath || "https://randomuser.me/api/portraits/men/32.jpg"),
+                        photoUrl: speakerPhotoSrc,
                         bio: spk.bio,
                         linkedin: spk.linkedin,
                         orcid: spk.orcid,
@@ -1280,7 +1295,8 @@ const getEventStatus = (dateStr) => {
                       </button>
                     </div>
                   </div>
-                ))}
+                );
+              })}
               </div>
               {speakersList.filter(s => s.isActive !== false).length > 8 && (
                 <div style={{ textAlign: "center", marginTop: "40px" }}>

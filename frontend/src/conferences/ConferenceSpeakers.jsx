@@ -59,6 +59,13 @@ const ConferenceSpeakers = () => {
     ? speakers.filter(s => s.isActive !== false)
     : mockSpeakers;
 
+  const getSpeakerPhoto = (spk) => {
+    if (spk?.photo?.fileName) return `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`;
+    if (spk?.photo?.filePath) return spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`;
+    if (spk?.photoUrl) return spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`;
+    return "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e";
+  };
+
   return (
     <section className="conf-subpage-section">
       <SEOHead
@@ -80,7 +87,7 @@ const ConferenceSpeakers = () => {
               <div key={spk.id} className={`speaker-card ${idx % 2 === 0 ? 'color-orange' : 'color-pink'}`}>
                 <div className="speaker-img-container">
                   <img 
-                    src={spk.photo?.fileName ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}` : (spk.photoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")} 
+                    src={getSpeakerPhoto(spk)} 
                     alt={spk.name} 
                     className="speaker-img"
                     onError={(e) => {
@@ -111,7 +118,7 @@ const ConferenceSpeakers = () => {
             <div className="conf-modal-content-grid">
               <div className="conf-modal-img-wrap">
                 <img 
-                  src={selectedSpeaker.photo?.fileName ? `${BASE_URL}/uploads/speakers/${selectedSpeaker.photo.fileName}` : (selectedSpeaker.photoUrl || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")} 
+                  src={getSpeakerPhoto(selectedSpeaker)} 
                   alt={selectedSpeaker.name}
                   onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"; }}
                 />
