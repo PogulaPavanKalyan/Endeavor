@@ -4,6 +4,7 @@ import { api, BASE_URL } from "../utils/api";
 import SEOHead from "../components/SEOHead";
 import "./ConferenceHome.css";
 import "./ConferenceHome.mobile.css";
+import "./ConferenceSpeakers.css";
 
 const DEFAULT_PRICING_TIERS = [
   { type: "Student Registration", earlyPrice: 129, midPrice: 159, finalPrice: 189 },
@@ -1381,42 +1382,19 @@ const getEventStatus = (dateStr) => {
         const isSpeakerTab = effectiveActiveSection?.sectionSlug === 'event-speakers' || 
                              effectiveActiveSection?.sectionName?.toLowerCase().includes("speaker");
 
-        let itemsToRender = [];
-        if (isSpeakerTab) {
-          const eventSpeakers = (speakersList || []).filter(s => {
-            if (s.isActive === false) return false;
-            const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
-            if (cat && cat.categoryName?.toLowerCase().includes("event")) return true;
-            if (s.type && s.type.toLowerCase().includes("event")) return true;
-            return false;
-          });
+        const eventSpeakers = (speakersList || []).filter(s => {
+          if (s.isActive === false) return false;
+          const cat = (speakerCategories || []).find(c => c.id?.toString() === s.categoryId?.toString());
+          if (cat && cat.categoryName?.toLowerCase().includes("event")) return true;
+          if (s.type && s.type.toLowerCase().includes("event")) return true;
+          return false;
+        });
 
-          const speakersSource = eventSpeakers.length > 0
-            ? eventSpeakers
-            : (speakersList || []).filter(s => s.isActive !== false);
+        const speakersSource = eventSpeakers.length > 0
+          ? eventSpeakers
+          : (speakersList || []).filter(s => s.isActive !== false);
 
-          itemsToRender = speakersSource.map(spk => ({
-            id: spk.id,
-            name: formatSpeakerName(spk.academicTitle, spk.name),
-            designation: spk.designation || "Event Speaker",
-            organization: spk.affiliation,
-            country: spk.country,
-            imagePath: spk.photo?.fileName
-              ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
-              : (spk.photo?.filePath
-                  ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
-                  : (spk.photoUrl
-                      ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
-                      : "https://randomuser.me/api/portraits/men/32.jpg")),
-            description: spk.bio,
-            websiteUrl: spk.website,
-            linkedinUrl: spk.linkedin,
-            orcid: spk.orcid,
-            researchAreas: spk.researchAreas
-          }));
-        } else {
-          itemsToRender = (effectiveActiveSection?.items || []).filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-        }
+        const regularItems = (effectiveActiveSection?.items || []).filter(item => item.isVisible !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
         return (
           <section className="conf-dynamic-tabs-section anim-section mob-anim-section" style={{ padding: "60px 0", backgroundColor: "#ffffff" }}>
@@ -1434,64 +1412,124 @@ const getEventStatus = (dateStr) => {
                 ))}
               </div>
 
-              {itemsToRender && itemsToRender.length > 0 ? (
-                <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
-                  {itemsToRender.map(item => (
-                    <div key={item.id} className="advisory-card-premium">
-                      <div 
-                        className="advisory-avatar-wrap-premium"
-                        style={{ cursor: item.description ? 'pointer' : 'default' }}
-                        onClick={() => {
-                          if (item.description) {
-                            setSelectedBioSpeaker({
+              {isSpeakerTab ? (
+                speakersSource.length > 0 ? (
+                  <div className="speakers-grid max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-6" style={{ marginTop: "20px" }}>
+                    {speakersSource.map((spk, idx) => {
+                      const speakerPhotoSrc = spk.photo?.fileName
+                        ? `${BASE_URL}/uploads/speakers/${spk.photo.fileName}`
+                        : (spk.photo?.filePath
+                            ? (spk.photo.filePath.startsWith('http') ? spk.photo.filePath : `${BASE_URL}${spk.photo.filePath.startsWith('/') ? '' : '/'}${spk.photo.filePath}`)
+                            : (spk.photoUrl
+                                ? (spk.photoUrl.startsWith('http') ? spk.photoUrl : `${BASE_URL}${spk.photoUrl.startsWith('/') ? '' : '/'}${spk.photoUrl}`)
+                                : "https://randomuser.me/api/portraits/men/32.jpg"));
+
+                      const fullSpeakerName = formatSpeakerName(spk.academicTitle, spk.name);
+
+                      return (
+                        <div key={spk.id} className={`speaker-card ${idx % 2 === 0 ? 'color-orange' : 'color-pink'}`}>
+                          <div className="speaker-img-container">
+                            <img 
+                              src={speakerPhotoSrc} 
+                              alt={fullSpeakerName} 
+                              className="speaker-img"
+                              onError={(e) => {
+                                e.target.src = "https://randomuser.me/api/portraits/men/32.jpg";
+                              }}
+                            />
+                            <div 
+                              className="speaker-overlay" 
+                              onClick={() => setSelectedBioSpeaker({
+                                name: fullSpeakerName,
+                                designation: spk.designation,
+                                org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
+                                photoUrl: speakerPhotoSrc,
+                                bio: spk.bio,
+                                linkedin: spk.linkedin,
+                                orcid: spk.orcid,
+                                website: spk.website,
+                                research: spk.researchAreas
+                              })} 
+                              style={{ cursor: 'pointer' }}
+                            >
+                              <div className="plus-icon"></div>
+                            </div>
+                          </div>
+                          <div className="speaker-info">
+                            <h3 className="speaker-name">{fullSpeakerName}</h3>
+                            <p className="speaker-designation-affiliation">
+                              {spk.designation}{spk.affiliation ? `, ${spk.affiliation}` : ''}{spk.country ? ` - ${spk.country}` : ''}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                    No event speakers announced yet.
+                  </div>
+                )
+              ) : (
+                regularItems.length > 0 ? (
+                  <div className="conf-advisory-grid-redesigned max-md:grid max-md:grid-cols-1 max-lg:grid-cols-2 max-md:gap-4">
+                    {regularItems.map(item => (
+                      <div key={item.id} className="advisory-card-premium">
+                        <div 
+                          className="advisory-avatar-wrap-premium"
+                          style={{ cursor: item.description ? 'pointer' : 'default' }}
+                          onClick={() => {
+                            if (item.description) {
+                              setSelectedBioSpeaker({
+                                name: item.name,
+                                designation: item.designation,
+                                org: `${item.organization || ''}${item.country ? `, ${item.country}` : ''}`,
+                                photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                                bio: item.description,
+                                website: item.websiteUrl,
+                                linkedin: item.linkedinUrl,
+                                orcid: item.orcid,
+                                research: item.researchAreas
+                              });
+                            }
+                          }}
+                        >
+                          <img
+                            src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
+                            alt={item.name}
+                            onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
+                          />
+                        </div>
+                        <div className="advisory-info-premium">
+                          <h3>{item.name}</h3>
+                          <p className="advisory-role-premium">{item.designation}</p>
+                          {item.organization && (
+                            <p className="advisory-org-premium">{item.organization}{item.country ? `, ${item.country}` : ''}</p>
+                          )}
+                          {item.description && (
+                            <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
                               name: item.name,
                               designation: item.designation,
                               org: `${item.organization || ''}${item.country ? `, ${item.country}` : ''}`,
-                              photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
+                              photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
                               bio: item.description,
                               website: item.websiteUrl,
                               linkedin: item.linkedinUrl,
                               orcid: item.orcid,
                               research: item.researchAreas
-                            });
-                          }
-                        }}
-                      >
-                        <img
-                          src={item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg"}
-                          alt={item.name}
-                          onError={(e) => { e.target.src = "https://randomuser.me/api/portraits/men/32.jpg"; }}
-                        />
+                            })}>
+                              Read Details
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="advisory-info-premium">
-                        <h3>{item.name}</h3>
-                        <p className="advisory-role-premium">{item.designation}</p>
-                        {item.organization && (
-                          <p className="advisory-org-premium">{item.organization}{item.country ? `, ${item.country}` : ''}</p>
-                        )}
-                        {item.description && (
-                          <button type="button" className="btn-read-bio-sm-premium" onClick={() => setSelectedBioSpeaker({
-                            name: item.name,
-                            designation: item.designation,
-                            org: `${item.organization || ''}${item.country ? `, ${item.country}` : ''}`,
-                            photoUrl: item.imagePath ? (item.imagePath.startsWith('http') ? item.imagePath : `${BASE_URL}${item.imagePath.startsWith('/') ? '' : '/'}${item.imagePath}`) : "https://randomuser.me/api/portraits/men/32.jpg",
-                            bio: item.description,
-                            website: item.websiteUrl,
-                            linkedin: item.linkedinUrl,
-                            orcid: item.orcid,
-                            research: item.researchAreas
-                          })}>
-                            Read Details
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
-                  No active entries found for this tab.
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                    No active entries found for this tab.
+                  </div>
+                )
               )}
             </div>
           </section>
