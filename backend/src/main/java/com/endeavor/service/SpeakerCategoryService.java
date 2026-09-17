@@ -50,13 +50,7 @@ public class SpeakerCategoryService {
     }
 
     public List<SpeakerCategory> getActiveCategoriesWithSpeakers(Long conferenceId) {
-        List<SpeakerCategory> categories = categoryRepository.findByConferenceIdAndStatusOrderByDisplayOrderAsc(conferenceId, true);
-        categories.removeIf(cat -> {
-            long active = speakerRepo.countByConferenceIdAndCategoryIdAndIsActiveTrue(conferenceId, cat.getId());
-            cat.setActiveSpeakerCount(active);
-            return active == 0;
-        });
-        return categories;
+        return categoryRepository.findByConferenceIdAndStatusOrderByDisplayOrderAsc(conferenceId, true);
     }
 
     public SpeakerCategory saveCategory(SpeakerCategory category) {
