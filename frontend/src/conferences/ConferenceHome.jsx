@@ -1325,13 +1325,13 @@ const getEventStatus = (dateStr) => {
                         <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
                         {spk.researchAreas && (
                           <div className="speaker-research-areas-premium">
-                            {spk.researchAreas.split(',').map((area, aIdx) => (
+                            {spk.researchAreas.split(',').slice(0, 3).map((area, aIdx) => (
                               <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
                             ))}
                           </div>
                         )}
 
-                        <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
+                        <button type="button" className="btn-read-bio-premium" onClick={() => setSelectedBioSpeaker({
                           name: fullSpeakerName,
                           designation: spk.designation,
                           org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
@@ -1353,8 +1353,8 @@ const getEventStatus = (dateStr) => {
                 <div style={{ textAlign: "center", marginTop: "40px" }}>
                   <button
                     onClick={() => setShowAllSpeakers(!showAllSpeakers)}
-                    className="btn-print-program-premium min-h-[48px] flex items-center justify-center"
-                    style={{ padding: "0 30px", fontSize: "14px", display: "inline-flex" }}
+                    className="btn-print-program-premium"
+                    style={{ padding: "10px 28px", fontSize: "13px" }}
                   >
                     {showAllSpeakers ? "View Less" : "View All Speakers"}
                   </button>
@@ -1448,13 +1448,13 @@ const getEventStatus = (dateStr) => {
                         <p className="speaker-org-premium">{spk.affiliation}{spk.country ? `, ${spk.country}` : ''}</p>
                         {spk.researchAreas && (
                           <div className="speaker-research-areas-premium">
-                            {spk.researchAreas.split(',').map((area, aIdx) => (
+                            {spk.researchAreas.split(',').slice(0, 3).map((area, aIdx) => (
                               <span key={aIdx} className="research-pill-premium">{area.trim()}</span>
                             ))}
                           </div>
                         )}
 
-                        <button type="button" className="btn-read-bio-premium min-h-[48px] flex items-center justify-center" onClick={() => setSelectedBioSpeaker({
+                        <button type="button" className="btn-read-bio-premium" onClick={() => setSelectedBioSpeaker({
                           name: fullSpeakerName,
                           designation: spk.designation,
                           org: `${spk.affiliation || ''}${spk.country ? `, ${spk.country}` : ''}`,
