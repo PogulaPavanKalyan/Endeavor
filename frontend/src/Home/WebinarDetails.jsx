@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../layouts/Header";
 import Footer from "../layouts/Footer";
+import SEOHead from "../components/SEOHead";
 import { api } from "../utils/api";
 import { getRegistrationRoute } from "../utils/routeHelper";
 import "./WebinarDetails.css";
@@ -119,8 +120,44 @@ const WebinarDetails = () => {
 
   const isUpcoming = !timeLeft.isLive && !timeLeft.isEnded;
 
+  const webinarEventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": webinar.title,
+    "description": webinar.description || `Join ${webinar.speakerName || "our expert speaker"} for this exclusive scientific webinar.`,
+    "startDate": webinar.webinarDate ? `${webinar.webinarDate}T${webinar.startTime || "00:00"}:00` : undefined,
+    "endDate": webinar.webinarDate ? `${webinar.webinarDate}T${webinar.endTime || "23:59"}:00` : undefined,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+    "location": {
+      "@type": "VirtualLocation",
+      "url": typeof window !== "undefined" ? window.location.href : `https://intelevoresearch.com/webinars/${slug}`
+    },
+    "image": webinar.bannerUrl || "https://intelevoresearch.com/logo.svg",
+    "performer": {
+      "@type": "Person",
+      "name": webinar.speakerName || "Speaker",
+      "jobTitle": webinar.speakerDesignation || ""
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "Intelevo Research",
+      "url": "https://intelevoresearch.com"
+    }
+  };
+
   return (
     <>
+      <SEOHead
+        title={`${webinar.title} | Intelevo Research Webinars`}
+        description={webinar.description ? webinar.description.slice(0, 160) : `Join ${webinar.speakerName} for ${webinar.title}. Learn state-of-the-art insights.`}
+        keywords={`${webinar.title}, ${webinar.speakerName || ""}, online webinar, research seminar, intelevo research`}
+        ogTitle={webinar.title}
+        ogDescription={webinar.description ? webinar.description.slice(0, 160) : `Online research webinar with ${webinar.speakerName}`}
+        ogImage={webinar.bannerUrl || "https://intelevoresearch.com/logo.svg"}
+        ogType="article"
+        structuredData={webinarEventSchema}
+      />
       <Header />
 
       <article className="webinar-details-wrapper">

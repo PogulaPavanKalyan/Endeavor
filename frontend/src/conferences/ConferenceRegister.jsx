@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 // import "./ConferenceRegisterLegacy.css"; // DISABLED: This file contains global Bootstrap styles that destroy the entire frontend UI when successfully compiled
 import "./ConferenceRegister.css";
 
@@ -268,6 +269,14 @@ const ConferenceRegister = () => {
 
   return (
     <div className="legacy-registration-scope" style={{ textAlign: 'left' }}>
+      <SEOHead
+        title={`Register for ${conference?.title || "International Conference"} | Intelevo Research`}
+        description={`Secure your registration for ${conference?.title || "our upcoming conference"}. Choose from academic, student, and delegate packages.`}
+        keywords={`register, conference registration, ${conference?.title || ""}, tickets, delegate pass, Intelevo Research`}
+        ogTitle={`Register for ${conference?.title || "International Conference"}`}
+        ogDescription={`Join global scholars and industry leaders at ${conference?.title || "our international conference"}. Registration is open.`}
+        ogImage={conference?.image || "https://intelevoresearch.com/logo.svg"}
+      />
       <section className="ts-speakers speaker-classic" style={{ paddingTop: '60px', paddingBottom: '60px', backgroundColor: '#fff' }}>
         <div className="container">
           <div className="row">

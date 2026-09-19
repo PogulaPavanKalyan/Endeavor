@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { api } from "../utils/api";
+import SEOHead from "../components/SEOHead";
 import "./ConferenceSuggestSpeaker.css";
 
 const ConferenceSuggestSpeaker = () => {
@@ -61,6 +62,14 @@ const ConferenceSuggestSpeaker = () => {
 
   return (
     <section className="conf-subpage-section suggest-speaker-section">
+      <SEOHead
+        title={`Suggest a Speaker - ${conference?.title || "Conference"} | Intelevo Research`}
+        description={`Nominate or suggest an expert keynote or plenary speaker for ${conference?.title || "our conference"}.`}
+        keywords={`suggest speaker, keynote speaker nomination, ${conference?.title || ""}, Intelevo Research`}
+        ogTitle={`Suggest a Speaker - ${conference?.title || "Conference"}`}
+        ogDescription={`Nominate an expert keynote or plenary speaker for ${conference?.title || "our conference"}.`}
+        ogImage={conference?.image || "https://intelevoresearch.com/logo.svg"}
+      />
       <div className="conf-subpage-container suggest-speaker-layout">
         
         {/* Main form column */}

@@ -15,6 +15,8 @@ Allow: /favicon.svg
 Allow: /logo.svg
 
 # Disallow Administrative Routes and Private Files
+Allow: /api/sitemap.xml
+Allow: /api/sitemap
 Disallow: /admin/
 Disallow: /admin/*
 Disallow: /api/
@@ -22,3 +24,4 @@ Disallow: /uploads/private/
 
 # Sitemap Location
 Sitemap: https://intelevoresearch.com/sitemap.xml
+Sitemap: https://intelevoresearch.com/api/sitemap.xml

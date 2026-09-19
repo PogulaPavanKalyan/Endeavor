@@ -83,6 +83,8 @@ public class Security {
                                 "/api/program-categories/**",
                                 "/api/footer/**",
                                 "/api/footer",
+                                "/api/sitemap.xml",
+                                "/api/sitemap",
 
                                 "/uploads/**")
                         .permitAll()
